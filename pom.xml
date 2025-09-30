@@ -21,23 +21,6 @@
 <junit.version>5.12.1</junit.version>  </properties>
 
   <dependencies>
-    <!-- JavaFX -->
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-controls</artifactId>
-      <version>17.0.14</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-fxml</artifactId>
-      <version>17.0.14</version>
-    </dependency>
-    <!-- ANTLR -->
-    <dependency>
-      <groupId>org.antlr</groupId>
-      <artifactId>antlr4</artifactId>
-      <version>4.13.2</version>
-    </dependency>
     <!-- JUnit -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
