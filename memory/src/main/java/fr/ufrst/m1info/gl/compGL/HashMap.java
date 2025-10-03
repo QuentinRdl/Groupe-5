@@ -191,6 +191,24 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
         sizeHashMap=0;
     }
 
+    /**
+     * Returns true if this map maps one or more keys to the specified value.
+     *
+     * @param value value whose presence in this map is to be tested
+     * @return true if this map maps one or more keys to the specified value
+     */
+    @Override
+    public boolean containsValue(Object value){
+        for (int i=0;i<capacity;i++){
+            for (EntryHashMap<K,V> e : buckets[i]){
+                if (value.equals(e.getValue())){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public Set<Entry<K, V>> entrySet() {
         return Set.of();
