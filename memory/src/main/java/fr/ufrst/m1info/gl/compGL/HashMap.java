@@ -2,6 +2,7 @@ package fr.ufrst.m1info.gl.compGL;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -439,6 +440,16 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
         return new_value;
     }
 
+    /**
+     * If the specified key is not already associated with a value or is associated with null, associates it with the given non-null value.
+     * Otherwise, replaces the associated value with the results of the given remapping function, or removes if the result is null
+     * If the function returns null the mapping is removed
+     *
+     * @param key key with which the resulting value is to be associated
+     * @param value the non-null value to be merged with the existing value associated with the key or, if no existing value or a null value is associated with the key, to be associated with the key
+     * @param remappingFunction the function to recompute a value if present
+     * @return the new value associated with the specified key, or null if no value is associated with the key
+     */
     public V merge(K key, V value, BiFunction<? super V,? super V,? extends V> remappingFunction){
         int index=key.hashCode() % capacity;
         V old_value=null;
@@ -464,5 +475,40 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
         V new_value = value;
         putIfAbsent(key,new_value);
         return new_value;
+    }
+
+    /**
+     * TODO : Performs the given action for each entry in this map until all entries have been processed or the action throws an exception.
+     * Unless otherwise specified by the implementing class, actions are performed in the order of entry set iteration (if an iteration order is specified.)
+     * Exceptions thrown by the action are relayed to the caller.
+     *
+     * @param action The action to be performed for each entry
+     */
+    public void forEach(BiConsumer<? super K,? super V> action){
+
+    }
+
+    /**
+     * Replaces each entry's value with the result of invoking the given function on that entry until all entries have been processed or the function throws an exception.
+     * Exceptions thrown by the function are relayed to the caller.
+     *
+     * @param function the function to apply to each entry
+     */
+    public void replaceAll(BiFunction<? super K,? super V,? extends V> function){
+        for (int i=0;i<capacity;i++){
+            for (EntryHashMap<K,V> e : buckets[i]){
+                e.setValue(function.apply(e.getKey(),e.getValue()));
+            }
+        }
+    }
+
+    /**
+     * TODO : Returns a shallow copy of this HashMap instance: the keys and values themselves are not cloned.
+     *
+     * @return a shallow copy of this map
+     * @throws CloneNotSupportedException
+     */
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
