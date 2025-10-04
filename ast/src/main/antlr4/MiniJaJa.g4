@@ -18,14 +18,18 @@ decls returns [ASTNode node]
 
 
 methmain returns [MainNode node]
-    : 'main' '{' vars instrs '}' {$node = new MainNode($vars.node, $instrs.node);}
+    : 'main' '{' (vars)? (instrs)? '}' {$node = new MainNode($vars.node, $instrs.node);}
     ;
 
 vars returns [ASTNode node]
     : . {$node = null;}
     ;
 
-instrs returns [ASTNode node]
+instrs returns [InstructionsNode node]
+    : instr ';' (instrs)? {$node = new InstructionsNode($instr.node, $instrs.node);}
+    ;
+
+instr returns [ASTNode node]
     : . {$node = null;}
     ;
 

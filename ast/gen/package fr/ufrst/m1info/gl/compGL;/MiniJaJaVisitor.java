@@ -49,4 +49,10 @@ public interface MiniJaJaVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitInstrs(MiniJaJaParser.InstrsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJaJaParser#instr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInstr(MiniJaJaParser.InstrContext ctx);
 }

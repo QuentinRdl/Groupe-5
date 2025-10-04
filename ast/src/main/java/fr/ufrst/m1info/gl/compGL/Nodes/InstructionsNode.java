@@ -2,6 +2,7 @@ package fr.ufrst.m1info.gl.compGL.Nodes;
 
 import fr.ufrst.m1info.gl.compGL.Memory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InstructionsNode extends ASTNode{
@@ -15,11 +16,15 @@ public class InstructionsNode extends ASTNode{
 
     @Override
     public List<String> compile() {
-        return List.of();
+        List<String> JJCodes = new ArrayList<>();
+        JJCodes.addAll(instruction.compile());
+        JJCodes.addAll(otherInstructions.compile());
+        return JJCodes;
     }
 
     @Override
     public void interpret(Memory m) throws Exception {
-
+        instruction.interpret(m);
+        otherInstructions.interpret(m);
     }
 }
