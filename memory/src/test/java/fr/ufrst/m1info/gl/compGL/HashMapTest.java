@@ -550,4 +550,26 @@ public class HashMapTest
         }
 
     }
+
+    @Test
+    public void testGetOrDefaultExistingKey()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.getOrDefault("OP",1),map.getOrDefault("OP",1));
+    }
+
+    @Test
+    public void testGetOrDefaultNotExistingKey()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.getOrDefault("MV",1),map.getOrDefault("MV",1));
+    }
 }

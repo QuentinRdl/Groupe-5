@@ -210,7 +210,7 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
     }
 
     /**
-     * Returns a Set view of the keys contained in this map.
+     * TODO : Returns a Set view of the keys contained in this map.
      *
      * @return a set view of the keys contained in this map
      */
@@ -226,7 +226,7 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
     }
 
     /**
-     * Returns a Collection view of the values contained in this map.
+     * TODO : Returns a Collection view of the values contained in this map.
      *
      * @return a view of the values contained in this map
      */
@@ -241,9 +241,29 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
         return res;
     }
 
+    /**
+     * TODO : Returns a Set view of the mappings contained in this map.
+     *
+     * @return a set view of the mappings contained in this map
+     */
     @Override
     public Set<Entry<K, V>> entrySet() {
         Set<Entry<K,V>> res = new HashSet<>();
         return res;
+    }
+
+    /**
+     * Returns the value to which the specified key is mapped, or defaultValue if this map contains no mapping for the key
+     *
+     * @param key the key whose associated value is to be returned
+     * @param defaultValue the default mapping of the key
+     * @return the value to which the specified key is mapped, or defaultValue if this map contains no mapping for the key
+     */
+    public V getOrDefault(Object key, V defaultValue) {
+        V value = get(key);
+        if (value==null){
+            return defaultValue;
+        }
+        return value;
     }
 }
