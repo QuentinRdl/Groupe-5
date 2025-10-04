@@ -18,13 +18,17 @@ public class WhileNode extends ASTNode{
     }
 
     @Override
-    public List<String> compile() {
+    public List<String> compile(int address) {
         List<String> JJCodes = new ArrayList<>();
-        List<String> pe = condition.compile();
+        // Compiling sub-instructions
+        List<String> pe = condition.compile(address);
+        List<String> piss = iss.compile(address);
+        // Node compilation
         JJCodes.addAll(pe);
         JJCodes.add("not");
-
-        List<String> piss = iss.compile();
+        JJCodes.add("if(" + address + pe.size() + piss.size() + 3 +")");
+        JJCodes.addAll(piss);
+        JJCodes.add("goto("+address+")");
         return List.of();
     }
 
