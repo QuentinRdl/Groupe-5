@@ -30,7 +30,7 @@ public class ClassNode extends ASTNode {
     }
 
     @Override
-    public void interpret(Memory m) {
+    public void interpret(Memory m) throws Exception {
         m.DeclVar();
         decls.interpret(m);
         main.interpret(m);
