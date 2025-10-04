@@ -291,4 +291,70 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
         sizeHashMap++;
         return old_value;
     }
+
+    /**
+     * Removes the entry for the specified key only if it is currently mapped to the specified value.
+     *
+     * @param key key with which the specified value is associated
+     * @param value value expected to be associated with the specified key
+     * @return true if the value was removed
+     */
+    public boolean remove(Object key, Object value){
+        int index=key.hashCode() % capacity;
+        for (int i=0; i<buckets[index].size();i++){
+            if (key.equals(buckets[index].get(i).getKey())){
+                V old_value = buckets[index].get(i).getValue();
+                if (value.equals(old_value)){
+                    buckets[index].remove(i);
+                    sizeHashMap--;
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Replaces the entry for the specified key only if currently mapped to the specified value.
+     *
+     * @param key key with which the specified value is associated
+     * @param oldValue value expected to be associated with the specified key
+     * @param newValue value to be associated with the specified key
+     * @return true if the value was replaced
+     */
+    public boolean replace(K key, V oldValue, V newValue){
+        int index=key.hashCode() % capacity;
+        for (EntryHashMap<K,V> e : buckets[index]){
+            if (key.equals(e.getKey())){
+                if (oldValue.equals(e.getValue())){
+                    e.setValue(newValue);
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Replaces the entry for the specified key only if it is currently mapped to some value.
+     *
+     * @param key key with which the specified value is associated
+     * @param value value to be associated with the specified key
+     * @return the previous value associated with the specified key, or null if there was no mapping for the key.
+     */
+    public V replace(K key, V value){
+        int index=key.hashCode() % capacity;
+        V old_value=null;
+        for (EntryHashMap<K,V> e : buckets[index]){
+            if (key.equals(e.getKey())){
+                old_value=e.getValue();
+                e.setValue(value);
+                return old_value;
+            }
+        }
+        return old_value;
+    }
 }

@@ -611,4 +611,109 @@ public class HashMapTest
         assertEquals(oldMap.get("OP"),map.get("OP"));
         assertEquals(oldMap.size(),map.size());
     }
+
+    @Test
+    public void testRemoveNotExistingKey()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.remove("MV",1),map.remove("MV",1));
+        assertEquals(oldMap.get("MV"),map.get("MV"));
+        assertEquals(oldMap.size(),map.size());
+    }
+
+    @Test
+    public void testRemoveIncorrectValue()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.remove("OP",1),map.remove("OP",1));
+        assertEquals(oldMap.get("OP"),map.get("OP"));
+        assertEquals(oldMap.size(),map.size());
+    }
+
+    @Test
+    public void testRemoveCorrectValue()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.remove("OP",81),map.remove("OP",81));
+        assertEquals(oldMap.get("OP"),map.get("OP"));
+        assertEquals(oldMap.size(),map.size());
+    }
+
+    @Test
+    public void testReplaceNotExistingKey()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.replace("MV",33,1),map.replace("MV",33,1));
+        assertEquals(oldMap.get("MV"),map.get("MV"));
+        assertEquals(oldMap.size(),map.size());
+    }
+
+    @Test
+    public void testReplaceNotExistingKey2()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.replace("MV",1),map.replace("MV",1));
+        assertEquals(oldMap.get("MV"),map.get("MV"));
+        assertEquals(oldMap.size(),map.size());
+    }
+
+    @Test
+    public void testReplaceExistingKey()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.replace("OP",1),map.replace("OP",1));
+        assertEquals(oldMap.get("OP"),map.get("OP"));
+        assertEquals(oldMap.size(),map.size());
+    }
+
+    @Test
+    public void testReplaceIncorrectValue()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.replace("OP",4,1),map.replace("OP",4,1));
+        assertEquals(oldMap.get("OP"),map.get("OP"));
+        assertEquals(oldMap.size(),map.size());
+    }
+
+    @Test
+    public void testReplaceCorrectValue()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.replace("OP",81,1),map.replace("OP",81,1));
+        assertEquals(oldMap.get("OP"),map.get("OP"));
+        assertEquals(oldMap.size(),map.size());
+    }
+
 }
