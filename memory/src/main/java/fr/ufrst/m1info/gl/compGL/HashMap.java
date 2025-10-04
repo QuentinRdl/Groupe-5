@@ -266,4 +266,29 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
         }
         return value;
     }
+
+    /**
+     * If the specified key is not already associated with a value (or is mapped to null) associates it with the given value and returns null,
+     * else returns the current value.
+     *
+     * @param key key with which the specified value is to be associated
+     * @param value value to be associated with the specified key
+     * @return the previous value associated with the specified key, or null if there was no mapping for the key
+     */
+    public V putIfAbsent(K key, V value) {
+        int index=key.hashCode() % capacity;
+        V old_value=null;
+        for (EntryHashMap<K,V> e : buckets[index]){
+            if (key.equals(e.getKey())){
+                old_value=e.getValue();
+                if (old_value==null){
+                    e.setValue(value);
+                }
+                return old_value;
+            }
+        }
+        buckets[index].add(new EntryHashMap<>(key,value));
+        sizeHashMap++;
+        return old_value;
+    }
 }

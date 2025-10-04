@@ -572,4 +572,43 @@ public class HashMapTest
         map.putAll(oldMap);
         assertEquals(oldMap.getOrDefault("MV",1),map.getOrDefault("MV",1));
     }
+
+    @Test
+    public void testPutIfAbsentNotExistingKey()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.putIfAbsent("MV",1),map.putIfAbsent("MV",1));
+        assertEquals(oldMap.get("MV"),map.get("MV"));
+        assertEquals(oldMap.size(),map.size());
+    }
+
+    @Test
+    public void testPutIfAbsentAlreadyExistingKey()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",81);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.putIfAbsent("OP",1),map.putIfAbsent("OP",1));
+        assertEquals(oldMap.get("OP"),map.get("OP"));
+        assertEquals(oldMap.size(),map.size());
+    }
+
+    @Test
+    public void testPutIfAbsentNull()
+    {
+        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
+        oldMap.put("OP",null);
+        oldMap.put("LN",4);
+        HashMap<String,Integer> map=new HashMap<>();
+        map.putAll(oldMap);
+        assertEquals(oldMap.putIfAbsent("OP",1),map.putIfAbsent("OP",1));
+        assertEquals(oldMap.get("OP"),map.get("OP"));
+        assertEquals(oldMap.size(),map.size());
+    }
 }
