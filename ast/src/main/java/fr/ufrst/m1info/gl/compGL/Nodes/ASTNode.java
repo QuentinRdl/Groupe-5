@@ -16,6 +16,6 @@ public abstract class ASTNode {
      * Interpret the node and it's descendants using a memory
      * @param m Memory used for the interpretation
      */
-    public abstract void interpret(Memory m);
+    public abstract void interpret(Memory m) throws Exception;
 
 }

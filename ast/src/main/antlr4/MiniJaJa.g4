@@ -9,7 +9,7 @@ classe returns [ClassNode node]
     ;
 
 ident returns [ASTNode node]
-    : . {$node = null;}
+    : id=IDENTIFIER {$node = new IdentNode($id.text);}
     ;
 
 decls returns [ASTNode node]
@@ -18,4 +18,8 @@ decls returns [ASTNode node]
 
 methmain returns [ASTNode node]
     : . {$node = null;}
+    ;
+
+IDENTIFIER
+    : ('_' | 'a'..'z' | 'A'..'Z')+ ('_' | 'a'..'z' | 'A'..'Z' | '0'..'9')*
     ;
