@@ -5,12 +5,16 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="fr.ufrst.m1info.gl.compgl.driver.HelloController">
   <padding>
     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
   </padding>
 
-  <Label fx:id="welcomeText"/>
-  <Button text="Hello!" onAction="#onHelloButtonClick"/>
+  <Button text="Choisir un fichier" fx:id="btnSelectFile" onAction="#selectFileButton"/>
+  <Label text="Aucun fichier sélectionné" fx:id="fileLabel"/>
+  <TextArea fx:id="viewer" editable="false" prefHeight="300"/>
+
+
 </VBox>
