@@ -30,6 +30,7 @@ instrs returns [InstructionsNode node]
 
 instr returns [WhileNode node]
     : 'while' '(' exp ')' '{' (instrs)? '}' {$node = new WhileNode($exp.node, $instrs.node);}
+    | 'return' exp {$node = new ReturnNode($exp.node);}
     ;
 
 exp returns [ASTNode node]
