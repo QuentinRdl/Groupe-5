@@ -1,11 +1,12 @@
 package fr.ufrst.m1info.gl.compGL;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.function.Executable;
 
 
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit test for simple App.
@@ -1022,6 +1023,48 @@ public class HashMapTest
         assertEquals(oldMap.containsKey("LL"),map.containsKey("LL"));
         assertEquals(oldMap.containsKey("MS"),map.containsKey("MS"));
         assertEquals(oldMap.containsKey("AP"),map.containsKey("AP"));
+    }
+
+    @Test
+    public void testConstructorExceptionCapacity()
+    {
+        assertThrows(IllegalArgumentException.class, () -> new HashMap<String, Integer>(-5,0.75F));
+    }
+
+    @Test
+    public void testConstructorExceptionLoadFactor()
+    {
+        assertThrows(IllegalArgumentException.class, () -> new HashMap<String, Integer>(3,-1.0F));
+    }
+
+    @Test
+    public void testComputeIfAbsentException()
+    {
+        HashMap<String, Integer> map =new HashMap<String, Integer>();
+        assertThrows(ArithmeticException.class, () -> map.computeIfAbsent("LS",(k) -> k.length()/0));
+    }
+
+    @Test
+    public void testComputeIfPresentException()
+    {
+        HashMap<String, Integer> map =new HashMap<String, Integer>();
+        map.put("LS",0);
+        assertThrows(ArithmeticException.class, () -> map.computeIfPresent("LS",(k,v) -> k.length()/v));
+    }
+
+    @Test
+    public void testComputeException()
+    {
+        HashMap<String, Integer> map =new HashMap<String, Integer>();
+        assertThrows(NullPointerException.class, () -> map.compute("LS",(k,v) -> k.length()/v));
+    }
+
+    @Test
+    public void testMergeException()
+    {
+        HashMap<String, Integer> map =new HashMap<String, Integer>();
+        map.put("LS",0);
+        assertThrows(ArithmeticException.class, () -> map.merge("LS",0,(v1,v2) -> v1/v2));
     }
 
 }

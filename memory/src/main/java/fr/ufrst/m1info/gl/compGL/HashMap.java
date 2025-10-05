@@ -24,7 +24,7 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
      * @param loadFactor the load factor
      */
     public HashMap(int initialCapacity, float loadFactor){
-        if (initialCapacity<0 && loadFactor<=0.0){
+        if (initialCapacity<0 || loadFactor<=0.0){
             throw new IllegalArgumentException("Arguments cannot be negative");
         }
         capacity=initialCapacity;
