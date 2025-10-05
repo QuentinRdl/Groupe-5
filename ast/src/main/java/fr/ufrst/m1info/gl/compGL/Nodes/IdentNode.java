@@ -18,7 +18,7 @@ public class IdentNode extends ASTNode implements EvaluableNode {
     public List<String> compile(int address) {
         List<String> jajacodes = new ArrayList<String>();
         jajacodes.add("load(" + this.identifier + ")");
-        return List.of();
+        return jajacodes;
     }
 
     @Override

@@ -21,10 +21,10 @@ public class MainNode extends ASTNode {
         if(vars != null)
             JJCodes.addAll(vars.compile(address));
         if(instrs != null)
-            JJCodes.addAll(instrs.compile(address));
+            JJCodes.addAll(instrs.compile(address + JJCodes.size()));
         JJCodes.add("push(0)");
         if(vars != null)
-            JJCodes.addAll(((WithradawableNode)vars).WithdrawCompile());
+            JJCodes.addAll(((WithradawableNode)vars).WithdrawCompile(address + JJCodes.size()));
         return JJCodes;
     }
 

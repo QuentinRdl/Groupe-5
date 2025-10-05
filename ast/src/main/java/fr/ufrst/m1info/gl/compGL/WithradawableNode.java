@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface WithradawableNode {
     public void WithradawInterpret(Memory m);
-    public List<String> WithdrawCompile();
+    public List<String> WithdrawCompile(int address);
 }

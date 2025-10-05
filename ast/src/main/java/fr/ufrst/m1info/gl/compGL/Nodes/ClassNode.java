@@ -22,10 +22,10 @@ public class ClassNode extends ASTNode {
         List<String> JJCodes = new ArrayList<String>();
         JJCodes.add("init");
         if(decls!=null)
-            JJCodes.addAll(decls.compile(address));
-        JJCodes.addAll(main.compile(address));
+            JJCodes.addAll(decls.compile(address + JJCodes.size()));
+        JJCodes.addAll(main.compile(address + JJCodes.size()));
         if(decls!=null)
-            JJCodes.addAll(((WithradawableNode)decls).WithdrawCompile());
+            JJCodes.addAll(((WithradawableNode)decls).WithdrawCompile(address + JJCodes.size()));
         JJCodes.add("pop");
         JJCodes.add("jcstop");
         return JJCodes;

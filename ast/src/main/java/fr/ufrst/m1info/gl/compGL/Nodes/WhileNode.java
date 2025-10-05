@@ -22,7 +22,7 @@ public class WhileNode extends ASTNode{
         List<String> JJCodes = new ArrayList<>();
         // Compiling sub-instructions
         List<String> pe = condition.compile(address);
-        List<String> piss = (iss == null)?List.of() : iss.compile(address);
+        List<String> piss = (iss == null)?List.of() : iss.compile(address + pe.size() + 2);
         // Node compilation
         JJCodes.addAll(pe);
         JJCodes.add("not");

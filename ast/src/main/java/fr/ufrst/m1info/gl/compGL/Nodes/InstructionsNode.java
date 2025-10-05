@@ -19,7 +19,7 @@ public class InstructionsNode extends ASTNode{
         List<String> JJCodes = new ArrayList<>();
         JJCodes.addAll(instruction.compile(address));
         if(otherInstructions!=null)
-            JJCodes.addAll(otherInstructions.compile(address));
+            JJCodes.addAll(otherInstructions.compile(address + JJCodes.size()));
         return JJCodes;
     }
 
