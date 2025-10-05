@@ -15,11 +15,11 @@ public class DeclarationsNode extends ASTNode{
     }
 
     @Override
-    public List<String> compile() {
+    public List<String> compile(int address) {
         List<String> jajacodes = new ArrayList<String>();
-        jajacodes.addAll(declaration.compile());
-        if (declarations != null){
-            jajacodes.addAll(declarations.compile());
+        jajacodes.addAll(declaration.compile(address));
+        if (declarations != null) {
+            jajacodes.addAll(declarations.compile(address + jajacodes.size()));
         }
         return jajacodes;
     }

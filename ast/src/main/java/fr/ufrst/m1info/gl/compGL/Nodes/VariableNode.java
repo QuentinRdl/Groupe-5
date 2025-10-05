@@ -20,9 +20,9 @@ public class VariableNode extends ASTNode implements WithradawableNode {
     }
 
     @Override
-    public List<String> compile() {
+    public List<String> compile(int address) {
         List<String> jajacodes = new ArrayList<String>();
-        jajacodes.addAll(vexp.compile());
+        jajacodes.addAll(vexp.compile(address));
         jajacodes.add("new(" + ident + "," + typemeth + ",var,0)" );
         return jajacodes;
     }
@@ -39,7 +39,7 @@ public class VariableNode extends ASTNode implements WithradawableNode {
     }
 
     @Override
-    public List<String> WithdrawCompile() {
+    public List<String> WithdrawCompile(int address) {
         List<String> jajacodes = new ArrayList<String>();
         jajacodes.add("swap");
         jajacodes.add("pop");

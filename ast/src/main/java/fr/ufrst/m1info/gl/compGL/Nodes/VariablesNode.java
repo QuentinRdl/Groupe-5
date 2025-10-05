@@ -15,11 +15,11 @@ public class VariablesNode extends ASTNode{
     }
 
     @Override
-    public List<String> compile() {
+    public List<String> compile(int address) {
         List<String> jajacodes = new ArrayList<String>();
-        jajacodes.addAll(variable.compile());
+        jajacodes.addAll(variable.compile(address));
         if (variables != null){
-            jajacodes.addAll(variables.compile());
+            jajacodes.addAll(variables.compile(address + jajacodes.size()));
         }
         return jajacodes;
     }
