@@ -1,8 +1,10 @@
 package fr.ufrst.m1info.gl.compgl.driver;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -18,6 +20,15 @@ public class HelloController {
 
     @FXML
     private TextArea viewer;
+
+    @FXML
+    private SplitPane splitPane;
+
+    @FXML
+    public void initialize(){
+        splitPane.setDividerPositions(0.75);
+        splitPane.setOrientation(Orientation.VERTICAL);
+    }
 
     @FXML
     protected void selectFileButton() {

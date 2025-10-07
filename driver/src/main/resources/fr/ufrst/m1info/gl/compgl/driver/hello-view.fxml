@@ -14,6 +14,10 @@
 
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.geometry.Orientation?>
+
+<?import javafx.scene.control.SplitPane.Divider?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ufrst.m1info.gl.compgl.driver.HelloController">
 
   <top>
@@ -40,8 +44,6 @@
         <Label text="No files selected" fx:id="fileLabel"/>
       </HBox>
 
-      <ListView fx:id="codeListView" VBox.vgrow="ALWAYS"/>
-
       <GridPane hgap="15.0" vgap="10" VBox.vgrow="ALWAYS">
         <padding>
           <Insets bottom="10.0" top="10.0"/>
@@ -56,18 +58,13 @@
         <TextArea fx:id="memoryState" editable="false" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS" />
       </GridPane>
 
+      <SplitPane fx:id="splitPane">
+        <ListView fx:id="codeListView"/>
+        <TextArea fx:id="output" editable="false" prefHeight="150"/>
+      </SplitPane>
+
     </VBox>
   </center>
-
-  <bottom>
-    <VBox>
-      <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-      </padding>
-
-      <TextArea fx:id="output" editable="false" prefHeight="150"/>
-    </VBox>
-  </bottom>
 
 </BorderPane>
 
