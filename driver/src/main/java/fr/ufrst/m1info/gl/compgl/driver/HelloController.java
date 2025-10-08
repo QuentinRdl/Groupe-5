@@ -1,11 +1,10 @@
 package fr.ufrst.m1info.gl.compgl.driver;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -19,7 +18,9 @@ public class HelloController {
     private Label fileLabel;
 
     @FXML
-    private TextArea viewer;
+    private ListView<CodeLine> codeListView;
+
+    private ObservableList<CodeLine> codeLines;
 
     @FXML
     private SplitPane splitPane;
@@ -28,11 +29,18 @@ public class HelloController {
     public void initialize(){
         splitPane.setDividerPositions(0.75);
         splitPane.setOrientation(Orientation.VERTICAL);
+
+        // initialize listView
+        codeLines = FXCollections.observableArrayList();
+        codeListView.setItems(codeLines);
+
+        // allows ListView to know how to create its cells
+        codeListView.setCellFactory(lv -> new CodeLineCell());
+
     }
 
     @FXML
     protected void selectFileButton() {
-        int nbLines = 0;
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().addAll(
                 new ExtensionFilter("Fichier MiniJaja et JajaCode", "*.mjj", "*.jcc")
@@ -41,21 +49,24 @@ public class HelloController {
 
         if (selectedFile != null) {
             fileLabel.setText(selectedFile.getName());
+
+            // Delete old cells
+            codeLines.clear();
+
             //Read file
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile))){
-
-                StringBuilder builder = new StringBuilder(); //concatenates strings in an optimised manner
+                int nbLines = 1;
                 String line;
+
                 while((line = bufferedReader.readLine()) != null){
-                    builder.append(nbLines++).append(". \t").append(line).append("\n");
+                    codeLines.add(new CodeLine(nbLines++, line));
                 }
-                viewer.setText(builder.toString());
 
             } catch (IOException e){
                 System.out.println("Error reading file: " + e.getMessage());
             }
         } else {
-            System.out.println("File is invalid");
+            System.out.println("No files selected");
         }
     }
 }

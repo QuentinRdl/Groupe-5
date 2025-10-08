@@ -44,20 +44,6 @@
         <Label text="No files selected" fx:id="fileLabel"/>
       </HBox>
 
-      <GridPane hgap="15.0" vgap="10" VBox.vgrow="ALWAYS">
-        <padding>
-          <Insets bottom="10.0" top="10.0"/>
-        </padding>
-
-        <columnConstraints>
-          <ColumnConstraints percentWidth="60"/>
-          <ColumnConstraints percentWidth="40"/>
-        </columnConstraints>
-
-        <TextArea fx:id="viewer" editable="false" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS"/>
-        <TextArea fx:id="memoryState" editable="false" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS" />
-      </GridPane>
-
       <SplitPane fx:id="splitPane">
         <ListView fx:id="codeListView"/>
         <TextArea fx:id="output" editable="false" prefHeight="150"/>
