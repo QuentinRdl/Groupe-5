@@ -449,6 +449,17 @@ public class HashMapTest
     }
 
     @Test
+    public void testKeyNull(){
+        HashMap<NegativeHashCode,Integer> map=new HashMap<>(8);
+        java.util.HashMap<NegativeHashCode, Integer> oldMap=new java.util.HashMap<>();
+        assertEquals(oldMap.put(null,0),map.put(null,0));
+        assertEquals(oldMap.get(null),map.get(null));
+        assertEquals(oldMap.containsKey(null),map.containsKey(null));
+        assertEquals(oldMap.remove(null),map.remove(null));
+        assertEquals(oldMap.get(null),map.get(null));
+    }
+
+    @Test
     public void testValuesEmpty()
     {
         HashMap<String,Integer> map=new HashMap<>();

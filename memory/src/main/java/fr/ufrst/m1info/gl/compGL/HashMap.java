@@ -66,6 +66,9 @@ public class HashMap<K,V>
      * @return the index of key
      */
     public int getIndex(Object key){
+        if (key==null){
+            return 0;
+        }
         return Math.abs(key.hashCode()) % capacity;
     }
 
@@ -103,7 +106,10 @@ public class HashMap<K,V>
     public V get(Object key){
         int index=getIndex(key);
         for (EntryHashMap<K,V> e : buckets[index]){
-            if (key.equals(e.getKey())){
+            if (key==null && e.getKey()==null){
+                return e.getValue();
+            }
+            if ((key!=null && e.getKey()!=null) && key.equals(e.getKey())){
                 return e.getValue();
             }
         }
@@ -119,7 +125,10 @@ public class HashMap<K,V>
     public boolean containsKey(Object key){
         int index=getIndex(key);
         for (EntryHashMap<K,V> e : buckets[index]){
-            if (key.equals(e.getKey())){
+            if (key==null && e.getKey()==null){
+                return true;
+            }
+            if ((key!=null && e.getKey()!=null) && key.equals(e.getKey())){
                 return true;
             }
 
@@ -139,7 +148,12 @@ public class HashMap<K,V>
         int index=getIndex(key);
         V old_value=null;
         for (EntryHashMap<K,V> e : buckets[index]){
-            if (key.equals(e.getKey())){
+            if (key==null && e.getKey()==null){
+                old_value=e.getValue();
+                e.setValue(value);
+                return old_value;
+            }
+            if ((key!=null && e.getKey()!=null) && key.equals(e.getKey())){
                 old_value=e.getValue();
                 e.setValue(value);
                 return old_value;
@@ -162,7 +176,13 @@ public class HashMap<K,V>
     public V remove(Object key){
         int index=getIndex(key);
         for (int i=0; i<buckets[index].size();i++){
-            if (key.equals(buckets[index].get(i).getKey())){
+            if (key==null && buckets[index].get(i).getKey()==null){
+                V value = buckets[index].get(i).getValue();
+                buckets[index].remove(i);
+                sizeHashMap--;
+                return value;
+            }
+            if ((key!=null && buckets[index].get(i).getKey()!=null) && key.equals(buckets[index].get(i).getKey())){
                 V value = buckets[index].get(i).getValue();
                 buckets[index].remove(i);
                 sizeHashMap--;
