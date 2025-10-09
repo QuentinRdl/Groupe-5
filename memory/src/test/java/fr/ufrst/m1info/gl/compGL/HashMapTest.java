@@ -383,54 +383,6 @@ public class HashMapTest
         assertEquals(oldMap.containsKey("AP"),map.containsKey("AP"));
     }
 
-
-
-    @Test
-    public void testKeySet()
-    {
-        java.util.HashMap<String, Integer> oldMap=new java.util.HashMap<String, Integer>();
-        oldMap.put("OP",81);
-        oldMap.put("LN",4);
-        oldMap.put("CL",16);
-        oldMap.put("LH",44);
-        oldMap.put("GR",63);
-        oldMap.put("AKA",12);
-        oldMap.put("MV",33);
-        oldMap.put("YT",22);
-        oldMap.put("AA",23);
-        oldMap.put("CS",55);
-        oldMap.put("PG",10);
-        oldMap.put("FC",43);
-        oldMap.put("EO",31);
-        oldMap.put("OB",87);
-        oldMap.put("FA",14);
-        oldMap.put("LS",18);
-        oldMap.put("NH",27);
-        oldMap.put("GB",5);
-        oldMap.put("IH",6);
-        oldMap.put("LL",6);
-        HashMap<String,Integer> map=new HashMap<>();
-        for (String key : oldMap.keySet()){
-            map.put(key,oldMap.get(key));
-        }
-        Set<String> setOldMap=oldMap.keySet();
-        Set<String> setMap=map.keySet();
-        assertEquals(setOldMap.size(),setMap.size());
-        for (String key : setOldMap){
-            assertTrue(setMap.contains(key));
-        }
-
-    }
-
-    @Test
-    public void testKeySetEmpty()
-    {
-        HashMap<String,Integer> map=new HashMap<>();
-        Set<String> setMap=map.keySet();
-        assertTrue(setMap.isEmpty());
-
-    }
-
     @Test
     public void testValues()
     {

@@ -62,6 +62,32 @@ public class HashMap<K,V>
     }
 
     /**
+     * Returns the index of key
+     *
+     * @param key
+     * @return the index of key
+     */
+    public int getIndex(Object key){
+        return Math.abs(key.hashCode()) % capacity;
+    }
+
+    /**
+     * Double the capacity of the hashMap
+     */
+    public void resize(){
+        Set<EntryHashMap<K,V>> entries=entrySet();
+        capacity*=2;
+        buckets=new List[capacity];
+        for (int i=0;i<capacity;i++){
+            buckets[i]=new ArrayList<>();
+        }
+        sizeHashMap=0;
+        for (EntryHashMap<K,V> e : entries){
+            put(e.getKey(),e.getValue());
+        }
+    }
+
+    /**
      * Returns true if this map contains no key-value mappings.
      *
      * @return true if this map contains no key-value mappings
@@ -77,7 +103,7 @@ public class HashMap<K,V>
      * @return the value to which the specified key is mapped, or null if this map contains no mapping for the key
      */
     public V get(Object key){
-        int index=key.hashCode() % capacity;
+        int index=getIndex(key);
         for (EntryHashMap<K,V> e : buckets[index]){
             if (key.equals(e.getKey())){
                 return e.getValue();
@@ -93,7 +119,7 @@ public class HashMap<K,V>
      * @return true if this map contains a mapping for the specified key.
      */
     public boolean containsKey(Object key){
-        int index=key.hashCode() % capacity;
+        int index=getIndex(key);
         for (EntryHashMap<K,V> e : buckets[index]){
             if (key.equals(e.getKey())){
                 return true;
@@ -112,7 +138,7 @@ public class HashMap<K,V>
      * @return the previous value associated with key, or null if there was no mapping for key
      */
     public V put(K key, V value){
-        int index=key.hashCode() % capacity;
+        int index=getIndex(key);
         V old_value=null;
         for (EntryHashMap<K,V> e : buckets[index]){
             if (key.equals(e.getKey())){
@@ -123,6 +149,9 @@ public class HashMap<K,V>
         }
         buckets[index].add(new EntryHashMap<>(key,value));
         sizeHashMap++;
+        if (sizeHashMap>capacity*loadFactor){
+            resize();
+        }
         return old_value;
     }
 
@@ -133,7 +162,7 @@ public class HashMap<K,V>
      * @return the previous value associated with key, or null if there was no mapping for key.
      */
     public V remove(Object key){
-        int index=key.hashCode() % capacity;
+        int index=getIndex(key);
         for (int i=0; i<buckets[index].size();i++){
             if (key.equals(buckets[index].get(i).getKey())){
                 V value = buckets[index].get(i).getValue();
@@ -156,15 +185,15 @@ public class HashMap<K,V>
     }
 
     /**
-     * Returns a Set view of the keys contained in this map.
+     * Returns a Set view of the entries contained in this map.
      *
-     * @return a set view of the keys contained in this map
+     * @return a set view of the entries contained in this map
      */
-    public Set<K> keySet(){
-        Set<K> res=new HashSet<>();
+    public Set<EntryHashMap<K,V>> entrySet(){
+        Set<EntryHashMap<K,V>> res=new HashSet<>();
         for (int i=0;i<capacity;i++){
             for (EntryHashMap<K,V> e : buckets[i]){
-                res.add(e.getKey());
+                res.add(e);
             }
         }
         return res;
