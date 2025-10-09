@@ -1,10 +1,8 @@
 package fr.ufrst.m1info.gl.compGL;
 
-import java.io.Serializable;
+
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+
 
 /**
  * Hello world!
