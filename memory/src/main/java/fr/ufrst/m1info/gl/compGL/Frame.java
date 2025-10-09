@@ -7,7 +7,7 @@ import java.util.*;
  */
 
 public class Frame {
-    private Map<String, Object> localVariables; // Local variables on this scope // TODO : Replace w/ theo's hashmap
+    private HashMap<String, Object> localVariables; // Local variables on this scope // TODO : Replace w/ theo's hashmap
     private Frame parent; // Parent of the current frame
 
     private final String funcName; // Name of the func // TODO : Keep it ?
@@ -96,8 +96,8 @@ public class Frame {
     /**
      * @return the map of the localVariables
      */
-   public Map<String, Object> getLocalVariables() {
-       return new HashMap<>(localVariables); // TODO : Replace w/ the HashMap of Theo
+   public HashMap<String, Object> getLocalVariables() {
+       return localVariables; // TODO : Replace w/ the HashMap of Theo
    }
 
     /**
