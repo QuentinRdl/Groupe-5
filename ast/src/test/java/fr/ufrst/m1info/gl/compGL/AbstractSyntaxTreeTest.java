@@ -32,6 +32,7 @@ public class AbstractSyntaxTreeTest {
     @DisplayName("Construction - Complex")
     public void ComplexTree() throws IOException {
         AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/Complex.mjj");
-
     }
+
+
 }
