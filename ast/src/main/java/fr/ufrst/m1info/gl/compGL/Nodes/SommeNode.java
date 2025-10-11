@@ -28,6 +28,6 @@ public class SommeNode extends ASTNode{
     public void interpret(Memory m) throws Exception {
         Value v = ((EvaluableNode)expression).eval(m);
         int res = ((Value)m.val(identifier.identifier)).valueInt + v.valueInt;
-        m.affectValue(identifier.identifier, res);
+        m.affectValue(identifier.identifier, new Value(res));
     }
 }

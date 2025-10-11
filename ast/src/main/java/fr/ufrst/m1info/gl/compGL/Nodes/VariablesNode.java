@@ -28,6 +28,8 @@ public class VariablesNode extends ASTNode{
     @Override
     public void interpret(Memory m) throws Exception {
         variable.interpret(m);
-        variables.interpret(m);
+        if(variables != null) {
+            variables.interpret(m);
+        }
     }
 }

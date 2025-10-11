@@ -38,6 +38,14 @@ public class AbstractSyntaxTreeTest {
                 }
         ).when(MemoryMock).affectValue(any(String.class), any(Object.class));
 
+        doAnswer( invocation -> {
+                String ident = invocation.getArgument(0);
+                Value value = invocation.getArgument(1);
+                memoryStorage.put(ident, value);
+                return null;
+            }
+        ).when(MemoryMock).declVar(any(String.class), any(Value.class), any());
+
         doAnswer(invocation -> {
                 String identifier =  invocation.getArgument(0);
                 return memoryStorage.get(identifier);
@@ -83,6 +91,14 @@ public class AbstractSyntaxTreeTest {
         assertEquals(17, memoryStorage.get("y").valueInt);
         assertEquals(-1, memoryStorage.get("z").valueInt);
         assertEquals(true, memoryStorage.get("w").valueBool);
-        assertEquals(true, memoryStorage.get("u").valueBool);
+        assertEquals(true, memoryStorage.get("v").valueBool);
+    }
+
+    @Test
+    @DisplayName("Evaluation - Local Variables")
+    public void LocalVariables() throws Exception {
+        AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/LocalVariables.mjj");
+        AST.interpret(MemoryMock);
+        assertEquals(9, memoryStorage.get("x").valueInt);
     }
 }
