@@ -122,4 +122,17 @@ public class AbstractSyntaxTreeTest {
         assertEquals(5, memoryStorage.get("c").valueInt);
         assertEquals(6, memoryStorage.get("v").valueInt);
     }
+
+    @Test
+    @DisplayName("Evaluation - Loops")
+    public void Loops() throws Exception {
+        AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/Loops.mjj");
+        try {
+            AST.interpret(MemoryMock);
+        }
+        catch (Exception e) {
+            fail(e.getMessage());
+        }
+        assertEquals(104, memoryStorage.get("x").valueInt);
+    }
 }
