@@ -8,7 +8,7 @@ import java.util.EmptyStackException;
 // TODO : Do the associated unit tests
 // TODO : Do the integration tests w/ the Stack_Variable class
 
-public class NewStack {
+public class Stack {
     private Deque<Stack_Variable> vars;
     private int scopeDepth;
     // private int size;
@@ -28,7 +28,7 @@ public class NewStack {
     /**
      * Constructor
      */
-    public NewStack() {
+    public Stack() {
         this.vars = new ArrayDeque<>();
         this.scopeDepth = 0;
         // this.size = 0;
