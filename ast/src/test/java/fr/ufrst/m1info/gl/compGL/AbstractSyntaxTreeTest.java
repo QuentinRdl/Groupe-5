@@ -71,6 +71,18 @@ public class AbstractSyntaxTreeTest {
     public void BasicOperations() throws Exception {
         AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/BasicOperations.mjj");
         AST.interpret(MemoryMock);
-        assertEquals(7, memoryStorage.get("x").valueInt);
+        assertEquals(8, memoryStorage.get("x").valueInt);
+    }
+
+    @Test
+    @DisplayName("Evaluation - OperationPrevalence")
+    public void OperationPrevalence() throws Exception {
+        AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/OperationPrevalence.mjj");
+        AST.interpret(MemoryMock);
+        assertEquals(17, memoryStorage.get("x").valueInt);
+        assertEquals(17, memoryStorage.get("y").valueInt);
+        assertEquals(-1, memoryStorage.get("z").valueInt);
+        assertEquals(true, memoryStorage.get("w").valueBool);
+        assertEquals(true, memoryStorage.get("u").valueBool);
     }
 }
