@@ -1,6 +1,7 @@
 grammar MiniJaJa;
 
 @header{
+package fr.ufrst.m1info.gl.compGL;
 import fr.ufrst.m1info.gl.compGL.Nodes.*;
 import fr.ufrst.m1info.gl.compGL.ValueType;
 }
