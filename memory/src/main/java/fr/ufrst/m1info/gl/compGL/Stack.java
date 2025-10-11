@@ -4,136 +4,181 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.EmptyStackException;
 
-/**
- * Manages the stack for the interpreter
- * -> Handles pushing and popping frames and variables management
- */
 public class Stack {
-    private Deque<Frame> frames;
+    private Deque<Stack_Variable> vars;
+    private int scopeDepth;
+    // private int size;
+
+    /**
+     * Exception thrown when attempting to pop a scope from the stack when no scopes exist.
+     */
+    public static class NoScopeException extends Exception {
+        public NoScopeException(String msg) {
+            super(msg);
+        }
+    }
+
+    /**
+     * Exception thrown when attempting to pop or access an element from the stack when it is empty.
+     */
+    public static class StackIsEmptyException extends Exception {
+        public StackIsEmptyException(String msg) {
+            super(msg);
+        }
+    }
 
     /**
      * Constructor
      */
     public Stack() {
-        this.frames = new ArrayDeque<>();
+        this.vars = new ArrayDeque<>();
+        this.scopeDepth = 0;
+        // this.size = 0;
     }
 
     /**
-     * Pushes a new frame into the stack
-     * @param frame new frame
+     * Adds a new scope
      */
-    public void push(Frame frame) {
-        frames.push(frame);
+    public void pushScope() {
+        scopeDepth++;
     }
 
     /**
-     * Creates & push a new frame into the stack
-     * @param funcName name of the func
-     * @param callLine line where the func was called
+     * Pops the current scope
+     * @throws NoScopeException if no scope are present
      */
-    public void pushFrame(String funcName, int callLine) {
-        Frame parent = frames.isEmpty() ? null : frames.peek(); // Sets the parent of the new Frame
-        Frame newFrame = new Frame(funcName, callLine, parent);
-        frames.push(newFrame);
+    public void popScope() throws NoScopeException {
+        if(scopeDepth == 0) throw new NoScopeException("There are currently 0 scopes, cannot pop");
+
+        // If we are here then no exception has been thrown, then we can remove all vars from current scope
+        while(!vars.isEmpty() && vars.peek().getScope() == scopeDepth) {
+            vars.pop();
+        }
+
+        scopeDepth--;
     }
 
     /**
-     * Return the top Frame while removing it from the stack
-     * @return Frame the popped frame
-     * @throws EmptyStackException if stack empty
-     */
-    public Frame pop() {
-        if(frames.isEmpty()) throw new EmptyStackException(); // If the stack is empty throw exception
-        return frames.pop();
-    }
-
-    /**
-     * Returns the top Frame WITHOUT removing it from the stack
-     * @return Frame the top frame
-     * @throws EmptyStackException if stack empty
-     */
-    public Frame top() {
-        if(frames.isEmpty()) throw new EmptyStackException(); // If the stack is empty throw exception
-        return frames.peek();
-    }
-
-    // TODO : Should we do a func like getFrameAt that returns the frame at a specific depth of the deque ?
-
-    // TODO : The swap should be like that or head and bottom ?
-    /**
-     * Swaps the top 2 frames of the stack
-     * @throws IllegalStateException if there are not a least 2 frames
-     */
-    public void swap() {
-        if(frames.size() < 2) throw new IllegalStateException("At least 2 frames are needed for swapping a stack !");
-        Frame top = frames.pop();
-        Frame second = frames.pop();
-        frames.push(top);
-        frames.push(second);
-    }
-
-    /**
-     * Sets a variable in the current frame (the one on top)
+     * Pushes a new var in the stack, w/ the current scope as suffix
      * @param name name of the var
      * @param value value of the var
      */
-    public void setVariable(String name, Object value) {
-        top().setVar(name, value);
+    public void setVar(String name, Object value) {
+        vars.push(new Stack_Variable(name, value, scopeDepth));
     }
 
     /**
-     * Returns the var
-     * @param name Name of the var
-     * @return Object the variable
+     * Returns the top variable from the stack
+     * @return Variable the top variable
+     * @throws EmptyStackException if stack empty
      */
-    public Object getVariable(String name) {
-       return top().getVar(name);
+    public Stack_Variable top() {
+        if (vars.isEmpty()) throw new EmptyStackException();
+        return vars.peek();
     }
 
+
     /**
-     * Updates the given variable
-     * @param name var name
-     * @param value var value
-     * @return true if defined and changed, false otherwise
+     * Removes and return the top var from the stack
+     * @return Stack_Variable the var on top of the stack
+     * @throws StackIsEmptyException if the stack is empty
      */
-    public boolean updateVariable(String name, Object value) {
-        return top().updateVar(name, value);
+    public Stack_Variable pop() throws StackIsEmptyException {
+        if(vars.isEmpty()) throw new StackIsEmptyException("The stack is empty, cannot pop");
+        return vars.pop();
+    }
+
+
+    /* TODO : Question -> Do we need the following func ?
+    *   Or should we use a generic func to get the top var ?
+    */
+    /**
+     * @param name the name of the var we are looking for
+     * @return Object, the var value if found, null otherwise
+     */
+     public Object getVar(String name) {
+         for(Stack_Variable var : vars) {
+             if(var.getName().equals(name) && var.getScope() == scopeDepth) {
+                 /* TODO : Do we return the var object of the value ? */
+                 /* return var; */
+                 return var.getValue();
+             }
+         }
+         return null;
+     }
+
+    /* TODO : Question -> Do we need the following func ?
+     *   Or should we use a generic func to update the top var ?
+     */
+
+    /**
+     * Updates the top var that matches the given name (in current scope)
+     * @param name name of the var
+     * @param value new value for the var
+     * @return true if var updated, false otherwise
+     */
+    public boolean updateVar(String name, Object value) {
+        for(Stack_Variable var : vars) {
+            if(var.getName().equals(name) && var.getScope() == scopeDepth) {
+                var.setValue(value);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Updates the top var of the stack w/ the given value
+     * @param value new value for the var on top of the stack
+     * @return true if var updated, false otherwise
+     */
+    public boolean updateTopVar(Object value) {
+        if (vars.isEmpty()) {
+            return false;
+        }
+        Stack_Variable topVar = vars.peek();
+        topVar.setValue(value);
+        return true;
     }
 
     /**
-     * Returns the current stack size
-     * @return int Size of the stack
+     * Checks if a var exists in the current scope
+     * @param name name of the var
+     * @return true if the var exists, false otherwise
+     */
+    public boolean hasVar(String name) {
+        for(Stack_Variable var : vars) {
+            if(var.getName().equals(name) && var.getScope() == scopeDepth) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns the number of vars on the stack
+     * @return int nb of vars
      */
     public int size() {
-        return frames.size();
+        return vars.size();
     }
 
     /**
-     * Checks if the stack is empty
-     * @return true is stack empty, false otherwise
+     * Check if the vars stack is empty
+     * @return true if no vars, false otherwise
      */
     public boolean isEmpty() {
-        return frames.isEmpty();
+        return vars.isEmpty();
     }
 
     /**
-     * Clears all the frames from the stack
+     * Clears all vars and reset the scope
      */
     public void clear() {
-        frames.clear();
+        vars.clear();
+        scopeDepth = 0;
     }
 
-    /**
-     * Prints the current state of the stack
-     * @return String the current state of the Stack
-     */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("Stack Trace:\n");
-        int depth = 0;
-        for (Frame frame : frames) {
-            sb.append("  ").append(depth++).append(": ").append(frame).append("\n");
-        }
-        return sb.toString();
-    }
+    // TODO : Do a toString method
 }

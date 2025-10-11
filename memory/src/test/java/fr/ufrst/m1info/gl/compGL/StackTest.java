@@ -1,235 +1,283 @@
 package fr.ufrst.m1info.gl.compGL;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-import java.util.EmptyStackException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.Mock;
 
 /**
  * Unit test for the Stack class
  */
-
 public class StackTest {
     private Stack stack;
+
+    @Mock
+    private Stack_Variable mockVariable;
 
     /**
      * Before each test, we set up an empty stack
      */
-    @BeforeEach
+    @Before
     public void setUp() {
         stack = new Stack();
     }
 
-    /**
-     * Checks that the push and top method work as intended
-     */
     @Test
-    public void pushAndTop() {
-       stack.pushFrame("main", 1) ;
-       Frame top = stack.top();
-
-       assertEquals("main", top.getFuncName());
-       assertEquals(1, top.getCallLine());
-       assertEquals(1, stack.size());
-    }
-
-
-    /**
-     * Checks that the push and pop method work as intended
-     */
-    @Test
-    public void pushAndPop() {
-        stack.pushFrame("main",1);
-        stack.pushFrame("func",2);
-
-        assertEquals(2, stack.size());
-
-        Frame popped = stack.pop();
-        assertEquals("func", popped.getFuncName());
-        assertEquals(1, stack.size());
-
-        popped = stack.pop();
-        assertEquals("main", popped.getFuncName());
+    public void testConstructor() {
+        assertTrue(stack.isEmpty());
         assertEquals(0, stack.size());
     }
 
-    /**
-     * Checks that calling the pop method on an empty stacks throws the right exception
-     */
     @Test
-    public void popEmptyStackException() {
-        assertThrows(EmptyStackException.class, () -> stack.pop());
+    public void pushScope() {
+        stack.pushScope();
+        assertTrue(stack.isEmpty());
+        // Even though we pushed a scope, as there are nothing in the scope it should still be empty
     }
 
-    /**
-     * Checks that calling the top method on an empty stacks throws the right exception
-     */
     @Test
-    public void topEmptyStackException() {
-        assertThrows(EmptyStackException.class, () -> stack.top());
+    public void popScope() throws Stack.NoScopeException {
+        stack.pushScope();
+        stack.popScope();
+        assertTrue(stack.isEmpty());
     }
 
-    /**
-     * Checks that the set and get Variable methods are working as intended
-     */
-    @Test
-    public void setAndGetVariable() {
-       stack.pushFrame("main", 1) ;
-       stack.setVariable("x", 1234);
-
-       assertEquals(1234, stack.getVariable("x"));
+    @Test(expected = Stack.NoScopeException.class)
+    public void testPopScopeWhenNoScopes() throws Stack.NoScopeException {
+        stack.popScope();
     }
 
-    /**
-     * Checks that we can access variables across frames, that we are not limited to one on top of the stack
-     * TODO : Should this be working ? Or like only for parent frame ?
-     */
     @Test
-    public void variableAccessAcrossFrames() {
-        stack.pushFrame("main", 0);
-        stack.setVariable("x", 1234);
-
-        stack.pushFrame("function", 5);
-        stack.setVariable("y", 4321);
-
-        assertEquals(1234, stack.getVariable("x"));
-        assertEquals(4321, stack.getVariable("y"));
+    public void setVar() {
+        stack.pushScope();
+        assertEquals(0, stack.size());
+        stack.setVar("x", 1234);
+        assertEquals(1, stack.size());
+        assertEquals(1234, stack.getVar("x"));
     }
 
-    /**
-     * Checks that the updateVar method works as intended
-     */
+    @Test
+    public void setVarMultipleVariables() {
+        stack.pushScope();
+        stack.setVar("x", 1234);
+        stack.setVar("y", 2345);
+        stack.setVar("z", 3456);
+        assertEquals(3, stack.size());
+    }
+
+    @Test
+    public void testTop() {
+        stack.pushScope();
+        stack.setVar("a", 100);
+        Stack_Variable top = stack.top();
+        assertEquals("a", top.getName());
+        assertEquals(100, top.getValue());
+    }
+
+    @Test(expected = java.util.EmptyStackException.class)
+    public void testTopWhenEmpty() {
+        stack.top();
+    }
+
+    @Test
+    public void testPop() throws Stack.StackIsEmptyException {
+        stack.pushScope();
+        stack.setVar("x", 50);
+        Stack_Variable popped = stack.pop();
+        assertEquals("x", popped.getName());
+        assertEquals(50, popped.getValue());
+        assertTrue(stack.isEmpty());
+    }
+
+    @Test(expected = Stack.StackIsEmptyException.class)
+    public void popWhenEmpty() throws Stack.StackIsEmptyException {
+        stack.pop();
+    }
+
+    @Test
+    public void getVar() {
+        stack.pushScope();
+        stack.setVar("x", 1234);
+        Object value = stack.getVar("x");
+        assertEquals(1234, value);
+    }
+
+    @Test
+    public void getVarNotFound() {
+        stack.pushScope();
+        stack.setVar("x", 1234);
+        Object value = stack.getVar("y");
+        assertNull(value);
+    }
+
+    @Test
+    public void getVarDifferentScopes() {
+        stack.pushScope();
+        stack.setVar("x", 1);
+
+        stack.pushScope();
+        stack.setVar("x", 2);
+        // Should only get the x from current scope (2)
+        assertEquals(2, stack.getVar("x"));
+
+        try {
+            stack.popScope();
+        } catch (Stack.NoScopeException e) {
+            fail("Should not throw exception");
+        }
+        // Now should get the x from previous scope (1)
+        assertEquals(1, stack.getVar("x"));
+    }
+
     @Test
     public void updateVar() {
-        stack.pushFrame("main", 0);
-        stack.setVariable("x", 1234);
-        assertEquals(1234, stack.getVariable("x"));
-
-        stack.pushFrame("func", 5);
-        assertTrue(stack.updateVariable("x", 4321));
-
-        assertEquals(4321, stack.getVariable("x"));
+        stack.pushScope();
+        stack.setVar("x", 1234);
+        boolean upd = stack.updateVar("x", 100);
+        assertTrue(upd);
+        assertEquals(100, stack.getVar("x"));
     }
 
-    /**
-     * When updating a var that does not exist, false should be returned
-     */
     @Test
     public void updateVarNotFound() {
-        stack.pushFrame("main", 1);
-        stack.setVariable("x", 1234);
-        assertTrue(stack.updateVariable("x", 4321));
-        assertFalse(stack.updateVariable("nope", 42));
+        stack.pushScope();
+        stack.setVar("x", 1234);
+        boolean updated = stack.updateVar("y", 100);
+        assertFalse(updated);
     }
 
-    /**
-     * Swapping the first and the second // TODO : Change the test to head and end of queue ?
-     */
     @Test
-    public void testSwap() {
-        stack.pushFrame("firstFrame", 1);
-        stack.pushFrame("secondFrame", 2);
-
-        assertEquals("secondFrame", stack.top().getFuncName());
-
-        stack.swap();
-
-        assertEquals("firstFrame", stack.top().getFuncName());
+    public void updateTopVar() {
+        stack.pushScope();
+        stack.setVar("x", 1234);
+        boolean updated = stack.updateTopVar(99);
+        assertTrue(updated);
+        assertEquals(99, stack.top().getValue());
     }
 
-
-    /**
-     * Checks that calling the swap method with 0 frame throws the right exception
-     */
     @Test
-    public void swapWith0Frame() {
-        assertThrows(IllegalStateException.class, () -> stack.swap());
+    public void updateTopVarWhenEmpty() {
+        boolean updated = stack.updateTopVar(50);
+        assertFalse(updated);
     }
 
-    /**
-     * Checks that calling the swap method with 0 frame throws the right exception
-     */
     @Test
-    public void swapWith1Frame() {
-        stack.pushFrame("main", 1);
-        assertThrows(IllegalStateException.class, () -> stack.swap());
+    public void hasVar() {
+        stack.pushScope();
+        stack.setVar("x", 1234);
+        assertTrue(stack.hasVar("x"));
+        assertFalse(stack.hasVar("y"));
     }
 
-    /**
-     * Checks that calling the swap method with >= 2 frame works as intended
-     */
     @Test
-    public void swapWith2Frame() {
-        stack.pushFrame("main", 1);
-        stack.pushFrame("second", 2);
-        stack.swap(); // TODO : Is there a way to test that nothing is thrown ?
-        // TODO : Actually check that they were swapped
+    public void hasVarDifferentScopes() {
+        stack.pushScope();
+        stack.setVar("x", 1234);
+
+        stack.pushScope();
+        // x exists in previous scope but not in current
+        assertFalse(stack.hasVar("x"));
     }
 
-    /**
-     * Checks that calling the swap method with >= 2 frame works as intended
-     */
-    /*
-    @Test
-    public void swapWithMoreThan2Frame()
-    TODO : Implement
-     */
-
-
-    /**
-     * Checks that the isEmpty method works as intended
-     */
-    @Test
-    public void isEmpty() {
-        assertTrue(stack.isEmpty());
-
-        stack.pushFrame("1st", 1);
-        assertFalse(stack.isEmpty());
-
-        stack.pop();
-        assertTrue(stack.isEmpty());
-    }
-
-    /**
-     * Checks that the size method works as intended
-     */
     @Test
     public void testSize() {
         assertEquals(0, stack.size());
-
-        stack.pushFrame("1st", 1);
+        stack.pushScope();
+        stack.setVar("x", 10);
         assertEquals(1, stack.size());
-
-        stack.pushFrame("2nd", 2);
+        stack.setVar("y", 20);
         assertEquals(2, stack.size());
-
-        stack.pop();
-        assertEquals(1, stack.size());
     }
 
+    @Test
+    public void isEmpty() {
+        assertTrue(stack.isEmpty());
+        stack.pushScope();
+        stack.setVar("x", 11234);
+        assertFalse(stack.isEmpty());
+    }
 
-    /**
-     * Checks that the clear method works as intended
-     */
     @Test
     public void testClear() {
-        assertTrue(stack.isEmpty());
-        stack.pushFrame("1st", 1);
-
-        assertFalse(stack.isEmpty());
-        stack.pushFrame("2nd", 2);
-
-        assertFalse(stack.isEmpty());
-        stack.pushFrame("3rd", 3);
-
-        assertFalse(stack.isEmpty());
-        assertEquals(3, stack.size());
+        stack.pushScope();
+        stack.setVar("x", 10);
+        stack.setVar("y", 20);
+        assertEquals(2, stack.size());
 
         stack.clear();
-
-        assertEquals(0, stack.size());
         assertTrue(stack.isEmpty());
+        assertEquals(0, stack.size());
+    }
+
+    @Test
+    public void actualScenario() throws Stack.StackIsEmptyException, Stack.NoScopeException {
+        // Global scope
+        stack.pushScope();
+        stack.setVar("x", 5);
+        stack.setVar("y", 10);
+
+        // Enter function scope
+        stack.pushScope();
+        stack.setVar("x", 50);
+        stack.setVar("z", 100);
+
+        assertEquals(50, stack.getVar("x"));
+        assertEquals(100, stack.getVar("z"));
+        assertNull(stack.getVar("y"));
+        assertEquals(4, stack.size());
+
+        // Update x in current scope
+        stack.updateVar("x", 55);
+        assertEquals(55, stack.getVar("x"));
+
+        // Exit function scope
+        stack.popScope();
+        assertEquals(5, stack.getVar("x"));
+        assertEquals(10, stack.getVar("y"));
+        assertNull(stack.getVar("z"));
+        assertEquals(2, stack.size());
+    }
+
+    @Test
+    public void multipleScopesWithSameVarName() throws Stack.NoScopeException {
+        stack.pushScope();
+        stack.setVar("count", 0);
+        assertEquals(0, stack.getVar("count"));
+
+        stack.pushScope();
+        stack.setVar("count", 1);
+        assertEquals(1, stack.getVar("count"));
+
+        stack.pushScope();
+        stack.setVar("count", 2);
+        assertEquals(2, stack.getVar("count"));
+
+        stack.popScope();
+        assertEquals(1, stack.getVar("count"));
+
+        stack.popScope();
+        assertEquals(0, stack.getVar("count"));
+
+        stack.popScope();
+        assertTrue(stack.isEmpty());
+    }
+
+    @Test
+    public void popRemovesOnlyCurrentScopeVars() throws Stack.NoScopeException {
+        stack.pushScope();
+        stack.setVar("global", "value");
+
+        stack.pushScope();
+        stack.setVar("local1", "val1");
+        stack.setVar("local2", "val2");
+
+        assertEquals(3, stack.size());
+
+        stack.popScope();
+
+        // Only the global variable should remain
+        assertEquals(1, stack.size());
+        assertEquals("value", stack.getVar("global"));
     }
 }
