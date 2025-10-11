@@ -2,11 +2,12 @@ package fr.ufrst.m1info.gl.compGL.Nodes;
 
 
 import fr.ufrst.m1info.gl.compGL.Memory.Memory;
+import fr.ufrst.m1info.gl.compGL.WithradawableNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VariablesNode extends ASTNode{
+public class VariablesNode extends ASTNode {
     ASTNode variable;
     ASTNode variables;
 

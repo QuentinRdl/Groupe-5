@@ -95,10 +95,31 @@ public class AbstractSyntaxTreeTest {
     }
 
     @Test
-    @DisplayName("Evaluation - Local Variables")
+    @DisplayName("Evaluation - Local Variables") // Ne passe pas car le noeud "vars" n'implémente pas encore withdrawableNode
     public void LocalVariables() throws Exception {
         AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/LocalVariables.mjj");
-        AST.interpret(MemoryMock);
+        try {
+            AST.interpret(MemoryMock);
+        }
+        catch (Exception e) {
+            fail(e.getMessage());
+        }
         assertEquals(9, memoryStorage.get("x").valueInt);
+    }
+
+    @Test
+    @DisplayName("Evaluation - Conditionnals")
+    public void Conditionnals() throws Exception {
+        AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/Conditionals.mjj");
+        try {
+            AST.interpret(MemoryMock);
+        }
+        catch (Exception e) {
+            fail(e.getMessage());
+        }
+        assertEquals(5, memoryStorage.get("a").valueInt);
+        assertEquals(6, memoryStorage.get("b").valueInt);
+        assertEquals(5, memoryStorage.get("c").valueInt);
+        assertEquals(6, memoryStorage.get("v").valueInt);
     }
 }

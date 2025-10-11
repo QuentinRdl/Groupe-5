@@ -38,7 +38,7 @@ public class ClassNode extends ASTNode {
         if(decls!=null)
             decls.interpret(m);
         main.interpret(m);
-        if(decls != null && decls instanceof WithradawableNode){
+        if(decls != null){
             ((WithradawableNode) decls).WithradawInterpret(m);
         }
     }
