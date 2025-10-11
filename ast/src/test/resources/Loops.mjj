@@ -2,7 +2,7 @@ class C {
     int x = 0;
     main {
         while(100 > x){
-            x=8;
+            x+=8;
         };
     }
 }
