@@ -4,7 +4,6 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.EmptyStackException;
 
-// TODO : Write the JavaDoc
 // TODO : Do the associated unit tests
 // TODO : Do the integration tests w/ the Stack_Variable class
 
@@ -13,12 +12,18 @@ public class Stack {
     private int scopeDepth;
     // private int size;
 
+    /**
+     * Exception thrown when attempting to pop a scope from the stack when no scopes exist.
+     */
     public static class NoScopeException extends Exception {
         public NoScopeException(String msg) {
             super(msg);
         }
     }
 
+    /**
+     * Exception thrown when attempting to pop or access an element from the stack when it is empty.
+     */
     public static class StackIsEmptyException extends Exception {
         public StackIsEmptyException(String msg) {
             super(msg);
@@ -34,10 +39,17 @@ public class Stack {
         // this.size = 0;
     }
 
+    /**
+     * Adds a new scope
+     */
     public void pushScope() {
         scopeDepth++;
     }
 
+    /**
+     * Pops the current scope
+     * @throws NoScopeException
+     */
     public void popScope() throws NoScopeException {
         if(scopeDepth == 0) throw new NoScopeException("There are currently 0 scopes, cannot pop");
 
@@ -104,6 +116,9 @@ public class Stack {
 
     /**
      * Updates the top var that matches the given name (in current scope)
+     * @param name name of the var
+     * @param value new value for the var
+     * @return true if var updated, false otherwise
      */
     public boolean updateVar(String name, Object value) {
         for(Stack_Variable var : vars) {
@@ -115,10 +130,25 @@ public class Stack {
         return false;
     }
 
-    // TODO : Do a func to update the topVar
+
+    /**
+     * Updates the top var of the stack w/ the given value
+     * @param value new value for the var on top of the stack
+     * @return true if var updated, false otherwise
+     */
+    public boolean updateTopVar(Object value) {
+        if (vars.isEmpty()) {
+            return false;
+        }
+        Stack_Variable topVar = vars.peek();
+        topVar.setValue(value);
+        return true;
+    }
 
     /**
      * Checks if a var exists in the current scope
+     * @param name name of the var
+     * @return true if the var exists, false otherwise
      */
     public boolean hasVar(String name) {
         for(Stack_Variable var : vars) {
