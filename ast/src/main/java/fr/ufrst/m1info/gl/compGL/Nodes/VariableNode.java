@@ -36,7 +36,7 @@ public class VariableNode extends ASTNode implements WithradawableNode {
 
     @Override
     public void WithradawInterpret(Memory m) {
-
+        m.withdrawDecl(ident.identifier);
     }
 
     @Override
