@@ -1,6 +1,8 @@
 package fr.ufrst.m1info.gl.compGL;
 
 import fr.ufrst.m1info.gl.compGL.Memory.Memory;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,14 +14,36 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 public class AbstractSyntaxTreeTest {
+    Map<String, Value> memoryStorage;
+    Memory MemoryMock;
+
+    @BeforeEach
+    public void setup(){
+        memoryStorage = new HashMap<>();
+        MemoryMock = mock();
+        doAnswer(invocation -> {
+                    String arg =  invocation.getArgument(0);
+                    Value value = invocation.getArgument(1);
+                    memoryStorage.put(arg, value);
+                    return null;
+                }
+        ).when(MemoryMock).affectValue(any(String.class), any(Object.class));
+
+        doAnswer(invocation -> {
+                String identifier =  invocation.getArgument(0);
+                return memoryStorage.get(identifier);
+            }
+        ).when(MemoryMock).val(any(String.class));
+    }
 
     @Test
     @DisplayName("Construction - Simple")
@@ -46,18 +70,7 @@ public class AbstractSyntaxTreeTest {
     @DisplayName("Evaluation - BasicOperations")
     public void BasicOperations() throws Exception {
         AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/BasicOperations.mjj");
-        Memory mock = mock();
-        List<Integer> values =  new ArrayList<>();
-        doAnswer(invocation -> {
-                Value value = invocation.getArgument(1);
-                values.add(value.valueInt);
-                return null;
-            }
-        ).when(mock).affectValue(any(String.class), any(Object.class));
-
-        AST.interpret(mock);
-
-        assertEquals(1, values.size());
-        assertEquals(7, values.get(0));
+        AST.interpret(MemoryMock);
+        assertEquals(7, memoryStorage.get("x").valueInt);
     }
 }
