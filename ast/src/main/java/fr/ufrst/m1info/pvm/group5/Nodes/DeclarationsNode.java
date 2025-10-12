@@ -9,7 +9,7 @@ import fr.ufrst.m1info.pvm.group5.WithradawableNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeclarationsNode extends ASTNode{
+public class DeclarationsNode extends ASTNode implements WithradawableNode{
     ASTNode declaration;
     ASTNode declarations;
 
@@ -39,5 +39,19 @@ public class DeclarationsNode extends ASTNode{
         declaration.interpret(m);
         if(declarations != null)
             declarations.interpret(m);
+    }
+
+    @Override
+    public void WithradawInterpret(Memory m) {
+        ((WithradawableNode)declarations).WithradawInterpret(m);
+        ((WithradawableNode)declaration).WithradawInterpret(m);
+    }
+
+    @Override
+    public List<String> WithdrawCompile(int address) {
+        List<String> jajacodes = new ArrayList<String>();
+        jajacodes.addAll(((WithradawableNode)declarations).WithdrawCompile(address));
+        jajacodes.addAll(((WithradawableNode)declaration).WithdrawCompile(address + jajacodes.size()));
+        return jajacodes;
     }
 }
