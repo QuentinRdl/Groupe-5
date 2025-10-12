@@ -1,10 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
-import fr.ufrst.m1info.pvm.group5.ASTBuildException;
-import fr.ufrst.m1info.pvm.group5.EvaluableNode;
+import fr.ufrst.m1info.pvm.group5.*;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
-import fr.ufrst.m1info.pvm.group5.Value;
-import fr.ufrst.m1info.pvm.group5.WithradawableNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +37,7 @@ public class WhileNode extends ASTNode{
     }
 
     @Override
-    public void interpret(Memory m) throws Exception {
+    public void interpret(Memory m) throws ASTInvalidMemoryException, ASTInvalidOperationException {
         Value e = ((EvaluableNode)condition).eval(m);
         if(e.valueBool){ // Rule [tantquevrai]
             if(iss != null)

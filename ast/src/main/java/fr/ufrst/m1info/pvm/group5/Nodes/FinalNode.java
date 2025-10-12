@@ -35,7 +35,7 @@ public class FinalNode extends ASTNode implements WithradawableNode {
 
     //TODO : do this when we have access to the memory
     @Override
-    public void interpret(Memory m) throws Exception {
+    public void interpret(Memory m) {
 
     }
 

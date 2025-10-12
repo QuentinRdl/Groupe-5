@@ -1,10 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
-import fr.ufrst.m1info.pvm.group5.ASTBuildException;
-import fr.ufrst.m1info.pvm.group5.ASTInvalidOperationException;
-import fr.ufrst.m1info.pvm.group5.EvaluableNode;
+import fr.ufrst.m1info.pvm.group5.*;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
-import fr.ufrst.m1info.pvm.group5.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +29,12 @@ public class UnMinusNode extends ASTNode implements EvaluableNode {
     }
 
     @Override
-    public void interpret(Memory m) throws Exception {
+    public void interpret(Memory m) throws ASTInvalidOperationException {
         throw new ASTInvalidOperationException("Cannot interpret unary minus operator");
     }
 
     @Override
-    public Value eval(Memory m) throws Exception {
+    public Value eval(Memory m) throws ASTInvalidOperationException, ASTInvalidMemoryException {
         Value v = ((EvaluableNode)exp).eval(m);
         return new Value(-v.valueInt);
     }

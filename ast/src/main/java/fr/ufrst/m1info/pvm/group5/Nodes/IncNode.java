@@ -23,7 +23,7 @@ public class IncNode extends ASTNode{
     }
 
     @Override
-    public void interpret(Memory m) throws Exception {
+    public void interpret(Memory m) throws ASTInvalidMemoryException {
         Value v = (Value)m.val(ident.identifier);
         if(v == null){
             throw new ASTInvalidMemoryException("Variable " + ident + " is undefined");

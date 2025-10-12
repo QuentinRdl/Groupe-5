@@ -25,12 +25,12 @@ public class IdentNode extends ASTNode implements EvaluableNode {
     }
 
     @Override
-    public void interpret(Memory m) throws Exception{
-        throw new Exception("Can not interpret ident node");
+    public void interpret(Memory m) throws ASTInvalidOperationException{
+        throw new ASTInvalidOperationException("Ident node cannot be interpreted");
     }
 
     @Override
-    public Value eval(Memory m) {
+    public Value eval(Memory m) throws ASTInvalidMemoryException{
         Value v = (Value) m.val(identifier);
         if(v == null){
             throw new ASTInvalidMemoryException("Variable " + identifier + " is undefined");

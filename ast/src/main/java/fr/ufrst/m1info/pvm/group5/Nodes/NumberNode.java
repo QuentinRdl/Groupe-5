@@ -23,12 +23,12 @@ public class NumberNode extends ASTNode implements EvaluableNode {
     }
 
     @Override
-    public void interpret(Memory m) throws Exception {
+    public void interpret(Memory m) throws ASTInvalidOperationException{
         throw new ASTInvalidOperationException("Cannot interpret number");
     }
 
     @Override
-    public Value eval(Memory m) throws Exception {
+    public Value eval(Memory m) {
         return new Value(this.number);
     }
 }

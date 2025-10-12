@@ -57,6 +57,66 @@ public class MiniJaJaBaseListener implements MiniJaJaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDecl(MiniJaJaParser.DeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDecl(MiniJaJaParser.DeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVars(MiniJaJaParser.VarsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVars(MiniJaJaParser.VarsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVar(MiniJaJaParser.VarContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVar(MiniJaJaParser.VarContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVexp(MiniJaJaParser.VexpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVexp(MiniJaJaParser.VexpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethode(MiniJaJaParser.MethodeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethode(MiniJaJaParser.MethodeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterMethmain(MiniJaJaParser.MethmainContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -64,6 +124,30 @@ public class MiniJaJaBaseListener implements MiniJaJaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMethmain(MiniJaJaParser.MethmainContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEntetes(MiniJaJaParser.EntetesContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEntetes(MiniJaJaParser.EntetesContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEntete(MiniJaJaParser.EnteteContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEntete(MiniJaJaParser.EnteteContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -88,6 +172,18 @@ public class MiniJaJaBaseListener implements MiniJaJaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitInstr(MiniJaJaParser.InstrContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterListexp(MiniJaJaParser.ListexpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitListexp(MiniJaJaParser.ListexpContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -165,42 +261,6 @@ public class MiniJaJaBaseListener implements MiniJaJaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDecl(MiniJaJaParser.DeclContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDecl(MiniJaJaParser.DeclContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterVars(MiniJaJaParser.VarsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitVars(MiniJaJaParser.VarsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterVar(MiniJaJaParser.VarContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitVar(MiniJaJaParser.VarContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterTypemeth(MiniJaJaParser.TypemethContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -220,18 +280,6 @@ public class MiniJaJaBaseListener implements MiniJaJaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitType(MiniJaJaParser.TypeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterVexp(MiniJaJaParser.VexpContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitVexp(MiniJaJaParser.VexpContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

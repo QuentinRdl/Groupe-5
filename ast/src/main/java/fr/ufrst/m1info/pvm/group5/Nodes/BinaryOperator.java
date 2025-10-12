@@ -29,11 +29,11 @@ public abstract class BinaryOperator extends ASTNode implements EvaluableNode {
         }
     }
 
-    public void interpret(Memory m) throws Exception{
+    public void interpret(Memory m) {
         throw new ASTInvalidOperationException("Cannot interpret BinaryOperator");
     }
 
-    public Value eval(Memory m) throws Exception{
+    public Value eval(Memory m) throws ASTInvalidMemoryException, ASTInvalidOperationException {
         Value l = ((EvaluableNode)left).eval(m);
         Value r = ((EvaluableNode)right).eval(m);
         return mainOperation(l,r);
@@ -60,5 +60,5 @@ public abstract class BinaryOperator extends ASTNode implements EvaluableNode {
      * @return Result of the operations performed on the 2 operands
      * @throws Exception
      */
-    protected abstract Value mainOperation(Value leftOperand, Value rightOperand) throws Exception ;
+    protected abstract Value mainOperation(Value leftOperand, Value rightOperand) throws ASTInvalidMemoryException, ASTInvalidOperationException ;
 }

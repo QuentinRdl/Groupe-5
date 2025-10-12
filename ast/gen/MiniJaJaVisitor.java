@@ -33,11 +33,53 @@ public interface MiniJaJaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDecls(MiniJaJaParser.DeclsContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniJaJaParser#decl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDecl(MiniJaJaParser.DeclContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJaJaParser#vars}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVars(MiniJaJaParser.VarsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJaJaParser#var}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVar(MiniJaJaParser.VarContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJaJaParser#vexp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVexp(MiniJaJaParser.VexpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJaJaParser#methode}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethode(MiniJaJaParser.MethodeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniJaJaParser#methmain}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitMethmain(MiniJaJaParser.MethmainContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJaJaParser#entetes}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEntetes(MiniJaJaParser.EntetesContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJaJaParser#entete}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEntete(MiniJaJaParser.EnteteContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJaJaParser#instrs}.
 	 * @param ctx the parse tree
@@ -50,6 +92,12 @@ public interface MiniJaJaVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitInstr(MiniJaJaParser.InstrContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJaJaParser#listexp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitListexp(MiniJaJaParser.ListexpContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJaJaParser#exp}.
 	 * @param ctx the parse tree
@@ -87,24 +135,6 @@ public interface MiniJaJaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIdent1(MiniJaJaParser.Ident1Context ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniJaJaParser#decl}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDecl(MiniJaJaParser.DeclContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniJaJaParser#vars}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVars(MiniJaJaParser.VarsContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniJaJaParser#var}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVar(MiniJaJaParser.VarContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link MiniJaJaParser#typemeth}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -116,10 +146,4 @@ public interface MiniJaJaVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitType(MiniJaJaParser.TypeContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniJaJaParser#vexp}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVexp(MiniJaJaParser.VexpContext ctx);
 }

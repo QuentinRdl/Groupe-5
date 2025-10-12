@@ -84,7 +84,7 @@ instr returns [ASTNode node]
     | 'return' exp {$node = new ReturnNode($exp.node);}
     | ident1 {$node = $ident1.node;}
     ( '=' exp {$node = new AffectationNode((IdentNode)$node, $exp.node);}
-    | '+=' exp {$node = new SommeNode((IdentNode)$node, $exp.node);}
+    | '+=' exp {$node = new SumNode((IdentNode)$node, $exp.node);}
     | '++' {$node = new IncNode((IdentNode)$node);}
     )
     | 'if' '(' exp ')' '{'

@@ -1,5 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ASTInvalidMemoryException;
+import fr.ufrst.m1info.pvm.group5.ASTInvalidOperationException;
 import fr.ufrst.m1info.pvm.group5.EvaluableNode;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
 import fr.ufrst.m1info.pvm.group5.Value;
@@ -22,7 +24,7 @@ public class ReturnNode extends ASTNode{
     }
 
     @Override
-    public void interpret(Memory m) throws Exception {
+    public void interpret(Memory m) throws ASTInvalidOperationException, ASTInvalidMemoryException {
         Value v = ((EvaluableNode)expr).eval(m);
         m.affectValue(m.identVarClass(), v);
     }

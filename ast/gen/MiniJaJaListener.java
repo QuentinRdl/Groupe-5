@@ -42,6 +42,56 @@ public interface MiniJaJaListener extends ParseTreeListener {
 	 */
 	void exitDecls(MiniJaJaParser.DeclsContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniJaJaParser#decl}.
+	 * @param ctx the parse tree
+	 */
+	void enterDecl(MiniJaJaParser.DeclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJaJaParser#decl}.
+	 * @param ctx the parse tree
+	 */
+	void exitDecl(MiniJaJaParser.DeclContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJaJaParser#vars}.
+	 * @param ctx the parse tree
+	 */
+	void enterVars(MiniJaJaParser.VarsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJaJaParser#vars}.
+	 * @param ctx the parse tree
+	 */
+	void exitVars(MiniJaJaParser.VarsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJaJaParser#var}.
+	 * @param ctx the parse tree
+	 */
+	void enterVar(MiniJaJaParser.VarContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJaJaParser#var}.
+	 * @param ctx the parse tree
+	 */
+	void exitVar(MiniJaJaParser.VarContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJaJaParser#vexp}.
+	 * @param ctx the parse tree
+	 */
+	void enterVexp(MiniJaJaParser.VexpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJaJaParser#vexp}.
+	 * @param ctx the parse tree
+	 */
+	void exitVexp(MiniJaJaParser.VexpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJaJaParser#methode}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethode(MiniJaJaParser.MethodeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJaJaParser#methode}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethode(MiniJaJaParser.MethodeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniJaJaParser#methmain}.
 	 * @param ctx the parse tree
 	 */
@@ -51,6 +101,26 @@ public interface MiniJaJaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMethmain(MiniJaJaParser.MethmainContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJaJaParser#entetes}.
+	 * @param ctx the parse tree
+	 */
+	void enterEntetes(MiniJaJaParser.EntetesContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJaJaParser#entetes}.
+	 * @param ctx the parse tree
+	 */
+	void exitEntetes(MiniJaJaParser.EntetesContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJaJaParser#entete}.
+	 * @param ctx the parse tree
+	 */
+	void enterEntete(MiniJaJaParser.EnteteContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJaJaParser#entete}.
+	 * @param ctx the parse tree
+	 */
+	void exitEntete(MiniJaJaParser.EnteteContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJaJaParser#instrs}.
 	 * @param ctx the parse tree
@@ -71,6 +141,16 @@ public interface MiniJaJaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitInstr(MiniJaJaParser.InstrContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJaJaParser#listexp}.
+	 * @param ctx the parse tree
+	 */
+	void enterListexp(MiniJaJaParser.ListexpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJaJaParser#listexp}.
+	 * @param ctx the parse tree
+	 */
+	void exitListexp(MiniJaJaParser.ListexpContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJaJaParser#exp}.
 	 * @param ctx the parse tree
@@ -132,36 +212,6 @@ public interface MiniJaJaListener extends ParseTreeListener {
 	 */
 	void exitIdent1(MiniJaJaParser.Ident1Context ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJaJaParser#decl}.
-	 * @param ctx the parse tree
-	 */
-	void enterDecl(MiniJaJaParser.DeclContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniJaJaParser#decl}.
-	 * @param ctx the parse tree
-	 */
-	void exitDecl(MiniJaJaParser.DeclContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MiniJaJaParser#vars}.
-	 * @param ctx the parse tree
-	 */
-	void enterVars(MiniJaJaParser.VarsContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniJaJaParser#vars}.
-	 * @param ctx the parse tree
-	 */
-	void exitVars(MiniJaJaParser.VarsContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MiniJaJaParser#var}.
-	 * @param ctx the parse tree
-	 */
-	void enterVar(MiniJaJaParser.VarContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniJaJaParser#var}.
-	 * @param ctx the parse tree
-	 */
-	void exitVar(MiniJaJaParser.VarContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link MiniJaJaParser#typemeth}.
 	 * @param ctx the parse tree
 	 */
@@ -181,14 +231,4 @@ public interface MiniJaJaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitType(MiniJaJaParser.TypeContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MiniJaJaParser#vexp}.
-	 * @param ctx the parse tree
-	 */
-	void enterVexp(MiniJaJaParser.VexpContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniJaJaParser#vexp}.
-	 * @param ctx the parse tree
-	 */
-	void exitVexp(MiniJaJaParser.VexpContext ctx);
 }

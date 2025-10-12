@@ -13,7 +13,7 @@ public class SupNode extends BinaryOperator{
     }
 
     @Override
-    protected Value mainOperation(Value leftOperand, Value rightOperand) throws Exception{
+    protected Value mainOperation(Value leftOperand, Value rightOperand) {
         return new Value(leftOperand.valueInt > rightOperand.valueInt);
     }
 }
