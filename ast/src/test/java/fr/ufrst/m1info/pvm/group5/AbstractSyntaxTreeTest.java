@@ -1,6 +1,4 @@
 package fr.ufrst.m1info.pvm.group5;
-
-
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
@@ -9,8 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class AbstractSyntaxTreeTest {
@@ -86,25 +83,46 @@ public class AbstractSyntaxTreeTest {
         assertEquals(true, memoryStorage.get("v").valueBool);
     }
 
-    @Test(expected = ASTInvalidMemoryException.class)
+    @Test
     @DisplayName("Evaluation - Undefined Variable / sum")
     public void UndefinedVariableSum() throws Exception {
         AbstractSyntaxTree AST = AbstractSyntaxTree.fromString("class C {int y = 10;main {x += y;}}");
-        AST.interpret(MemoryMock);
+        boolean success = false;
+        try {
+            AST.interpret(MemoryMock);
+        }
+        catch (ASTInvalidMemoryException e) {
+            success = true;
+        }
+        assertTrue(success);
     }
 
-    @Test(expected = ASTInvalidMemoryException.class)
+    @Test
     @DisplayName("Evaluation - Undefined Variable / Inc")
     public void UndefinedVariableInc() throws Exception {
         AbstractSyntaxTree AST = AbstractSyntaxTree.fromString("class C {int y = 10;main {x++}}");
-        AST.interpret(MemoryMock);
+        boolean success = false;
+        try {
+            AST.interpret(MemoryMock);
+        }
+        catch (ASTInvalidMemoryException e) {
+            success = true;
+        }
+        assertTrue(success);
     }
 
-    @Test(expected = ASTInvalidMemoryException.class)
+    @Test
     @DisplayName("Evaluation - Undefined Variable / Evaluation")
     public void UndefinedVariableEval() throws Exception {
         AbstractSyntaxTree AST = AbstractSyntaxTree.fromString("class C {int y = 10;main {y = x;}}");
-        AST.interpret(MemoryMock);
+        boolean success = false;
+        try {
+            AST.interpret(MemoryMock);
+        }
+        catch (ASTInvalidMemoryException e) {
+            success = true;
+        }
+        assertTrue(success);
     }
 
     @Test
