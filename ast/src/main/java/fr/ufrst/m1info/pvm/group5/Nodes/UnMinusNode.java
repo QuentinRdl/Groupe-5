@@ -1,5 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ASTBuildException;
+import fr.ufrst.m1info.pvm.group5.ASTInvalidOperationException;
 import fr.ufrst.m1info.pvm.group5.EvaluableNode;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
 import fr.ufrst.m1info.pvm.group5.Value;
@@ -11,7 +13,14 @@ public class UnMinusNode extends ASTNode implements EvaluableNode {
     ASTNode exp ;
 
     public UnMinusNode(ASTNode exp){
+
         this.exp = exp;
+        if(exp == null){
+            throw new ASTBuildException("Unary minus must hava an operand");
+        }
+        if(!(exp instanceof EvaluableNode)){
+            throw new ASTBuildException("Unary minus must have an evaluable operand");
+        }
     }
 
     @Override
@@ -24,7 +33,7 @@ public class UnMinusNode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) throws Exception {
-        throw new Exception ("Can not interpret unary minus node");
+        throw new ASTInvalidOperationException("Cannot interpret unary minus operator");
     }
 
     @Override

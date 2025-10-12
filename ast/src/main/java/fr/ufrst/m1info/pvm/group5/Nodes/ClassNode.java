@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ASTBuildException;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
 import fr.ufrst.m1info.pvm.group5.WithradawableNode;
 
@@ -15,6 +16,15 @@ public class ClassNode extends ASTNode {
         this.ident = ident;
         this.decls = decls;
         this.main = main;
+        if(ident == null){
+            throw new ASTBuildException("Class node cannot have null identifier");
+        }
+        if(main == null){
+            throw new ASTBuildException("Class must contain a main method");
+        }
+        if(!(decls instanceof WithradawableNode)){
+            throw new ASTBuildException("Class node declaration must be withradawable");
+        }
     }
 
     @Override

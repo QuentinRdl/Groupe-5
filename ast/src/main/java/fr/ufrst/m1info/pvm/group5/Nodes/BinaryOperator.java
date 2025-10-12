@@ -1,7 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
-import fr.ufrst.m1info.pvm.group5.EvaluableNode;
+import fr.ufrst.m1info.pvm.group5.*;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
-import fr.ufrst.m1info.pvm.group5.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +12,25 @@ public abstract class BinaryOperator extends ASTNode implements EvaluableNode {
     ASTNode left;
     ASTNode right;
 
+    /**
+     * Constructs a binary operator from it's two operands
+     * @param left left operand of the operator
+     * @param right right operand of the operator
+     * @throws ASTBuildException throws an exception if one of the operator is null or not evaluable
+     */
     public BinaryOperator(ASTNode left, ASTNode right) {
         this.left = left;
         this.right = right;
+        if(this.left == null || this.right == null){
+            throw new ASTBuildException("Binary operator cannot have a null operand");
+        }
+        if(!(left instanceof  EvaluableNode) ||  !(right instanceof  EvaluableNode)){
+            throw new ASTBuildException("Binary operator cannot have a non-evaluable operand");
+        }
     }
 
     public void interpret(Memory m) throws Exception{
-        throw new Exception("Binary operators cannot be interpreted");
+        throw new ASTInvalidOperationException("Cannot interpret BinaryOperator");
     }
 
     public Value eval(Memory m) throws Exception{
@@ -36,6 +47,18 @@ public abstract class BinaryOperator extends ASTNode implements EvaluableNode {
         return JJCodes;
     }
 
+    /**
+     * Get the name of the JaJaCode operation of the node
+     * @return Name of the JaJaCode operation corresponding to the node
+     */
     protected abstract String getCompileName();
+
+    /**
+     * Operation performed by the node when evaluated
+     * @param leftOperand Value of the left operand
+     * @param rightOperand Value of the right operand
+     * @return Result of the operations performed on the 2 operands
+     * @throws Exception
+     */
     protected abstract Value mainOperation(Value leftOperand, Value rightOperand) throws Exception ;
 }

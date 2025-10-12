@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ASTInvalidOperationException;
 import fr.ufrst.m1info.pvm.group5.Value;
 
 public class DivNode extends BinaryOperator{
@@ -17,6 +18,6 @@ public class DivNode extends BinaryOperator{
         if (rightOperand.valueInt != 0){
             return new Value(leftOperand.valueInt / rightOperand.valueInt);
         }
-        throw new Exception("Can not divide by zero");
+        throw new ASTInvalidOperationException("Cannot divide by zero");
     }
 }

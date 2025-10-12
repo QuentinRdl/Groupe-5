@@ -15,6 +15,7 @@ public abstract class ASTNode {
     /**
      * Interpret the node and it's descendants using a memory
      * @param m Memory used for the interpretation
+     * @throws Exception throws an exception when an error occurs while trying to evaluate the node
      */
     public abstract void interpret(Memory m) throws Exception;
 

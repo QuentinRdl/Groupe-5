@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ASTBuildException;
 import fr.ufrst.m1info.pvm.group5.EvaluableNode;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
 import fr.ufrst.m1info.pvm.group5.Value;
@@ -11,7 +12,11 @@ public class NotNode extends ASTNode implements EvaluableNode {
     ASTNode expr;
 
     public NotNode(ASTNode expr) {
+
         this.expr = expr;
+        if(expr==null){
+            throw new ASTBuildException("Not operator must have an operand");
+        }
     }
 
     @Override

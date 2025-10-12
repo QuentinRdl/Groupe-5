@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ASTInvalidMemoryException;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
 import fr.ufrst.m1info.pvm.group5.Value;
 
@@ -24,6 +25,9 @@ public class IncNode extends ASTNode{
     @Override
     public void interpret(Memory m) throws Exception {
         Value v = (Value)m.val(ident.identifier);
+        if(v == null){
+            throw new ASTInvalidMemoryException("Variable " + ident + " is undefined");
+        }
         Value res = new Value(v.valueInt + 1);
         m.affectValue(ident.identifier, res);
     }

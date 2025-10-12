@@ -2,16 +2,12 @@
 
 package fr.ufrst.m1info.pvm.group5;
 import fr.ufrst.m1info.pvm.group5.Nodes.*;
-import fr.ufrst.m1info.pvm.group5.ValueType;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
 public class MiniJaJaParser extends Parser {
@@ -553,7 +549,7 @@ public class MiniJaJaParser extends Parser {
 					match(T__10);
 					setState(106);
 					((InstrContext)_localctx).exp = exp();
-					((InstrContext)_localctx).node =  new SommeNode((IdentNode)_localctx.node, ((InstrContext)_localctx).exp.node);
+					((InstrContext)_localctx).node =  new SumNode((IdentNode)_localctx.node, ((InstrContext)_localctx).exp.node);
 					}
 					break;
 				case T__11:

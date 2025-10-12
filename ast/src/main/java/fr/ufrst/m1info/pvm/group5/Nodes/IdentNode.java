@@ -1,8 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
-import fr.ufrst.m1info.pvm.group5.EvaluableNode;
+import fr.ufrst.m1info.pvm.group5.*;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
-import fr.ufrst.m1info.pvm.group5.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,11 @@ public class IdentNode extends ASTNode implements EvaluableNode {
     String identifier;
 
     public IdentNode(String identifier){
+
         this.identifier = identifier;
+        if(this.identifier == null){
+            throw new ASTBuildException("Ident node cannot have null identifier");
+        }
     }
 
     @Override
@@ -29,6 +32,9 @@ public class IdentNode extends ASTNode implements EvaluableNode {
     @Override
     public Value eval(Memory m) {
         Value v = (Value) m.val(identifier);
+        if(v == null){
+            throw new ASTInvalidMemoryException("Variable " + identifier + " is undefined");
+        }
         return v;
     }
 }

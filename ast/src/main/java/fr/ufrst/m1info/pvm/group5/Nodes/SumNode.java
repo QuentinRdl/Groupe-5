@@ -1,5 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ASTBuildException;
+import fr.ufrst.m1info.pvm.group5.ASTInvalidMemoryException;
 import fr.ufrst.m1info.pvm.group5.EvaluableNode;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
 import fr.ufrst.m1info.pvm.group5.Value;
@@ -7,13 +9,19 @@ import fr.ufrst.m1info.pvm.group5.Value;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SommeNode extends ASTNode{
+public class SumNode extends ASTNode{
     IdentNode identifier;
     ASTNode expression;
 
-    public SommeNode(IdentNode identifier, ASTNode expression){
+    public SumNode(IdentNode identifier, ASTNode expression){
         this.identifier = identifier;
         this.expression = expression;
+        if(this.identifier == null){
+            throw new ASTBuildException("Sum identifier cannot be null");
+        }
+        if(this.expression == null){
+            throw new ASTBuildException("Sum operand cannot be null");
+        }
     }
 
     @Override
@@ -27,6 +35,9 @@ public class SommeNode extends ASTNode{
     @Override
     public void interpret(Memory m) throws Exception {
         Value v = ((EvaluableNode)expression).eval(m);
+        if(v == null){
+            throw  new ASTInvalidMemoryException(identifier.identifier + " is undefined");
+        }
         int res = ((Value)m.val(identifier.identifier)).valueInt + v.valueInt;
         m.affectValue(identifier.identifier, new Value(res));
     }

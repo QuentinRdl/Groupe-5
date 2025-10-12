@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ASTBuildException;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
 
 import java.util.ArrayList;
@@ -12,6 +13,9 @@ public class InstructionsNode extends ASTNode{
     public InstructionsNode(ASTNode instruction, ASTNode otherInstructions) {
         this.instruction = instruction;
         this.otherInstructions = otherInstructions;
+        if(instruction == null){
+            throw new ASTBuildException("Invalid instruction definition");
+        }
     }
 
     @Override

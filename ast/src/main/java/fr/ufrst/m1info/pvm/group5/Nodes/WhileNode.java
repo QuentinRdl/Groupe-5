@@ -1,8 +1,10 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ASTBuildException;
 import fr.ufrst.m1info.pvm.group5.EvaluableNode;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
 import fr.ufrst.m1info.pvm.group5.Value;
+import fr.ufrst.m1info.pvm.group5.WithradawableNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,12 @@ public class WhileNode extends ASTNode{
     public WhileNode(ASTNode condition, ASTNode iss){
         this.condition = condition;
         this.iss = iss;
+        if(this.condition == null){
+            throw new ASTBuildException("While node must have a condition");
+        }
+        if(!(condition instanceof WithradawableNode)){
+            throw new ASTBuildException("While node condition must be evaluable");
+        }
     }
 
     @Override

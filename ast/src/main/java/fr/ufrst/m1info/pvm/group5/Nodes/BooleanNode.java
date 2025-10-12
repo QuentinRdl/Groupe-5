@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ASTInvalidOperationException;
 import fr.ufrst.m1info.pvm.group5.EvaluableNode;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
 import fr.ufrst.m1info.pvm.group5.Value;
@@ -26,7 +27,7 @@ public class BooleanNode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) throws Exception {
-        throw new Exception ("Can not interpret boolean node");
+        throw new ASTInvalidOperationException("Cannot interpret Boolean node");
     }
 
     @Override
