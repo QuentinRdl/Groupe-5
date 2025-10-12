@@ -1,9 +1,9 @@
 grammar MiniJaJa;
 
 @header{
-package fr.ufrst.m1info.gl.compGL;
-import fr.ufrst.m1info.gl.compGL.Nodes.*;
-import fr.ufrst.m1info.gl.compGL.ValueType;
+package fr.ufrst.m1info.pvm.group5;
+import fr.ufrst.m1info.pvm.group5.Nodes.*;
+import fr.ufrst.m1info.pvm.group5.ValueType;
 }
 
 classe returns [ClassNode node]

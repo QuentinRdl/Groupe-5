@@ -1,8 +1,8 @@
 // Generated from /media/kilian/Data/Utilitaires/IDEA projects/groupe-5/ast/src/main/antlr4/MiniJaJa.g4 by ANTLR 4.13.2
 
-package fr.ufrst.m1info.gl.compGL;
-import fr.ufrst.m1info.gl.compGL.Nodes.*;
-import fr.ufrst.m1info.gl.compGL.ValueType;
+package fr.ufrst.m1info.pvm.group5;
+import fr.ufrst.m1info.pvm.group5.Nodes.*;
+import fr.ufrst.m1info.pvm.group5.ValueType;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -161,16 +161,6 @@ public interface MiniJaJaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVar(MiniJaJaParser.VarContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MiniJaJaParser#varPrime}.
-	 * @param ctx the parse tree
-	 */
-	void enterVarPrime(MiniJaJaParser.VarPrimeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniJaJaParser#varPrime}.
-	 * @param ctx the parse tree
-	 */
-	void exitVarPrime(MiniJaJaParser.VarPrimeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJaJaParser#typemeth}.
 	 * @param ctx the parse tree

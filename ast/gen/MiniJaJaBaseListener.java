@@ -1,8 +1,8 @@
 // Generated from /media/kilian/Data/Utilitaires/IDEA projects/groupe-5/ast/src/main/antlr4/MiniJaJa.g4 by ANTLR 4.13.2
 
-package fr.ufrst.m1info.gl.compGL;
-import fr.ufrst.m1info.gl.compGL.Nodes.*;
-import fr.ufrst.m1info.gl.compGL.ValueType;
+package fr.ufrst.m1info.pvm.group5;
+import fr.ufrst.m1info.pvm.group5.Nodes.*;
+import fr.ufrst.m1info.pvm.group5.ValueType;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -196,18 +196,6 @@ public class MiniJaJaBaseListener implements MiniJaJaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitVar(MiniJaJaParser.VarContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterVarPrime(MiniJaJaParser.VarPrimeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitVarPrime(MiniJaJaParser.VarPrimeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

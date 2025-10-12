@@ -29,6 +29,7 @@ T__27=28
 T__28=29
 IDENTIFIER=30
 NOMBRE=31
+WS=32
 'class'=1
 '{'=2
 '}'=3
