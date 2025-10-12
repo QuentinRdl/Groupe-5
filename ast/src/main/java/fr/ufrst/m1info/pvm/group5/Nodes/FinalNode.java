@@ -1,8 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.Nodes;
 
-import fr.ufrst.m1info.pvm.group5.ASTBuildException;
+import fr.ufrst.m1info.pvm.group5.*;
 import fr.ufrst.m1info.pvm.group5.Memory.Memory;
-import fr.ufrst.m1info.pvm.group5.WithradawableNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +32,15 @@ public class FinalNode extends ASTNode implements WithradawableNode {
         return jajacodes;
     }
 
-    //TODO : do this when we have access to the memory
     @Override
     public void interpret(Memory m) {
-
+        Value v = ((EvaluableNode)expression).eval(m);
+        m.declCst(ident.identifier, v, ValueType.toDataType(type.valueType));
     }
-
-    //TODO : do this when we have access to the memory
+    
     @Override
     public void WithradawInterpret(Memory m) {
-
+        m.withdrawDecl(ident.identifier);
     }
 
     @Override
