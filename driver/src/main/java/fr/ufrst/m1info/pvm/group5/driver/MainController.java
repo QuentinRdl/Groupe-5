@@ -16,12 +16,15 @@ import java.io.IOException;
 /*
 * Controller class for managing interactions in the main application interface.
 */
-public class HelloController {
+public class MainController {
     @FXML
     private Label fileLabel;
 
     @FXML
     private ListView<CodeLine> codeListView;
+
+    @FXML
+    private TextArea output;
 
     private ObservableList<CodeLine> codeLines;
 
@@ -54,30 +57,69 @@ public class HelloController {
     protected void selectFileButton() {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().addAll(
-                new ExtensionFilter("Fichier MiniJaja et JajaCode", "*.mjj", "*.jcc")
+                new ExtensionFilter("MiniJaja and JajaCode file", "*.mjj", "*.jcc")
         );
         File selectedFile = fc.showOpenDialog(null);
+        loadFile(selectedFile);
+    }
 
-        if (selectedFile != null) {
+    /*
+    * Load, display the file code line by line,
+    * and update the ListView to display each numbered line
+    *
+    * @param selectedFile the file to be loaded
+    * @return true if the file was successfully loaded, false otherwise
+    */
+    public boolean loadFile(File selectedFile){
+        if(selectedFile == null){
+            System.out.println("No file selected");
+            return false;
+        }
+
+        if(!selectedFile.exists()){
+            System.err.println("File doesn't exist : " + selectedFile.getName());
+            return false;
+        }
+
+        try {
             fileLabel.setText(selectedFile.getName());
 
             // Delete old cells
             codeLines.clear();
 
             //Read file
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile))){
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile))) {
                 int nbLines = 1;
                 String line;
 
-                while((line = bufferedReader.readLine()) != null){
+                while ((line = bufferedReader.readLine()) != null) {
                     codeLines.add(new CodeLine(nbLines++, line));
                 }
-
-            } catch (IOException e){
-                System.out.println("Error reading file: " + e.getMessage());
             }
-        } else {
-            System.out.println("No files selected");
+
+            if (output != null) {
+                output.appendText("File loaded : " + selectedFile.getName() + "\n");
+            }
+            return true;
+
+        } catch (IOException e){
+            System.err.println("Error reading file : " + e.getMessage());
+            if (output != null) {
+                output.appendText("Error : " + e.getMessage() + "\n");
+            }
+            return false;
         }
+    }
+
+    public Label getFileLabel(){
+        return fileLabel;
+    }
+
+    public ObservableList<CodeLine> getCodeLines(){
+        return codeLines;
+    }
+
+    public ListView<CodeLine> getCodeListView(){
+        return codeListView;
     }
 }
