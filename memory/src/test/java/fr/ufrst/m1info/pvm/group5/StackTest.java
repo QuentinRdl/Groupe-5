@@ -298,11 +298,11 @@ public class StackTest {
     public void nonEmptyStack_toString() throws Exception {
         Stack s = new Stack();
 
-        // construct Stack_Object instances (use constructor that accepts DataType)
+        // Construct Stack_Object instances (use constructor that accepts DataType)
         Stack_Object a = new Stack_Object("x", 1, 0, EntryKind.VARIABLE, DataType.INT);
         Stack_Object b = new Stack_Object("y", 2, 0, EntryKind.VARIABLE, DataType.INT);
 
-        // use reflection to access the private deque and add elements in insertion order
+        // Use reflection to access the private deque and add elements in insertion order
         Field f = Stack.class.getDeclaredField("stack_content");
         f.setAccessible(true);
         @SuppressWarnings("unchecked")
@@ -314,4 +314,29 @@ public class StackTest {
         String expected = "Stack{scopeDepth=0, contents=[x_0=1, y_0=2]}";
         assertEquals(expected, s.toString());
     }
+
+    @Test
+    public void constructor_exception_test() {
+        String msg = "Invalid variable name";
+        Stack.InvalidNameException ex = new Stack.InvalidNameException(msg);
+
+        assertEquals(msg, ex.getMessage());
+    }
+
+
+    /* TODO : Replace with the correct format
+    @Test(expected = Stack.InvalidNameException.class)
+    public void setVar_nullName_throwsInvalidNameException() {
+        Stack s = new Stack();
+        s.pushScope();
+        s.setVar(null, 42, DataType.INT);
+    }
+
+    @Test(expected = Stack.InvalidNameException.class)
+    public void setVar_emptyName_throwsInvalidNameException() {
+        Stack s = new Stack();
+        s.pushScope();
+        s.setVar("", 42, DataType.INT);
+    }
+    */
 }
