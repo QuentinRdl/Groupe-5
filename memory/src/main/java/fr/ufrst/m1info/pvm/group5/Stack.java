@@ -5,6 +5,7 @@ import fr.ufrst.m1info.pvm.group5.SymbolTable.EntryKind;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.EmptyStackException;
+import java.util.Objects;
 
 public class Stack {
     private Deque<Stack_Object> stack_content;
@@ -208,5 +209,38 @@ public class Stack {
         sb.append(']');
         sb.append('}');
         return sb.toString();
+    }
+
+    /**
+     * Searches for the given Object in the stack // TODO : Unit tests !!!
+     * @param identifier the name of the Object we are looking for
+     * @return Object if found, null otherwise
+     */
+    public Stack_Object searchObject(String identifier) {
+        for(Stack_Object obj : stack_content) {
+            if(Objects.equals(obj.getName(), identifier)) {
+                return obj; // Object found
+            }
+        }
+        return null; // Object not found
+    }
+
+    /**
+     * Will remove the given Stack_Object given, MUST BE SURE IT EXISTS
+     * @param object the Stack_Object to remove
+     */
+    private void removeObject(Stack_Object object) {
+        stack_content.remove(object);
+    }
+
+    public boolean putOnTop(String identifier) {
+        Stack_Object obj = searchObject(identifier);
+        if(obj == null) return false; // Object does not exist in the stack
+        // We remove the Stack_Object from the stack
+        removeObject(obj);
+
+        // We put the object back on top of the stack
+        stack_content.push(obj);
+        return true;
     }
 }
