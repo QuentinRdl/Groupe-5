@@ -1,5 +1,8 @@
 package fr.ufrst.m1info.pvm.group5;
 
+import fr.ufrst.m1info.pvm.group5.SymbolTable.DataType;
+import fr.ufrst.m1info.pvm.group5.SymbolTable.EntryKind;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.EmptyStackException;
@@ -65,7 +68,7 @@ public class Stack {
      * @param value value of the var
      */
     public void setVar(String name, Object value) {
-        vars.push(new Stack_Variable(name, value, scopeDepth));
+        vars.push(new Stack_Variable(name, value, scopeDepth, EntryKind.VARIABLE));
     }
 
     /**

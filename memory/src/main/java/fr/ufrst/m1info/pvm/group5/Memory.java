@@ -66,7 +66,7 @@ public class Memory {
     public void declVar(String identifier, Object value, DataType type) {
         // Adds to the table of symbols
         // SymbolTableEntry entry = new SymbolTableEntry(identifier, );
-        // Adds to the stack
+        // Adds to the stack TODO : Is it needed ??
         stack.setVar(identifier, value); // TODO : Add a type
     }
 
@@ -74,7 +74,7 @@ public class Memory {
      * Declares a named constant
      * @param identifier identifier of the constant, can't be null
      * @param value value of the constant. If it's null, the value of the constant will be assignable later
-     * @param type tupe of the constant
+     * @param type type of the constant
      */
     public void declCst(String identifier, Object value, DataType type) {
         // TODO

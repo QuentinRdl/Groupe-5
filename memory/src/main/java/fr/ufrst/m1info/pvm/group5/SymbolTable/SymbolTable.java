@@ -64,7 +64,6 @@ public class SymbolTable {
     public void addEntry(String identifier, EntryKind kind, DataType type) {
         SymbolTableEntry entry = new SymbolTableEntry(identifier, kind, type);
         addEntry(entry);
-        // TODO : Test this method
     }
 
     /**

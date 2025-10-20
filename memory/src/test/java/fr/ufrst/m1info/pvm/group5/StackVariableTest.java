@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5;
 
+import fr.ufrst.m1info.pvm.group5.SymbolTable.EntryKind;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -7,10 +8,11 @@ import static org.junit.Assert.*;
 
 public class StackVariableTest {
     private Stack_Variable variable;
+    private final EntryKind type = EntryKind.VARIABLE;
 
     @Before
     public void setUp() {
-        variable = new Stack_Variable("x", 42, 0);
+        variable = new Stack_Variable("x", 42, 0, type);
     }
 
     @Test
@@ -23,21 +25,21 @@ public class StackVariableTest {
     @Test
     public void getName() {
         assertEquals("x", variable.getName());
-        Stack_Variable newVar = new Stack_Variable("y", 2, 12);
+        Stack_Variable newVar = new Stack_Variable("y", 2, 12, type);
         assertEquals("y", newVar.getName());
     }
 
     @Test
     public void getValue() {
         assertEquals(42, variable.getValue());
-        Stack_Variable newVar = new Stack_Variable("y", 2, 12);
+        Stack_Variable newVar = new Stack_Variable("y", 2, 12, type);
         assertEquals(2, newVar.getValue());
     }
 
     @Test
     public void getScope() {
         assertEquals(0, variable.getScope());
-        Stack_Variable newVar = new Stack_Variable("y", 2, 12);
+        Stack_Variable newVar = new Stack_Variable("y", 2, 12, type);
         assertEquals(12, newVar.getScope());
     }
 

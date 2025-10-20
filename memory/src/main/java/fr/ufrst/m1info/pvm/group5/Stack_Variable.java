@@ -1,5 +1,8 @@
 package fr.ufrst.m1info.pvm.group5;
 
+import fr.ufrst.m1info.pvm.group5.SymbolTable.DataType; // TODO : We should not have to import
+import fr.ufrst.m1info.pvm.group5.SymbolTable.EntryKind;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -10,6 +13,7 @@ import java.util.Deque;
 public class Stack_Variable {
     private final String name;
     private Object value;
+    private final EntryKind type;
     private final int scope;
 
     /**
@@ -18,10 +22,11 @@ public class Stack_Variable {
      * @param value value of the var
      * @param scope scope of the var
      */
-    public Stack_Variable(String name, Object value, int scope) {
+    public Stack_Variable(String name, Object value, int scope, EntryKind type) {
         this.name = name;
         this.value = value;
         this.scope = scope;
+        this.type = type;
     }
 
     /**
@@ -46,6 +51,10 @@ public class Stack_Variable {
      */
     public int getScope() {
         return scope;
+    }
+
+    public EntryKind getType() {
+       return type;
     }
 
     /**
