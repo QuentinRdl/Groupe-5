@@ -1,4 +1,8 @@
 package fr.ufrst.m1info.pvm.group5;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import fr.ufrst.m1info.pvm.group5.SymbolTable.DataType;
 import fr.ufrst.m1info.pvm.group5.SymbolTable.EntryKind;
@@ -24,7 +28,7 @@ public class StackTest {
     /**
      * Before each test, we set up an empty stack
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         stack = new Stack();
         integ = DataType.INT;
@@ -50,9 +54,11 @@ public class StackTest {
         assertTrue(stack.isEmpty());
     }
 
-    @Test(expected = Stack.NoScopeException.class)
-    public void testPopScopeWhenNoScopes() throws Stack.NoScopeException {
-        stack.popScope();
+    @Test
+    public void testPopScopeWhenNoScopes() {
+        assertThrows(Stack.NoScopeException.class, () -> {
+            stack.popScope();
+        });
     }
 
     @Test
@@ -82,9 +88,11 @@ public class StackTest {
         assertEquals(100, top.getValue());
     }
 
-    @Test(expected = java.util.EmptyStackException.class)
+    @Test
     public void testTopWhenEmpty() {
-        stack.top();
+        assertThrows(java.util.EmptyStackException.class, () -> {
+            stack.top();
+        });
     }
 
     @Test
@@ -97,9 +105,12 @@ public class StackTest {
         assertTrue(stack.isEmpty());
     }
 
-    @Test(expected = Stack.StackIsEmptyException.class)
+    @Test
+    //(expected = Stack.StackIsEmptyException.class)
     public void popWhenEmpty() throws Stack.StackIsEmptyException {
-        stack.pop();
+        assertThrows(Stack.StackIsEmptyException.class, () -> {
+            stack.pop();
+        });
     }
 
     @Test
