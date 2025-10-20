@@ -1,13 +1,14 @@
 package fr.ufrst.m1info.pvm.group5;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 
@@ -31,7 +32,7 @@ public class MemoryTest {
     /**
      * Before each test, we set up an empty memory
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         mocksCloser = MockitoAnnotations.openMocks(this);
         memory = new Memory();
@@ -40,7 +41,7 @@ public class MemoryTest {
         memory.symbolTable = symbolTableMocked;
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (mocksCloser != null) mocksCloser.close();
     }
