@@ -59,7 +59,7 @@ public class MemoryTest {
     public void pushDelegatesToStack() {
         // When we push in the Stack we must delegate it to the setVar method
         memory.push("x", 42, DataType.INT, EntryKind.VARIABLE);
-        verify(stackMocked, times(1)).setVar("x", 42);
+        verify(stackMocked, times(1)).setVar("x", 42, DataType.INT);
     }
     /**
 

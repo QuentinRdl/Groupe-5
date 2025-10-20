@@ -34,7 +34,7 @@ public class Memory {
             return;
         }
         if(kind == EntryKind.VARIABLE) {
-            stack.setVar(identifier, value);
+            stack.setVar(identifier, value, type);
             symbolTable.addEntry(identifier, kind, type);
         }
     }
@@ -66,8 +66,8 @@ public class Memory {
     public void declVar(String identifier, Object value, DataType type) {
         // Adds to the table of symbols
         // SymbolTableEntry entry = new SymbolTableEntry(identifier, );
-        // Adds to the stack TODO : Is it needed ??
-        stack.setVar(identifier, value); // TODO : Add a type
+        // Adds to the stack TODO : Is it needed or is DeclVar only to declare in the Symbol table ??
+        stack.setVar(identifier, value, type);
     }
 
     /**

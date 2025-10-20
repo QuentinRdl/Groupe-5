@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5;
 
+import fr.ufrst.m1info.pvm.group5.SymbolTable.DataType;
 import fr.ufrst.m1info.pvm.group5.SymbolTable.EntryKind;
 
 import java.util.ArrayDeque;
@@ -26,6 +27,16 @@ public class Stack {
      */
     public static class StackIsEmptyException extends Exception {
         public StackIsEmptyException(String msg) {
+            super(msg);
+        }
+    }
+
+    /**
+     * Exception thrown when attempting to create or set a variable with an invalid (null/empty) name.
+     * This is unchecked so existing callers don't need to change their signatures.
+     */
+    public static class InvalidNameException extends IllegalArgumentException {
+        public InvalidNameException(String msg) {
             super(msg);
         }
     }
@@ -66,8 +77,11 @@ public class Stack {
      * @param name name of the var
      * @param value value of the var
      */
-    public void setVar(String name, Object value) {
-        Stack_Object var = new Stack_Object(name, value, scopeDepth, EntryKind.VARIABLE);
+    public void setVar(String name, Object value, DataType type) {
+        if (name == null || name.isEmpty()) {
+            throw new InvalidNameException("Variable name cannot be null or empty");
+        }
+        Stack_Object var = new Stack_Object(name, value, scopeDepth, EntryKind.VARIABLE, type);
         stack_content.push(var);
     }
 
@@ -93,9 +107,6 @@ public class Stack {
     }
 
 
-    /* TODO : Question -> Do we need the following func ?
-    *   Or should we use a generic func to get the top var ?
-    */
     /**
      * @param name the name of the var we are looking for
      * @return Object, the var value if found, null otherwise
@@ -110,10 +121,6 @@ public class Stack {
          }
          return null;
      }
-
-    /* TODO : Question -> Do we need the following func ?
-     *   Or should we use a generic func to update the top var ?
-     */
 
     /**
      * Updates the top var that matches the given name (in current scope)
@@ -233,6 +240,11 @@ public class Stack {
         stack_content.remove(object);
     }
 
+    /**
+     * Will look for an Object with the name given as an argument, remove it and put it back on top of the stack
+     * @param identifier name of the Object we want to put on top
+     * @return true if successful, false otherwise
+     */
     public boolean putOnTop(String identifier) {
         Stack_Object obj = searchObject(identifier);
         if(obj == null) return false; // Object does not exist in the stack
