@@ -38,6 +38,16 @@ public class CodeLineCell extends ListCell<CodeLine> {
         container = new HBox();
         container.getStyleClass().add("code-line");
         container.getChildren().addAll(lineNumberLabel, codeField);
+
+        lineNumberLabel.setOnMouseClicked(event -> handleBreakpointClick());
+    }
+
+    private void handleBreakpointClick(){
+        CodeLine item = getItem();
+        if (item != null){
+            item.setBreakpoint(!item.isBreakpoint());
+            updateItem(item, false);
+        }
     }
 
     /**
@@ -57,6 +67,11 @@ public class CodeLineCell extends ListCell<CodeLine> {
         } else {
             lineNumberLabel.setText(String.valueOf(item.getLineNumber()));
             codeField.setText(item.getCode());
+            if ( item.isBreakpoint() ){
+                lineNumberLabel.getStyleClass().add("breakpoint");
+            } else {
+                lineNumberLabel.getStyleClass().remove("breakpoint");
+            }
             setGraphic(container);
         }
     }

@@ -47,3 +47,25 @@
     -fx-spacing: 0;
 }
 
+.breakpoint {
+    -fx-text-fill: #850606;
+
+}
+
+.tool-bar .button {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+}
+
+.tool-bar .button:hover {
+    -fx-cursor: hand;
+}
+
+.tool-bar .button:focused {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-effect: null;
+}
+
