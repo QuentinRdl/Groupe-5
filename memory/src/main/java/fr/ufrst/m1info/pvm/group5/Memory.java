@@ -35,7 +35,7 @@ public class Memory {
         }
         if(kind == EntryKind.VARIABLE) {
             stack.setVar(identifier, value);
-            symbolTable.addEntry(identifier, type, kind);
+            symbolTable.addEntry(identifier, kind, type);
         }
     }
 

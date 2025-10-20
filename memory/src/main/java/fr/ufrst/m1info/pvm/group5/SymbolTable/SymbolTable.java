@@ -57,11 +57,11 @@ public class SymbolTable {
      * Adds a new entry to the symbol table.
      * If a symbol with the same name already exists, an exception is thrown.
      * @param identifier or name of the symbol to add
-     * @param type type of the symbol to add
      * @param kind kind of the symbol to add
+     * @param type type of the symbol to add
      * @throws IllegalArgumentException if the symbol name already exists in the table
      */
-    public void addEntry(String identifier, DataType type, EntryKind kind) {
+    public void addEntry(String identifier, EntryKind kind, DataType type) {
         SymbolTableEntry entry = new SymbolTableEntry(identifier, kind, type);
         addEntry(entry);
         // TODO : Test this method
