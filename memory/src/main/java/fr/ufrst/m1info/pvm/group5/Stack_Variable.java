@@ -5,6 +5,7 @@ import fr.ufrst.m1info.pvm.group5.SymbolTable.EntryKind;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+// TODO : Remove the whole class (When Stack_Object is fully finished !!)
 
 /**
  * Represents an entry of a variable in the stack, with name that contains the actual

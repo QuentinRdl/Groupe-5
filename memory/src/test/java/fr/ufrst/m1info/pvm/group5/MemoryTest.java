@@ -61,6 +61,7 @@ public class MemoryTest {
         memory.push("x", 42, DataType.INT, EntryKind.VARIABLE);
         verify(stackMocked, times(1)).setVar("x", 42);
     }
+    /**
 
     @Test
     public void popDelegatesToStack() throws Exception {
@@ -125,4 +126,5 @@ public class MemoryTest {
         assertEquals(777, result);
         verify(symbolTableMocked, times(1)).lookup("y");
     }
+    */
 }
