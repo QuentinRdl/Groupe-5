@@ -1,8 +1,14 @@
 package fr.ufrst.m1info.pvm.group5;
 
+import fr.ufrst.m1info.pvm.group5.SymbolTable.DataType;
+import fr.ufrst.m1info.pvm.group5.SymbolTable.EntryKind;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.lang.reflect.Field;
+import java.util.Deque;
+
 import static org.junit.Assert.*;
 
 /**
@@ -53,7 +59,7 @@ public class StackTest {
         assertEquals(0, stack.size());
         stack.setVar("x", 1234);
         assertEquals(1, stack.size());
-        assertEquals(1234, stack.getVar("x"));
+        assertEquals(1234, stack.getObject("x"));
     }
 
     @Test
@@ -69,7 +75,7 @@ public class StackTest {
     public void testTop() {
         stack.pushScope();
         stack.setVar("a", 100);
-        Stack_Variable top = stack.top();
+        Stack_Object top = stack.top();
         assertEquals("a", top.getName());
         assertEquals(100, top.getValue());
     }
@@ -83,7 +89,7 @@ public class StackTest {
     public void testPop() throws Stack.StackIsEmptyException {
         stack.pushScope();
         stack.setVar("x", 50);
-        Stack_Variable popped = stack.pop();
+        Stack_Object popped = stack.pop();
         assertEquals("x", popped.getName());
         assertEquals(50, popped.getValue());
         assertTrue(stack.isEmpty());
@@ -98,7 +104,7 @@ public class StackTest {
     public void getVar() {
         stack.pushScope();
         stack.setVar("x", 1234);
-        Object value = stack.getVar("x");
+        Object value = stack.getObject("x");
         assertEquals(1234, value);
     }
 
@@ -106,7 +112,7 @@ public class StackTest {
     public void getVarNotFound() {
         stack.pushScope();
         stack.setVar("x", 1234);
-        Object value = stack.getVar("y");
+        Object value = stack.getObject("y");
         assertNull(value);
     }
 
@@ -118,7 +124,7 @@ public class StackTest {
         stack.pushScope();
         stack.setVar("x", 2);
         // Should only get the x from current scope (2)
-        assertEquals(2, stack.getVar("x"));
+        assertEquals(2, stack.getObject("x"));
 
         try {
             stack.popScope();
@@ -126,7 +132,7 @@ public class StackTest {
             fail("Should not throw exception");
         }
         // Now should get the x from previous scope (1)
-        assertEquals(1, stack.getVar("x"));
+        assertEquals(1, stack.getObject("x"));
     }
 
     @Test
@@ -135,7 +141,7 @@ public class StackTest {
         stack.setVar("x", 1234);
         boolean upd = stack.updateVar("x", 100);
         assertTrue(upd);
-        assertEquals(100, stack.getVar("x"));
+        assertEquals(100, stack.getObject("x"));
     }
 
     @Test
@@ -162,21 +168,21 @@ public class StackTest {
     }
 
     @Test
-    public void hasVar() {
+    public void hasObj() {
         stack.pushScope();
         stack.setVar("x", 1234);
-        assertTrue(stack.hasVar("x"));
-        assertFalse(stack.hasVar("y"));
+        assertTrue(stack.hasObj("x"));
+        assertFalse(stack.hasObj("y"));
     }
 
     @Test
-    public void hasVarDifferentScopes() {
+    public void hasObjDifferentScopes() {
         stack.pushScope();
         stack.setVar("x", 1234);
 
         stack.pushScope();
         // x exists in previous scope but not in current
-        assertFalse(stack.hasVar("x"));
+        assertFalse(stack.hasObj("x"));
     }
 
     @Test
@@ -221,20 +227,20 @@ public class StackTest {
         stack.setVar("x", 50);
         stack.setVar("z", 100);
 
-        assertEquals(50, stack.getVar("x"));
-        assertEquals(100, stack.getVar("z"));
-        assertNull(stack.getVar("y"));
+        assertEquals(50, stack.getObject("x"));
+        assertEquals(100, stack.getObject("z"));
+        assertNull(stack.getObject("y"));
         assertEquals(4, stack.size());
 
         // Update x in current scope
         stack.updateVar("x", 55);
-        assertEquals(55, stack.getVar("x"));
+        assertEquals(55, stack.getObject("x"));
 
         // Exit function scope
         stack.popScope();
-        assertEquals(5, stack.getVar("x"));
-        assertEquals(10, stack.getVar("y"));
-        assertNull(stack.getVar("z"));
+        assertEquals(5, stack.getObject("x"));
+        assertEquals(10, stack.getObject("y"));
+        assertNull(stack.getObject("z"));
         assertEquals(2, stack.size());
     }
 
@@ -242,21 +248,21 @@ public class StackTest {
     public void multipleScopesWithSameVarName() throws Stack.NoScopeException {
         stack.pushScope();
         stack.setVar("count", 0);
-        assertEquals(0, stack.getVar("count"));
+        assertEquals(0, stack.getObject("count"));
 
         stack.pushScope();
         stack.setVar("count", 1);
-        assertEquals(1, stack.getVar("count"));
+        assertEquals(1, stack.getObject("count"));
 
         stack.pushScope();
         stack.setVar("count", 2);
-        assertEquals(2, stack.getVar("count"));
+        assertEquals(2, stack.getObject("count"));
 
         stack.popScope();
-        assertEquals(1, stack.getVar("count"));
+        assertEquals(1, stack.getObject("count"));
 
         stack.popScope();
-        assertEquals(0, stack.getVar("count"));
+        assertEquals(0, stack.getObject("count"));
 
         stack.popScope();
         assertTrue(stack.isEmpty());
@@ -277,6 +283,33 @@ public class StackTest {
 
         // Only the global variable should remain
         assertEquals(1, stack.size());
-        assertEquals("value", stack.getVar("global"));
+        assertEquals("value", stack.getObject("global"));
+    }
+
+    @Test
+    public void emptyStack_toString() {
+        Stack s = new Stack();
+        assertEquals("Stack{scopeDepth=0, contents=[]}", s.toString());
+    }
+
+    @Test
+    public void nonEmptyStack_toString() throws Exception {
+        Stack s = new Stack();
+
+        // construct Stack_Object instances (use constructor that accepts DataType)
+        Stack_Object a = new Stack_Object("x", 1, 0, EntryKind.VARIABLE, DataType.INT);
+        Stack_Object b = new Stack_Object("y", 2, 0, EntryKind.VARIABLE, DataType.INT);
+
+        // use reflection to access the private deque and add elements in insertion order
+        Field f = Stack.class.getDeclaredField("stack_content");
+        f.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        Deque<Stack_Object> dq = (Deque<Stack_Object>) f.get(s);
+
+        dq.addLast(a);
+        dq.addLast(b);
+
+        String expected = "Stack{scopeDepth=0, contents=[x_0=1, y_0=2]}";
+        assertEquals(expected, s.toString());
     }
 }
