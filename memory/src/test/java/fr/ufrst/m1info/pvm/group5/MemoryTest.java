@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.junit.jupiter.api.Assertions.*;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 
@@ -46,7 +47,7 @@ public class MemoryTest {
         if (mocksCloser != null) mocksCloser.close();
     }
 
-    /* Test will fail right now, as it is TDD and the API is not implemented yet
+    // Test will fail right now, as it is TDD and the API is not implemented yet
 
     @Test
     public void constructor() {
@@ -60,8 +61,9 @@ public class MemoryTest {
     public void pushDelegatesToStack() {
         // When we push in the Stack we must delegate it to the setVar method
         memory.push("x", 42, DataType.INT, EntryKind.VARIABLE);
-        verify(stackMocked, times(1)).setVar("x", 42);
+        verify(stackMocked, times(1)).setVar("x", 42, DataType.INT);
     }
+    /**
 
     @Test
     public void popDelegatesToStack() throws Exception {
