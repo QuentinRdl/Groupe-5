@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.driver;
 
+import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +19,7 @@ import org.testfx.framework.junit5.ApplicationTest;
  * Unit tests for the CodeLineCell class
  */
 @ExtendWith(ApplicationExtension.class)
-public class CodeLineCellT extends ApplicationTest {
+public class CodeLineCellTest extends ApplicationTest {
 
     private ListView<CodeLine> listView;
 
@@ -94,4 +95,9 @@ public class CodeLineCellT extends ApplicationTest {
         assertEquals("1", lineNumber.getText());
         assertEquals("x = 10;", codeField.getText());
     }
+
+    //TODO: breakpointVisibleTest
+
+    //TODO: breakpointClickTest
+
 }
