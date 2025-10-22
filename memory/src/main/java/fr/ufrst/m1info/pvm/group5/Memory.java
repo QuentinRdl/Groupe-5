@@ -27,19 +27,26 @@ public class Memory {
      * @param kind kind of value (method, var, ...)
      */
     public void push(String identifier, Object value, DataType type, EntryKind kind) {
-        if(kind != EntryKind.VARIABLE && kind != EntryKind.CONSTANT)
-        {
-            // TODO : Implement for different EntryKind
-            System.out.println(kind + " is not handled right yet");
-            return;
+
+        if(kind == null || type == null || value == null || identifier == null) {
+            throw new IllegalArgumentException("One of the following arguments are not compatible with this function call : identifier = " + identifier + " value = " + value + " type = " + type + " kind = " + kind);
         }
+        if(kind != EntryKind.VARIABLE && kind != EntryKind.CONSTANT) {
+            // TODO : Implement for different EntryKind
+            throw new IllegalArgumentException("Pushing with " + kind + " as en EntryKind is invalid !");
+        }
+
         if(kind == EntryKind.VARIABLE) {
             stack.setVar(identifier, value, type);
-            symbolTable.addEntry(identifier, kind, type);
+            // Create an explicit SymbolTableEntry and add it so tests can capture it
+            SymbolTableEntry entry = new SymbolTableEntry(identifier, kind, type);
+            symbolTable.addEntry(entry);
         }
+
         if(kind == EntryKind.CONSTANT) {
             stack.setConst(identifier, value, type);
-            symbolTable.addEntry(identifier, kind, type);
+            SymbolTableEntry entry = new SymbolTableEntry(identifier, kind, type);
+            symbolTable.addEntry(entry);
         }
     }
 
@@ -69,7 +76,9 @@ public class Memory {
      */
     public void declVar(String identifier, Object value, DataType type) {
         // Adds to the table of symbols
+        // Use the SymbolTableEntry overload so tests can capture the object
         SymbolTableEntry entry = new SymbolTableEntry(identifier, EntryKind.VARIABLE, type);
+        symbolTable.addEntry(entry);
         // Adds to the stack
         stack.setVar(identifier, value, type);
     }
@@ -83,6 +92,7 @@ public class Memory {
     public void declCst(String identifier, Object value, DataType type) {
         // Adds to the table of symbols
         SymbolTableEntry entry = new SymbolTableEntry(identifier, EntryKind.CONSTANT, type);
+        symbolTable.addEntry(entry);
         // Adds to the stack
         stack.setConst(identifier, value, type);
     }
