@@ -110,6 +110,33 @@ public class StackTest {
 
         Stack_Object cstNotSameKind = new Stack_Object("x", 1234, 1, EntryKind.CONSTANT, DataType.DOUBLE);
         assertFalse(constant.equals(cstNotSameKind));
+
+        int notSameObject = 3;
+        assertFalse(constant.equals(notSameObject));
+    }
+
+    @Test
+    public void hashCode_differsWhenFieldsDiffer() {
+        Stack_Object base = new Stack_Object("x", 1234, 1, EntryKind.CONSTANT, DataType.INT);
+        Stack_Object diffName = new Stack_Object("y", 1234, 1, EntryKind.CONSTANT, DataType.INT);
+        Stack_Object diffVal = new Stack_Object("x", 4321, 1, EntryKind.CONSTANT, DataType.INT);
+        Stack_Object diffScope = new Stack_Object("x", 1234, 2, EntryKind.CONSTANT, DataType.INT);
+        Stack_Object diffKind = new Stack_Object("x", 1234, 1, EntryKind.VARIABLE, DataType.INT);
+        Stack_Object diffType = new Stack_Object("x", 1234, 1, EntryKind.CONSTANT, DataType.DOUBLE);
+
+        // Ensure objects are not equal
+        assertNotEquals(base, diffName);
+        assertNotEquals(base, diffVal);
+        assertNotEquals(base, diffScope);
+        assertNotEquals(base, diffKind);
+        assertNotEquals(base, diffType);
+
+        // It's extremely unlikely these different objects will have colliding hash codes
+        assertNotEquals(base.hashCode(), diffName.hashCode());
+        assertNotEquals(base.hashCode(), diffVal.hashCode());
+        assertNotEquals(base.hashCode(), diffScope.hashCode());
+        assertNotEquals(base.hashCode(), diffKind.hashCode());
+        assertNotEquals(base.hashCode(), diffType.hashCode());
     }
 
     @Test

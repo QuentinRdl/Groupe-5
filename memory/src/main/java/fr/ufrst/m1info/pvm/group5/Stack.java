@@ -82,7 +82,10 @@ public class Stack {
             throw new InvalidNameException("Variable name cannot be null or empty");
         }
 
-        validateType(value, type);
+        // Allow declarations without initial value: only validate when value is non-null
+        if (value != null) {
+            validateType(value, type);
+        }
 
         Stack_Object var = new Stack_Object(name, value, scopeDepth, EntryKind.VARIABLE, type);
         stack_content.push(var);
@@ -99,7 +102,11 @@ public class Stack {
             throw new InvalidNameException("Constant name cannot be null or empty");
         }
 
-        validateType(value, type);
+        // Constants may be declared without an initial value (value can be assigned later),
+        // so only validate when a non-null value is provided
+        if (value != null) {
+            validateType(value, type);
+        }
 
         Stack_Object constant = new Stack_Object(name, value, scopeDepth, EntryKind.CONSTANT, type);
         stack_content.push(constant);
