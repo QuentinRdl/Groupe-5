@@ -18,7 +18,7 @@ import org.testfx.framework.junit5.ApplicationTest;
  * Unit tests for the CodeLineCell class
  */
 @ExtendWith(ApplicationExtension.class)
-public class CodeLineCellT extends ApplicationTest {
+public class CodeLineCellTest extends ApplicationTest {
 
     private ListView<CodeLine> listView;
 
