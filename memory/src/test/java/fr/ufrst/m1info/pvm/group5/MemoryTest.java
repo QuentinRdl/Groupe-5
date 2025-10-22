@@ -1,6 +1,5 @@
 package fr.ufrst.m1info.pvm.group5;
 
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -124,11 +123,22 @@ public class MemoryTest {
     }
 
 
-    @Disabled // TODO : Remove
     @Test
     public void withdrawDeclRemovesEntry() {
         memory.withdrawDecl("tmp");
         verify(symbolTableMocked, times(1)).removeEntry("tmp");
+    }
+
+
+    @Test
+    public void withdrawDeclThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            memory.withdrawDecl("");
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            memory.withdrawDecl(null);
+        });
     }
 
 

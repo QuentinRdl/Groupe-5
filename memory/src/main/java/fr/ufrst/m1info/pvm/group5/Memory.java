@@ -14,10 +14,7 @@ public class Memory {
     Stack stack = new Stack();
     SymbolTable symbolTable = new SymbolTable();
 
-
-    /**
-     * Operations directly related to the stack
-     */
+    /* Operations directly related to the stack */
 
     /**
      * Put a value at the top of the stack
@@ -97,14 +94,17 @@ public class Memory {
         stack.setConst(identifier, value, type);
     }
 
-    // DeclTab and DeclMeth will be done when we'll do methods and arrays
+    // TODO : DeclTab and DeclMeth will be done when we'll do methods and arrays
 
     /**
      * Remove a declaration
      * @param identifier identifier of the declaration to remove
      */
     public void withdrawDecl(String identifier) {
-        // TODO
+        if(identifier == null || identifier.isEmpty()) {
+            throw new IllegalArgumentException("Cannot call 'withdrawDecl' with an empty/null identifier");
+        }
+        symbolTable.removeEntry(identifier);
     }
 
     /**
