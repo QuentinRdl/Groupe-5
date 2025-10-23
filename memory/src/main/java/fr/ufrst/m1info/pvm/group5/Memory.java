@@ -112,6 +112,9 @@ public class Memory {
      * @param value value to affect (cannot be null)
      */
     public void affectValue(String identifier, Object value) {
+        if(value == null) {
+            throw new IllegalArgumentException("affectValue cannot be called with null value");
+        }
         // TODO
     }
 
