@@ -73,11 +73,19 @@ public class ASTMocks {
         Memory result = createMemoryWithStorage(storage);
         doAnswer(invocation -> {
             storage.remove((String)invocation.getArgument(0));
-           return null;
+            return null;
         }).when(result).withdrawDecl(any(String.class));
         return result;
     }
 
+    /**
+     * Creates a mock to mimic a node of the AST
+     * @param type class of node to create
+     * @param onInterpret function called when the "interpret" method is called from the mock
+     * @param onCompile function called when the "compile" method is called from the mock
+     * @return mock created
+     * @param <T> class of node to create, defined by the [type] parameter
+     */
     public static<T extends ASTNode> T createNode(Class<T> type, Consumer<Memory> onInterpret, Function<Integer, Integer> onCompile){
         T result = mock(type);
         doAnswer(invocationOnMock ->{
@@ -95,6 +103,15 @@ public class ASTMocks {
         return result;
     }
 
+    /**
+     * Creates a mock to mimic an evaluable node
+     * @param type class of node to create
+     * @param onInterpret function called when the "interpret" method is called from the mock
+     * @param onCompile function called when the "compile" method is called from the mock
+     * @param onEval function called when the "eval" method is called from the mock
+     * @return mock created
+     * @param <T> class of node to create, defined by the [type] parameter
+     */
     public static<T extends ASTNode & EvaluableNode> T createEvalNode(
             Class<T> type,
             Consumer<Memory> onInterpret,
@@ -110,6 +127,15 @@ public class ASTMocks {
         return result;
     }
 
+    /**
+     * Creates a mock to mimic an evaluable node
+     * @param type class of node to create
+     * @param onInterpret function called when the "interpret" method is called from the mock
+     * @param onCompile function called when the "compile" method is called from the mock
+     * @param onWithdraw function called when the "withdrawInterpret" method is called from the mock
+     * @return mock created
+     * @param <T> class of node to create, defined by the [type] parameter
+     */
     public static<T extends ASTNode & WithradawableNode> T createWithdrawNode(
             Class<T> type,
             Consumer<Memory> onInterpret,
