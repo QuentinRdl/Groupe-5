@@ -7,6 +7,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.EmptyStackException;
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Stack {
     private Deque<Stack_Object> stack_content;
@@ -350,7 +352,52 @@ public class Stack {
      * @param obj2 2nd Object
      * @return True if swapped, false otherwise
      */
-    public boolean swap(Object obj1, Object obj2) {
-        return false;
+    public boolean swap(Stack_Object obj1, Stack_Object obj2) {
+        // Validate arguments
+        if (obj1 == null || obj2 == null) {
+            throw new IllegalArgumentException("Swap requires non-null Stack_Object arguments");
+        }
+
+        String id1 = obj1.getName();
+        String id2 = obj2.getName();
+
+        if (id1 == null || id2 == null) {
+            throw new IllegalArgumentException("Swap requires Stack_Object instances with non-null names");
+        }
+
+        // If identifiers are equal, nothing to do
+        if (id1.equals(id2)) return true;
+
+        // Convert deque to list to find indices and swap
+        List<Stack_Object> list = new ArrayList<>(stack_content);
+        int idx1 = -1, idx2 = -1;
+        for (int i = 0; i < list.size(); i++) {
+            Stack_Object so = list.get(i);
+            if (idx1 == -1 && Objects.equals(so.getName(), id1)) {
+                idx1 = i;
+            }
+            if (idx2 == -1 && Objects.equals(so.getName(), id2)) {
+                idx2 = i;
+            }
+            if (idx1 != -1 && idx2 != -1) break;
+        }
+
+        if (idx1 == -1 || idx2 == -1) {
+            // One or both objects not found
+            return false;
+        }
+
+        // Swap in list
+        Stack_Object tmp = list.get(idx1);
+        list.set(idx1, list.get(idx2));
+        list.set(idx2, tmp);
+
+        // Rebuild deque preserving the new order
+        stack_content.clear();
+        for (Stack_Object so : list) {
+            stack_content.addLast(so);
+        }
+
+        return true;
     }
 }

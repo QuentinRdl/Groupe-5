@@ -420,7 +420,7 @@ public class StackTest {
             fail("Reflection setup failed: " + ex.getMessage());
         }
 
-        boolean res = s.swap("a", "a");
+        boolean res = s.swap(a, a);
         assertTrue(res);
     }
 
@@ -453,7 +453,7 @@ public class StackTest {
             fail("Reflection setup failed: " + ex.getMessage());
         }
 
-        boolean res = s.swap("a", "b");
+        boolean res = s.swap(a, b);
         assertTrue(res);
 
         // Verify order is now [b, a, c]
@@ -479,6 +479,10 @@ public class StackTest {
         when(a.getName()).thenReturn("a");
         when(a.getScope()).thenReturn(0);
 
+        Stack_Object b = mock(Stack_Object.class);
+        when(b.getName()).thenReturn("b");
+        when(b.getScope()).thenReturn(0);
+
         try {
             Field f = Stack.class.getDeclaredField("stack_content");
             f.setAccessible(true);
@@ -489,7 +493,7 @@ public class StackTest {
             fail("Reflection setup failed: " + ex.getMessage());
         }
 
-        boolean res = s.swap("a", "b");
+        boolean res = s.swap(a, b);
         assertFalse(res);
     }
 
