@@ -424,4 +424,32 @@ public class NodeInterpretationUnitTest {
         tested = new EqualNode(f1,f2);
         assertTrue(tested.eval(memory).valueBool);
     }
+
+    /**
+     * Skipping FinalNode, as the tests would be the same as the VariableNode within the representation of the memory we use now
+     */
+
+    /**
+     * IdentNode
+     */
+
+    @Test
+    public void IdentNode_Integer(){
+        IdentNode id = new IdentNode("a");
+        memory.declVar("a", new Value(5),  DataType.INT);
+        assertEquals(5, id.eval(memory).valueInt);
+    }
+
+    @Test
+    public void IdentNode_Boolean(){
+        IdentNode id = new IdentNode("a");
+        memory.declVar("a", new Value(true),  DataType.BOOL);
+        assertTrue(id.eval(memory).valueBool);
+    }
+
+    @Test
+    public void IdentNode_Undeclared(){
+        IdentNode id = new IdentNode("a");
+        assertThrows(ASTInvalidMemoryException.class, () -> id.eval(memory));
+    }
 }
