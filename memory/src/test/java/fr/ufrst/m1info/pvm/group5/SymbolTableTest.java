@@ -39,6 +39,20 @@ public class SymbolTableTest {
         assertEquals(DataType.INT, result.getDataType());
     }
 
+    /**
+     * Tests the second addEntry method which takes 3 args.
+     */
+    @Test
+    public void test2ndAddEntry() {
+        // SymbolTableEntry  = new SymbolTableEntry("x", EntryKind.VARIABLE, DataType.INT);
+        globalTable.addEntry("x", EntryKind.VARIABLE, DataType.INT);
+
+        SymbolTableEntry result = globalTable.lookup("x");
+        assertNotNull(result);
+        assertEquals("x", result.getName());
+        assertEquals(EntryKind.VARIABLE, result.getKind());
+        assertEquals(DataType.INT, result.getDataType());
+    }
 
     /**
      * Tests that adding a duplicate symbol in the same scope throws an exception.
