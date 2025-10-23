@@ -159,7 +159,8 @@ public class NodeInterpretationUnitTest {
                 DeclarationsNode.class,
                 m->m.declVar("x", new Value(5), DataType.INT),
                 null,
-                m->{}
+                m->{},
+                null
                 );
         ClassNode c = new ClassNode(ident, d, main);
         c.interpret(memory);
@@ -176,7 +177,8 @@ public class NodeInterpretationUnitTest {
                 DeclarationsNode.class,
                 m->m.declVar("x", new Value(5), DataType.INT),
                 null,
-                m->m.withdrawDecl("x")
+                m->m.withdrawDecl("x"),
+                null
         );
         ClassNode c = new ClassNode(ident, d, main);
         c.interpret(mem);
@@ -191,7 +193,7 @@ public class NodeInterpretationUnitTest {
                 m->m.declVar("x", new Value(5), DataType.INT),
                 null
         );
-        DeclarationsNode d = ASTMocks.createWithdrawNode(DeclarationsNode.class, m -> {}, null, m->{});
+        DeclarationsNode d = ASTMocks.createWithdrawNode(DeclarationsNode.class, m -> {}, null, m->{}, null);
         ClassNode c = new ClassNode(ident, d, main);
         c.interpret(memory);
         assertEquals(5, memoryStorage.get("x").valueInt);
@@ -209,7 +211,8 @@ public class NodeInterpretationUnitTest {
                 DeclarationsNode.class,
                 m->m.declVar("x", new Value(5), DataType.INT),
                 null,
-                m->m.withdrawDecl("x")
+                m->m.withdrawDecl("x"),
+                null
         );
         ClassNode c = new ClassNode(ident, d, main);
         c.interpret(memory);
