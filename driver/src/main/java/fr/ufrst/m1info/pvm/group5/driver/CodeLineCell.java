@@ -35,7 +35,12 @@ public class CodeLineCell extends ListCell<CodeLine> {
         codeField.getStyleClass().add("code-field");
         HBox.setHgrow(codeField, Priority.ALWAYS);
 
-        //TODO : make the code editable by listening for changes
+        // listen to changes in the code
+        codeField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(getItem() != null){
+                getItem().setCode(newValue);
+            }
+        });
 
         container = new HBox();
         container.getStyleClass().add("code-line");
@@ -54,12 +59,16 @@ public class CodeLineCell extends ListCell<CodeLine> {
     protected void updateItem(CodeLine item, boolean empty){
         super.updateItem(item, empty);
 
-        if (empty | item == null){
+        if (empty || item == null){
             setGraphic(null);
         } else {
             lineNumberLabel.setText(String.valueOf(item.getLineNumber()));
             codeField.setText(item.getCode());
             setGraphic(container);
         }
+    }
+
+    public TextField getCodeField(){
+        return codeField;
     }
 }

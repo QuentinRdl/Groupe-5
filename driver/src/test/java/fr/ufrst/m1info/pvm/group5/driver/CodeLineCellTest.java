@@ -1,5 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.driver;
 
+import javafx.application.Platform;
+import javafx.scene.layout.StackPane;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,6 +15,7 @@ import javafx.scene.layout.HBox;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.util.WaitForAsyncUtils;
 
 /**
  * Unit tests for the CodeLineCell class
@@ -93,5 +96,32 @@ public class CodeLineCellTest extends ApplicationTest {
 
         assertEquals("1", lineNumber.getText());
         assertEquals("x = 10;", codeField.getText());
+    }
+
+    @Test
+    public void testCodeLineUpdatesWhenUserEditsTextField(){
+        CodeLineCell cell = new CodeLineCell();
+        CodeLine codeLine = new CodeLine(1, "int x = 10;");
+
+        Platform.runLater(() -> {
+            cell.updateItem(codeLine, false);
+
+            StackPane root = new StackPane(cell.getGraphic());
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 400, 300));
+            stage.show();
+        });
+
+        WaitForAsyncUtils.waitForFxEvents();
+
+        TextField codeField = cell.getCodeField();
+        assertNotNull(codeField);
+        assertEquals("int x = 10;", codeField.getText());
+
+        clickOn(codeField).eraseText(codeField.getText().length()).write("int y = 12");
+
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals("int y = 12", codeField.getText());
     }
 }

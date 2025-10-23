@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 
 /**
@@ -137,4 +138,11 @@ public class MainController {
     public ListView<CodeLine> getCodeListView(){
         return codeListView;
     }
+
+    //TODO: retrieve the modified code
+    public String getModifiedField(){
+        return codeLines.stream().map(CodeLine::getCode).collect(Collectors.joining("\n"));
+    }
+
+    //TODO: save the file
 }
