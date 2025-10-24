@@ -52,6 +52,7 @@ public class Memory {
      */
     public void pop() throws Stack.StackIsEmptyException {
         stack.pop();
+        // TODO : Remove from table of symbol
     }
 
     /**
@@ -103,6 +104,7 @@ public class Memory {
             throw new IllegalArgumentException("Cannot call 'withdrawDecl' with an empty/null identifier");
         }
         symbolTable.removeEntry(identifier);
+        // TODO : Do not remove from the stack right ?
     }
 
     /**
@@ -112,19 +114,35 @@ public class Memory {
      * @param value value to affect (cannot be null)
      */
     public void affectValue(String identifier, Object value) {
-        if(value == null) {
+        if(identifier == null) {
+            throw new IllegalArgumentException("affectValue cannot be called with null identifier");
+        }
+        else if(value == null) {
             throw new IllegalArgumentException("affectValue cannot be called with null value");
         }
-        // TODO
+
+        SymbolTableEntry entry = symbolTable.lookup(identifier);
+        String ref = entry.getName();
+        // TODO : Should we iterate through the stack to find the ref, and change the value ?
     }
 
     public void declVarClass(String identifier) {
         // TODO
     }
 
+    /**
+     * TODO : Is it actually that ?
+     * Returns Object with the given identifier
+     * @param identifier identifier of the Object we are looking for
+     * @return Object if found, null otherwise
+     */
     public Object val(String identifier) {
-        // TODO
-        return null;
+        if(identifier == null || identifier.isEmpty()) {
+            throw new IllegalArgumentException("val cannot be called with an empty/null identifier");
+        }
+        // Lookup the symbol table entry
+        SymbolTableEntry entry = symbolTable.lookup(identifier);
+        return entry.getReference();
     }
 
     public String identVarClass() {

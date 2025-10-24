@@ -115,8 +115,6 @@ public class Stack {
     }
 
 
-
-
     /**
      * Returns the top object from the stack
      * @return Object the top object
@@ -416,5 +414,61 @@ public class Stack {
         Stack_Object second = stack_content.pop();
         stack_content.push(first);
         stack_content.push(second);
+    }
+
+    /**
+     * Returns the DataType for any given Object
+     * @param obj object to check type
+     * @return The DataType (UNKNOWN) if not in DataType enum
+     */
+    public DataType getDataTypeFromGenericObject(Object obj) {
+        if (obj instanceof Integer) {
+            return DataType.INT;
+        }
+        if (obj instanceof Boolean) {
+            return DataType.BOOL;
+        }
+        if (obj instanceof String) {
+            return DataType.STRING;
+        }
+        if (obj instanceof Float) {
+            return DataType.FLOAT;
+        }
+        if (obj instanceof Double) {
+            return DataType.DOUBLE;
+        }
+
+        /* TODO : How to handle null objects ??
+        if (obj == null) {
+            return DataType.VOID;
+        }
+         */
+
+        return DataType.UNKNOWN;
+    }
+
+    /**
+     * Puts a value on a const that has no affected value yet
+     * @param obj const object
+     * @param value value to assign the object
+     * @return true if value affected, false otherwise
+     */
+    public boolean initializeConst(Stack_Object obj, Object value) {
+        if(obj == null || value == null) return false;
+        if(obj.getEntryKind() != EntryKind.CONSTANT) {
+            throw new IllegalArgumentException("initializeConst must be called with a const !");
+        }
+
+        DataType dt = getDataTypeFromGenericObject(obj);
+        if(dt != obj.getDataType()) {
+            throw new IllegalArgumentException("Called intializeConst with incorrect data type");
+        }
+
+        if(obj.getValue() != null) {
+            throw new IllegalStateException("Called intializeConst with a const that is already affected");
+        }
+
+        obj.setValue(value);
+        return true;
     }
 }

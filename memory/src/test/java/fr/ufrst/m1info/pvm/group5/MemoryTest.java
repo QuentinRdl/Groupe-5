@@ -167,4 +167,19 @@ public class MemoryTest {
         verify(symbolTableMocked, times(1)).lookup("y");
     }
     */
+
+    @Test
+    public void swapDelegatesToStack() {
+        // Call swap on memory and verify it calls the stack swap method
+        memory.swap();
+        verify(stackMocked, times(1)).swap();
+    }
+
+    @Test
+    public void swapPropagatesException() {
+        // Calling swap should throw error
+        doThrow(new RuntimeException("swap error")).when(stackMocked).swap();
+        assertThrows(RuntimeException.class, () -> memory.swap());
+        verify(stackMocked, times(1)).swap();
+    }
 }
