@@ -570,6 +570,64 @@ public class StackTest {
         assertThrows(IllegalStateException.class, s::swap);
     }
 
+    @Test
+    public void updateTopValue_emptyStack_returnsFalse() {
+        Stack s = new Stack();
+        boolean res = s.updateTopValue(42);
+        assertFalse(res);
+    }
+
+    @Test
+    public void updateTopValue_variable_success() {
+        stack.pushScope();
+        stack.setVar("x", 1, DataType.INT);
+        boolean res = stack.updateTopValue(2);
+        assertTrue(res);
+        assertEquals(2, stack.top().getValue());
+    }
+
+    @Test
+    public void updateTopValue_typeMismatch_returnsFalse() {
+        stack.pushScope();
+        stack.setVar("x", 1, DataType.INT);
+        // Attempt to update with a Double while variable is INT
+        boolean res = stack.updateTopValue(2.5);
+        assertFalse(res);
+        // value should remain unchanged
+        assertEquals(1, stack.top().getValue());
+    }
+
+    @Test
+    public void updateTopValue_constantAlreadyAssigned_returnsFalse() {
+        stack.pushScope();
+        stack.setConst("c", 10, DataType.INT);
+        // constant already has a value -> updateTopValue should refuse
+        boolean res = stack.updateTopValue(20);
+        assertFalse(res);
+        assertEquals(10, stack.top().getValue());
+    }
+
+    @Test
+    public void updateTopValue_constantUninitialized_canInitialize() {
+        stack.pushScope();
+        // declare constant without initial value
+        stack.setConst("c", null, DataType.INT);
+        // now initialize it using updateTopValue
+        boolean res = stack.updateTopValue(99);
+        assertTrue(res);
+        assertEquals(99, stack.top().getValue());
+    }
+
+    @Test
+    public void updateTopValue_constantUninitialized_typeMismatch_returnsFalse() {
+        stack.pushScope();
+        stack.setConst("c", null, DataType.INT);
+        // attempt to initialize with wrong type
+        boolean res = stack.updateTopValue(3.14);
+        assertFalse(res);
+        assertNull(stack.top().getValue());
+    }
+
 
 
     /* TODO : Replace with the correct format

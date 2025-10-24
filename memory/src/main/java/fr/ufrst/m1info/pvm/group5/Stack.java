@@ -236,6 +236,31 @@ public class Stack {
     }
 
     /**
+     * Updates the top value of the stack w/ the given value
+     * @param value new value for the object on top of the stack
+     * @return true if object updated, false otherwise
+     */
+    public boolean updateTopValue(Object value) {
+        if (stack_content.isEmpty()) {
+            return false;
+        }
+
+        DataType valueDt = getDataTypeFromGenericObject(value);
+        Stack_Object topObj = stack_content.peek();
+        if(topObj == null) return false;
+        if(topObj.getEntryKind() == EntryKind.CONSTANT) {
+            // Can only reassign constant if value == null
+            if(topObj.getValue() != null) return false; // Cannot reassign constant
+        }
+        if(topObj.getDataType() != valueDt) return false;
+
+        // The object on top of the stack is of the same type as the object we were given, we can reaffect
+        topObj.setValue(value);
+        return true;
+    }
+
+
+    /**
      * Checks if a var exists in the current scope
      * @param name name of the var
      * @return true if the var exists, false otherwise
