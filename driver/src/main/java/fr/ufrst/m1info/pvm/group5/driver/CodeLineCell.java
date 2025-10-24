@@ -72,6 +72,10 @@ public class CodeLineCell extends ListCell<CodeLine> {
         return lineNumberContainer;
     }
 
+    public TextField getCodeField(){
+        return codeField;
+    }
+
     private void handleBreakpointClick(){
         CodeLine item = getItem();
         if (item != null){
@@ -110,9 +114,5 @@ public class CodeLineCell extends ListCell<CodeLine> {
 
             setGraphic(container);
         }
-    }
-
-    public TextField getCodeField(){
-        return codeField;
     }
 }

@@ -12,7 +12,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -32,6 +37,8 @@ public class MainController {
 
     @FXML
     private SplitPane splitPane;
+
+    private File currentFile;
 
     /**
      * Initializes the controller components after the FXML has been loaded.
@@ -60,7 +67,7 @@ public class MainController {
         fc.getExtensionFilters().addAll(
                 new ExtensionFilter("MiniJaja and JajaCode file", "*.mjj", "*.jcc")
         );
-        File selectedFile = fc.showOpenDialog(null);
+        File selectedFile = fc.showOpenDialog(splitPane.getScene().getWindow());
         loadFile(selectedFile);
     }
 
@@ -84,8 +91,6 @@ public class MainController {
         }
 
         try {
-            fileLabel.setText(selectedFile.getName());
-
             // Delete old cells
             codeLines.clear();
 
@@ -98,6 +103,9 @@ public class MainController {
                     codeLines.add(new CodeLine(nbLines++, line));
                 }
             }
+
+            fileLabel.setText(selectedFile.getName());
+            currentFile = selectedFile;
 
             if (output != null) {
                 output.appendText("File loaded : " + selectedFile.getName() + "\n");
@@ -139,10 +147,55 @@ public class MainController {
         return codeListView;
     }
 
-    //TODO: retrieve the modified code
-    public String getModifiedField(){
+    public String getModifiedCode(){
         return codeLines.stream().map(CodeLine::getCode).collect(Collectors.joining("\n"));
     }
 
-    //TODO: save the file
+    public void saveButton(){
+        if(currentFile != null){
+            saveToFile(currentFile);
+        } else {
+            saveAsButton();
+        }
+    }
+
+    public void saveAsButton(){
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Save a file as");
+        fc.getExtensionFilters().addAll(
+                new ExtensionFilter( "MiniJaja file", "*.mjj"),
+                new ExtensionFilter("JajaCode file", "*.jcc")
+        );
+
+        // Default name if file exists
+        if (currentFile != null){
+            fc.setInitialFileName(currentFile.getName());
+            fc.setInitialDirectory(currentFile.getParentFile());
+        }
+
+        File fileToSave = fc.showSaveDialog(splitPane.getScene().getWindow());
+        if(fileToSave != null){
+            saveToFile(fileToSave);
+            currentFile = fileToSave;
+            fileLabel.setText(currentFile.getName());
+        }
+    }
+
+    private void saveToFile(File file){
+        try {
+            List<String> lines = codeLines.stream().map(CodeLine::getCode).toList();
+            Files.write(file.toPath(), lines , StandardCharsets.UTF_8);
+
+            if (output != null) {
+                output.appendText("File saved : " + currentFile.getName() + "\n");
+            }
+
+        } catch (IOException e){
+            System.err.println("Error during saving : " + e.getMessage());
+            if (output != null) {
+                output.appendText("Error saving file\n");
+            }
+        }
+    }
+
 }

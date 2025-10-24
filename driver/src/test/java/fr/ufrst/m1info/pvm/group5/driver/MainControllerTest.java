@@ -1,5 +1,8 @@
 package fr.ufrst.m1info.pvm.group5.driver;
 
+import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -22,6 +25,7 @@ import static org.testfx.matcher.control.LabeledMatchers.hasText;
 import static org.testfx.util.NodeQueryUtils.isVisible;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.util.WaitForAsyncUtils;
 
 /**
  * Unit tests for the MainController class
@@ -201,6 +205,34 @@ public class MainControllerTest extends ApplicationTest {
         assertEquals("second.mjj", controller.getFileLabel().getText());
         assertEquals(1,controller.getCodeLines().size());
         assertEquals("final int a = 2000;", controller.getCodeLines().getFirst().getCode());
+    }
+
+    @Test
+    public void testGetModifiedCode() throws Exception{
+        File testFile = createTestFile("test.mjj", "int x = 10;", "x++;");
+
+        interact(() -> {
+            boolean success = controller.loadFile(testFile);
+            assertTrue(success);
+        });
+
+        ObservableList<CodeLine> codeLines = controller.getCodeLines();
+        ListView<CodeLine> codeListView = controller.getCodeListView();
+        interact(() -> {
+            codeListView.scrollTo(0); // wait until the list view displays the first cell
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        TextField codeField = (TextField) codeListView.lookup(".code-field");
+        assertNotNull(codeField);
+
+        clickOn(codeField).eraseText(codeLines.get(0).getCode().length()).write("int y = 12;");
+
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals("int y = 12;", codeLines.get(0).getCode());
+
+        assertEquals("int y = 12;\nx++;", controller.getModifiedCode());
     }
 
 }
