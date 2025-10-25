@@ -1,4 +1,4 @@
-package fr.ufrst.m1info.pvm.group5;
+package fr.ufrst.m1info.pvm.group5.memory;
 
 /**
  * Class interacting with memory allowing to have IO from the memory.
