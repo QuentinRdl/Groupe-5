@@ -1,4 +1,4 @@
-package fr.ufrst.m1info.pvm.group5;
+package fr.ufrst.m1info.pvm.group5.interpreter;
 import org.junit.jupiter.api.*;
 
 import java.nio.file.NoSuchFileException;
