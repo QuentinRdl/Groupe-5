@@ -53,8 +53,9 @@ public class Memory {
      * Removes the top of the stack
      */
     public void pop() throws Stack.StackIsEmptyException {
+        Stack_Object top = stack.top();
+        symbolTable.removeEntry(top.getName()); // TODO : Check in unit tests
         stack.pop();
-        // TODO : Remove from table of symbol
     }
 
     /**
@@ -106,7 +107,11 @@ public class Memory {
             throw new IllegalArgumentException("Cannot call 'withdrawDecl' with an empty/null identifier");
         }
         symbolTable.removeEntry(identifier);
-        // TODO : Do not remove from the stack right ?
+
+        // Find the object in the stack
+        Stack_Object obj = stack.getObject(identifier);
+        // If object present in the stack, remove it
+        if(obj != null) stack.removeObject(obj);
     }
 
     /**
@@ -123,9 +128,45 @@ public class Memory {
             throw new IllegalArgumentException("affectValue cannot be called with null value");
         }
 
-        SymbolTableEntry entry = symbolTable.lookup(identifier);
-        String ref = entry.getName();
-        // TODO : Should we iterate through the stack to find the ref, and change the value ?
+        // Check that it exists in the symbol table
+        SymbolTableEntry entry = symbolTable.lookup(identifier); // Can throw illegalArgumentException if identifier not found
+
+        // Check that types matches
+        DataType givenDataType = stack.getDataTypeFromGenericObject(value);
+
+        // Find the object in the stack
+        Stack_Object obj = stack.searchObject(identifier);
+        if (obj == null) {
+            throw new IllegalArgumentException("Identifier '" + identifier + "' exists in the symbol table but no corresponding object was found in the stack");
+        }
+
+        // Ensure declared type matches given value type
+        DataType declared = entry.getDataType();
+        if (declared != givenDataType) {
+            throw new IllegalArgumentException("Type mismatch when affecting value to '" + identifier + "' : declared=" + declared + " given=" + givenDataType);
+        }
+
+        // Handle according to the kind
+        if (entry.getKind() == EntryKind.VARIABLE) {
+            // Variables can always be reassigned
+            obj.setValue(value);
+            // Update symbol table reference
+            entry.setReference(value);
+            return;
+        }
+
+        if (entry.getKind() == EntryKind.CONSTANT) {
+            // Constants can only be initialized once
+            if (obj.getValue() != null) {
+                throw new IllegalStateException("Cannot modify constant '" + identifier + "' once it has already been declared");
+            }
+            obj.setValue(value);
+            entry.setReference(value);
+            return;
+        }
+
+        // TODO : For other kinds, we don't support assignment yet
+        throw new IllegalArgumentException("affectValue is not supported for EntryKind: " + entry.getKind());
     }
 
     public void declVarClass(String identifier) {
@@ -133,7 +174,6 @@ public class Memory {
     }
 
     /**
-     * TODO : Is it actually that ?
      * Returns Object with the given identifier
      * @param identifier identifier of the Object we are looking for
      * @return Object if found, null otherwise
@@ -144,12 +184,13 @@ public class Memory {
         }
         // Lookup the symbol table entry
         SymbolTableEntry entry = symbolTable.lookup(identifier);
-        return entry.getReference();
-        // TODO : retourne la valeur de l'objet
+        String ref = entry.getName();
+
+        return stack.getObject(ref);
     }
 
     public String identVarClass() {
-        // TODO : La variable de classe est specifique, pour dire que ca retourne la variable de classe,
+        // TODO : La variable de classe est spécifique, pour dire que ca retourne la variable de classe,
         return null;
     }
 

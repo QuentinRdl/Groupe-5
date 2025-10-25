@@ -163,10 +163,10 @@ public class Stack {
 
 
     /**
-     * @param name the name of the var we are looking for
+     * @param name the name of the object we are looking for
      * @return Object, the Object if found, null otherwise
      */
-     public Object getObject(String name) {
+     public Stack_Object getObject(String name) {
          for(Stack_Object obj : stack_content) {
              if(obj.getName().equals(name) && obj.getScope() == scopeDepth) {
                  return obj;
@@ -331,7 +331,7 @@ public class Stack {
      * Will remove the given Stack_Object given, MUST BE SURE IT EXISTS
      * @param object the Stack_Object to remove
      */
-    private void removeObject(Stack_Object object) {
+    public void removeObject(Stack_Object object) {
         stack_content.remove(object);
     }
 
