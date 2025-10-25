@@ -94,5 +94,29 @@ public class NodeCompileTest {
         assertEquals(List.of("push(jcfaux)"),tested.compile(1));
     }
 
+    @Test
+    public void ClassNodeWithDecls(){
+        IdentNode ident = new IdentNode("x");
+        DeclarationsNode decls = ASTMocks.createWithdrawNode(
+                DeclarationsNode.class,
+                null,
+                i -> List.of("DECLSTEST"),
+                null,
+                i -> List.of("WITHDECLSTEST")
+        );
+        MainNode main = ASTMocks.createNode(MainNode.class, null, i -> List.of("MAINTEST"));;
+        ClassNode tested = new ClassNode(ident,decls,main);
+        assertEquals(List.of("init", "DECLSTEST","MAINTEST","WITHDECLSTEST","pop","jcstop"),tested.compile(1));
+    }
+
+    @Test
+    public void ClassNodeWithoutDecls(){
+        IdentNode ident = new IdentNode("x");
+        DeclarationsNode decls = null;
+        MainNode main = ASTMocks.createNode(MainNode.class, null, i -> List.of("MAINTEST"));;
+        ClassNode tested = new ClassNode(ident,decls,main);
+        assertEquals(List.of("init","MAINTEST","pop","jcstop"),tested.compile(1));
+    }
+
 
 }
