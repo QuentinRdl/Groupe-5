@@ -1,6 +1,8 @@
 package fr.ufrst.m1info.pvm.group5;
 
 
+import fr.ufrst.m1info.pvm.group5.ast.AbstractSyntaxTree;
+
 public class InterpreterMiniJaja implements Interpreter{
     /**
      * Interpret the given code
