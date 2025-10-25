@@ -152,5 +152,35 @@ public class NodeCompileTest {
         assertEquals(List.of("VARIABLETEST2","VARIABLETEST1"),tested.withdrawCompile(1));
     }
 
+    @Test
+    public void FinalNodeWithExp(){
+        IdentNode ident = new IdentNode("x");
+        AddNode exp = ASTMocks.createNode(
+                AddNode.class,
+                null,
+                i -> List.of("ADD")
+        );
+        TypeNode type = new TypeNode(ValueType.INT);
+        FinalNode tested = new FinalNode(type,ident,exp);
+        assertEquals(List.of("ADD","new(x,INT,cst,0)"),tested.compile(1));
+    }
+
+    @Test
+    public void FinalNodeWithoutExp(){
+        IdentNode ident = new IdentNode("x");
+        TypeNode type = new TypeNode(ValueType.INT);
+        FinalNode tested = new FinalNode(type,ident,null);
+        assertEquals(List.of("new(x,INT,cst,0)"),tested.compile(1));
+    }
+
+    @Test
+    public void FinalNodeWithdraw(){
+        IdentNode ident = new IdentNode("x");
+        TypeNode type = new TypeNode(ValueType.INT);
+        FinalNode tested = new FinalNode(type,ident,null);
+        assertEquals(List.of("swap","pop"),tested.withdrawCompile(1));
+    }
+
+
 
 }
