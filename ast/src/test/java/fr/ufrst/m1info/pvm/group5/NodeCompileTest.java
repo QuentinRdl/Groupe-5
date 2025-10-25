@@ -181,6 +181,11 @@ public class NodeCompileTest {
         assertEquals(List.of("swap","pop"),tested.withdrawCompile(1));
     }
 
+    @Test
+    public void IdentNode(){
+        IdentNode tested = new IdentNode("x");
+        assertEquals(List.of("load(x)"),tested.compile(1));
+    }
 
 
 }
