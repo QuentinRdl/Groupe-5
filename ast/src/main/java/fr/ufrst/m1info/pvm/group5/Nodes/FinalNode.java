@@ -33,7 +33,7 @@ public class FinalNode extends ASTNode implements WithradawableNode {
         if(expression != null) {
             jajacodes.addAll(expression.compile(address));
         }
-        jajacodes.add("new(" + ident + "," + type + ",cst,0)");
+        jajacodes.add("new(" + ident.identifier + "," + type + ",cst,0)");
         return jajacodes;
     }
 
