@@ -45,6 +45,8 @@ public class Memory {
             SymbolTableEntry entry = new SymbolTableEntry(identifier, kind, type);
             symbolTable.addEntry(entry);
         }
+
+        // TODO :
     }
 
     /**
@@ -143,10 +145,11 @@ public class Memory {
         // Lookup the symbol table entry
         SymbolTableEntry entry = symbolTable.lookup(identifier);
         return entry.getReference();
+        // TODO : retourne la valeur de l'objet
     }
 
     public String identVarClass() {
-        // TODO
+        // TODO : La variable de classe est specifique, pour dire que ca retourne la variable de classe,
         return null;
     }
 

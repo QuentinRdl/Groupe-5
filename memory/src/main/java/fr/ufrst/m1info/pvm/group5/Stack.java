@@ -34,7 +34,6 @@ public class Stack {
         }
     }
 
-
     /**
      * Thrown when attempting to modify a Stack_Object whose entry kind is CONSTANT.
      */

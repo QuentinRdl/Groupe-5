@@ -1038,4 +1038,37 @@ public class StackTest {
             }
         });
     }
+
+    @Test
+    public void getDataTypeFromGenericObjectTest() {
+        DataType res;
+        // INT
+        int integer = 2;
+        res = stack.getDataTypeFromGenericObject(integer);
+        assertEquals(DataType.INT, res);
+
+        // BOOL
+        boolean bouleEtBill = true;
+        res = stack.getDataTypeFromGenericObject(bouleEtBill);
+        assertEquals(DataType.BOOL, res);
+
+        // STRING
+        String str = "chaine";
+        res = stack.getDataTypeFromGenericObject(str);
+        assertEquals(DataType.STRING, res);
+
+        // FLOAT
+        float flottant = 1.2F;
+        res = stack.getDataTypeFromGenericObject(flottant);
+        assertEquals(DataType.FLOAT, res);
+
+        // DOUBLE
+        double deux = 1.2;
+        res = stack.getDataTypeFromGenericObject(deux);
+        assertEquals(DataType.DOUBLE, res);
+
+        // UNKNOWN
+        res = stack.getDataTypeFromGenericObject(null);
+        assertEquals(DataType.UNKNOWN, res);
+    }
 }
