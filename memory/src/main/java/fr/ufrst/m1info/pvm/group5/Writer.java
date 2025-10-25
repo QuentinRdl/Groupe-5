@@ -1,18 +1,14 @@
 package fr.ufrst.m1info.pvm.group5;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Consumer;
-
 /**
  * Class interacting with memory allowing to have IO from the memory.
  * The class takes the role of publisher in a publish-subscribe like pattern.
  */
 public class Writer {
     private String _innerText;
-    private ConcurrentLinkedQueue<Consumer<TextData>> _subscribers;
+    public final Event<TextData> TextChangedEvent = new Event<>();
+    public final Event<TextAddedData> TextAddedEvent = new Event<>();
+    public final Event<TextRemovedData> TextRemovedEvent = new Event<>();
 
     /**
      * Types of events that can be triggered from this class
@@ -32,26 +28,63 @@ public class Writer {
      * Record of data of a text update
      * @param oldText State of the text before the update
      * @param newText State of the text before the update
-     * @param diff Text added between new and old text.
-     *             Is empty if text have been removed
+     * @param diff Text added or removed by the update. The content will depend on the type of event
      * @param nbAdded number of characters added by the update. Is negative if characters have been removed
      * @param change Type of change that occurred
      */
     public record TextData(String oldText, String newText, String diff, int nbAdded, TextChangeEvent change) {}
 
+    /**
+     * Record of data of a text added
+     * @param oldText State of the text before text is added to it
+     * @param newText State of the text after text is added to it
+     * @param diff Text added
+     * @param nbAdded Number of characters added to the Text
+     */
+    public record TextAddedData(String oldText, String newText, String diff, int nbAdded) {}
+
+    /**
+     * Record of data of text removal
+     * @param oldText State of the text before text is removed from it
+     * @param newText State of the text after text is removed from it
+     * @param diff Text removed
+     * @param nbRemoved Number of characters removed
+     */
+    public  record TextRemovedData(String oldText, String newText, String diff, int nbRemoved) {}
+
     public Writer(){
-        _subscribers = new ConcurrentLinkedQueue<>();
         _innerText = "";
     }
 
+
     /**
-     * Asynchronously triggers all the subscribers, giving them the inputted data
-     * @param data data to call the subscribers with
+     * Triggers the events corresponding to when text is added
+     * @param data data of the added text
      */
-    private void onTextChangeAsync(TextData data){
-        for(Consumer<TextData> c : _subscribers){
-            CompletableFuture.runAsync(() -> c.accept(data));
-        }
+    private void onTextAddedAsync(TextAddedData data){
+        TextChangedEvent.TriggerAsync(new TextData(
+                data.oldText,
+                data.newText,
+                data.diff,
+                data.nbAdded,
+                TextChangeEvent.TEXT_ADDED
+                ));
+        TextAddedEvent.TriggerAsync(data);
+    }
+
+    /**
+     * Triggers the events corresponding to when text is removed
+     * @param data data of the removed text
+     */
+    private void onTextRemovedAsync(TextRemovedData data){
+        TextChangedEvent.TriggerAsync(new TextData(
+                data.oldText,
+                data.newText,
+                data.diff,
+                -data.nbRemoved,
+                TextChangeEvent.TEXT_REMOVED
+        ));
+        TextRemovedEvent.TriggerAsync(data);
     }
 
     /**
@@ -61,12 +94,11 @@ public class Writer {
     public void Write(String text){
         String oldText = _innerText;
         _innerText += text;
-        onTextChangeAsync(new TextData(
+        onTextAddedAsync(new TextAddedData(
                 oldText,
                 _innerText,
                 text,
-                text.length(),
-                TextChangeEvent.TEXT_ADDED
+                text.length()
         ));
     }
 
@@ -75,15 +107,7 @@ public class Writer {
      * @param line line of text to append
      */
     public void WriteLine(String line){
-        String oldText = _innerText;
-        _innerText += "\n" + line;
-        onTextChangeAsync(new TextData(
-                oldText,
-                _innerText,
-                "\n"+line,
-                line.length() + 1,
-                TextChangeEvent.TEXT_ADDED
-        ));
+        Write("\n"+line);
     }
 
     /**
@@ -93,7 +117,7 @@ public class Writer {
     public void Erase(int nbChars){
         String oldText = _innerText;
         int erased;
-        if(nbChars<_innerText.length()){ // Special case
+        if(nbChars>=_innerText.length()){ // Special case
             _innerText = "";
             erased = oldText.length();
         }
@@ -101,12 +125,11 @@ public class Writer {
             _innerText = _innerText.substring(0, oldText.length() - nbChars);
             erased = nbChars;
         }
-        onTextChangeAsync(new TextData(
+        onTextRemovedAsync(new TextRemovedData(
                 oldText,
                 _innerText,
-                "",
-                -erased,
-                TextChangeEvent.TEXT_REMOVED
+                oldText.substring(0, oldText.length() - erased),
+                erased
         ));
     }
 
@@ -125,21 +148,11 @@ public class Writer {
             _innerText = _innerText.substring(0, lineIndex);
             removed = oldText.length() - lineIndex;
         }
-        onTextChangeAsync(new TextData(
+        onTextRemovedAsync(new TextRemovedData(
                 oldText,
                 _innerText,
-                "",
-                -removed,
-                TextChangeEvent.TEXT_REMOVED
+                oldText.substring(0, oldText.length()-removed),
+                removed
         ));
-    }
-
-    /**
-     * Add a subscriber to the writer.
-     * The function is called when something is written or erased from the writer.
-     * @param consumer function to call when the event is triggered
-     */
-    public void subscribe(Consumer<TextData> consumer){
-        _subscribers.add(consumer);
     }
 }
