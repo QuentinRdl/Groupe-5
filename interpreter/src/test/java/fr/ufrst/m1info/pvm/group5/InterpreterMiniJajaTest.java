@@ -325,6 +325,94 @@ public class InterpreterMiniJajaTest {
         Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
     }
 
+    /*@Test
+    @DisplayName("Interpret Declaration With 2 Equals")
+    public void declarationWith2Equals()  {
+        String errMessage=imj.interpretCode("class C { int y == 10; main{}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }*/
+
+    @Test
+    @DisplayName("Interpret Affectation With 2 Equals")
+    public void affectationWith2Equals()  {
+        String errMessage=imj.interpretCode("class C { int y; main{y == 10;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        //Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    /*@Test
+    @DisplayName("Interpret Double Declaration")
+    public void doubleDeclaration()  {
+        String errMessage=imj.interpretCode("class C { int y = 5 = 10; main{}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }*/
+
+    /*@Test
+    @DisplayName("Interpret Double Affectation")
+    public void doubleAffectation()  {
+        String errMessage=imj.interpretCode("class C { int y; main{y = 5 = 10;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }*/
+
+    @Test
+    @DisplayName("Interpret Increment With 3 Plus")
+    public void incrementWith3Plus()  {
+        String errMessage=imj.interpretCode("class C { int y = 10; main{y +++;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        //Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Increment With Number")
+    public void incrementWithNumber()  {
+        String errMessage=imj.interpretCode("class C { int y = 10; main{y ++ 5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        //Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Increment Affectation")
+    public void incrementAffectation()  {
+        String errMessage=imj.interpretCode("class C { int y = 10; main{y ++= 5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        //Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Sum Without Ident")
+    public void sumWithoutIdent()  {
+        String errMessage=imj.interpretCode("class C { int y = 10; main{ += 5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        //Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Affectation Without Ident")
+    public void affectationWithoutIdent()  {
+        String errMessage=imj.interpretCode("class C { int y; main{ = 5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        //Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Affectation On A Number")
+    public void affectationOnANumber()  {
+        String errMessage=imj.interpretCode("class C { int y; main{ 1 = 5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        //Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Number")
+    public void number()  {
+        String errMessage=imj.interpretCode("class C { main{10;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
     @Test
     @DisplayName("Interpret I Forgot A Semicolon")
     public void iForgotASemiColon()  {
@@ -339,6 +427,13 @@ public class InterpreterMiniJajaTest {
         String errMessage=imj.interpretCode("ezudzedezezbclassdezdoncCdzedo{dezodjintezpodjy;podkezdmain{ydpocke=dozejd10;}}");
         Assertions.assertNotEquals(null,errMessage);
         //Assertions.assertEquals(ASTBuildException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Empty String")
+    public void emptyString()  {
+        String errMessage=imj.interpretCode("");
+        Assertions.assertNotEquals(null,errMessage);
     }
 
     @Test
