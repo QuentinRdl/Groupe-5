@@ -92,10 +92,18 @@ instr returns [ASTNode node]
     )?
     '}' {$node = new IfNode($exp.node,(instrsflag1)?$i1.node:null,null);}
     ('else' '{'
-     (i2=instrs {instrsflag2 = true;}
-     )?
-     '}' {$node = new IfNode($exp.node,(instrsflag1)?$i1.node:null,(instrsflag2)?$i2.node:null);}
-     )?
+    (i2=instrs {instrsflag2 = true;}
+    )?
+    '}' {$node = new IfNode($exp.node,(instrsflag1)?$i1.node:null,(instrsflag2)?$i2.node:null);}
+    )?
+    | 'write' '('
+    ( ident {$node = new WriteNode($ident.node);}
+    | e=STRING {$node = new WriteNode($e);}
+    ) ')'
+    | 'writeln' '('
+    ( ident {$node = new WriteNode($ident.node);}
+    | e=STRING {$node = new WriteNode($e);}
+    ) ')'
     ;
 
 listexp returns [ASTNode node]
@@ -172,4 +180,8 @@ NOMBRE
 
 WS
     :   (' ' | '\t' | '\r'| '\n') -> skip
+    ;
+
+STRING
+    : .+?
     ;
