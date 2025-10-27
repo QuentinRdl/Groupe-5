@@ -1,6 +1,7 @@
 package fr.ufrst.m1info.pvm.group5;
 
 import fr.ufrst.m1info.pvm.group5.Nodes.*;
+import fr.ufrst.m1info.pvm.group5.ast.Nodes.ASTInvalidDynamicTypeException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import java.util.HashMap;
