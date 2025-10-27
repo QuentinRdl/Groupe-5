@@ -1,5 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.memory;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Class interacting with memory allowing to have IO from the memory.
  * The class takes the role of publisher in a publish-subscribe like pattern.
@@ -59,9 +61,11 @@ public class Writer {
 
     /**
      * Triggers the events corresponding to when text is added
+     *
      * @param data data of the added text
+     * @return Completable future to when the task of running the event is over
      */
-    private void onTextAddedAsync(TextAddedData data){
+    private CompletableFuture<Void> onTextAddedAsync(TextAddedData data){
         TextChangedEvent.TriggerAsync(new TextData(
                 data.oldText,
                 data.newText,
@@ -69,14 +73,16 @@ public class Writer {
                 data.nbAdded,
                 TextChangeEvent.TEXT_ADDED
                 ));
-        TextAddedEvent.TriggerAsync(data);
+        return TextAddedEvent.TriggerAsync(data);
     }
 
     /**
      * Triggers the events corresponding to when text is removed
+     *
      * @param data data of the removed text
+     * @return Completable future to when the task of running the event is over
      */
-    private void onTextRemovedAsync(TextRemovedData data){
+    private CompletableFuture<Void> onTextRemovedAsync(TextRemovedData data){
         TextChangedEvent.TriggerAsync(new TextData(
                 data.oldText,
                 data.newText,
@@ -84,17 +90,19 @@ public class Writer {
                 -data.nbRemoved,
                 TextChangeEvent.TEXT_REMOVED
         ));
-        TextRemovedEvent.TriggerAsync(data);
+        return TextRemovedEvent.TriggerAsync(data);
     }
 
     /**
      * Append text at the end of the text
+     *
      * @param text text to append
+     * @return Completable future to when the task of running the event is over
      */
-    public void Write(String text){
+    public CompletableFuture<Void> writeAsync(String text){
         String oldText = _innerText;
         _innerText += text;
-        onTextAddedAsync(new TextAddedData(
+        return onTextAddedAsync(new TextAddedData(
                 oldText,
                 _innerText,
                 text,
@@ -104,17 +112,21 @@ public class Writer {
 
     /**
      * Append a line of text at the end of the text
+     *
      * @param line line of text to append
+     * @return Completable future to when the task of running the event is over
      */
-    public void WriteLine(String line){
-        Write("\n"+line);
+    public CompletableFuture<Void> WriteLine(String line){
+        return writeAsync("\n"+line);
     }
 
     /**
      * Erase a given number of characters at the end of the text
+     *
      * @param nbChars number of characters to erase
+     * @return Completable future to when the task of running the event is over
      */
-    public void Erase(int nbChars){
+    public CompletableFuture<Void> Erase(int nbChars){
         String oldText = _innerText;
         int erased;
         if(nbChars>=_innerText.length()){ // Special case
@@ -125,7 +137,7 @@ public class Writer {
             _innerText = _innerText.substring(0, oldText.length() - nbChars);
             erased = nbChars;
         }
-        onTextRemovedAsync(new TextRemovedData(
+        return onTextRemovedAsync(new TextRemovedData(
                 oldText,
                 _innerText,
                 oldText.substring(0, oldText.length() - erased),
@@ -135,8 +147,10 @@ public class Writer {
 
     /**
      * Erase the last line of the text
+     *
+     * @return Completable future to when the task of running the event is over
      */
-    public void EraseLine(){
+    public CompletableFuture<Void> EraseLine(){
         String oldText = _innerText;
         int lineIndex = _innerText.lastIndexOf("\n");
         int removed = 0;
@@ -148,7 +162,7 @@ public class Writer {
             _innerText = _innerText.substring(0, lineIndex);
             removed = oldText.length() - lineIndex;
         }
-        onTextRemovedAsync(new TextRemovedData(
+        return onTextRemovedAsync(new TextRemovedData(
                 oldText,
                 _innerText,
                 oldText.substring(0, oldText.length()-removed),

@@ -151,7 +151,7 @@ public class Memory {
      */
     public void write(String text){
         if(output != null){
-            output.Write(text);
+            output.writeAsync(text);
         }
     }
 

@@ -14,7 +14,11 @@ public class Event<T> {
     /**
      * Consumers subscribed to the event
      */
-    private ConcurrentLinkedQueue<Consumer<T>> _subscribers;
+    private final ConcurrentLinkedQueue<Consumer<T>> _subscribers;
+
+    public Event() {
+        _subscribers = new ConcurrentLinkedQueue<>();
+    }
 
     /**
      * Subscribe to the event. The function will be called when the event is triggered
@@ -48,9 +52,11 @@ public class Event<T> {
      * /!\ This function should not be called by subscribers
      * @param eventData data of the event
      */
-    public void TriggerAsync(T eventData){
-        for(Consumer<T> c : _subscribers){
-            CompletableFuture.runAsync(() -> c.accept(eventData));
-        }
+    public CompletableFuture<Void> TriggerAsync(T eventData){
+        return CompletableFuture.runAsync(()-> {
+            for (Consumer<T> c : _subscribers) {
+                c.accept(eventData);
+            }
+        });
     }
 }
