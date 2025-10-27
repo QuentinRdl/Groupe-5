@@ -1,6 +1,8 @@
 package fr.ufrst.m1info.pvm.group5.interpreter;
 import org.junit.jupiter.api.*;
 
+import fr.ufrst.m1info.pvm.group5.ast.*;
+
 import java.nio.file.NoSuchFileException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
