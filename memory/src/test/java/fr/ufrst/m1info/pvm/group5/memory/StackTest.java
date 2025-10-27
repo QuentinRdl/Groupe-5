@@ -916,7 +916,7 @@ public class StackTest {
     @Test
     public void validateType_nullValue_throwsIllegalArgumentException() throws Exception {
         Stack s = new Stack();
-        java.lang.reflect.Method m = Stack.class.getDeclaredMethod("validateType", Object.class, fr.ufrst.m1info.pvm.group5.SymbolTable.DataType.class);
+        java.lang.reflect.Method m = Stack.class.getDeclaredMethod("validateType", Object.class, fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType.class);
         m.setAccessible(true);
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -975,7 +975,7 @@ public class StackTest {
     @Test
     public void validateType_mismatchedType_throwsIllegalArgumentException() throws Exception {
         Stack s = new Stack();
-        java.lang.reflect.Method m = Stack.class.getDeclaredMethod("validateType", Object.class, fr.ufrst.m1info.pvm.group5.SymbolTable.DataType.class);
+        java.lang.reflect.Method m = Stack.class.getDeclaredMethod("validateType", Object.class, fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType.class);
         m.setAccessible(true);
 
         // BOOL expected, but provide Integer
@@ -1015,7 +1015,7 @@ public class StackTest {
     @Test
     public void validateType_voidOrUnknown_throwsIllegalArgumentException() throws Exception {
         Stack s = new Stack();
-        java.lang.reflect.Method m = Stack.class.getDeclaredMethod("validateType", Object.class, fr.ufrst.m1info.pvm.group5.SymbolTable.DataType.class);
+        java.lang.reflect.Method m = Stack.class.getDeclaredMethod("validateType", Object.class, fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType.class);
         m.setAccessible(true);
 
         assertThrows(IllegalArgumentException.class, () -> {
