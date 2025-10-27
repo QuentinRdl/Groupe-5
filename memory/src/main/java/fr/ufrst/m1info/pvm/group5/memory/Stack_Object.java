@@ -27,13 +27,13 @@ public class Stack_Object {
      */
     public Stack_Object(String name, Object value, int scope, EntryKind kind, DataType dataType) {
         if (kind == EntryKind.VARIABLE || kind == EntryKind.CONSTANT) {
-            if (dataType == null || dataType == DataType.UNKNOWN) {
+            if (dataType == null) {
                 throw new Stack.InvalidStackObjectConstructionException(
                         "VARIABLE or CONSTANT must specify a valid DataType"
                 );
             }
-        } else {
-            if (dataType != null && dataType != DataType.UNKNOWN) {
+        } else if(dataType != DataType.UNKNOWN) {
+            if (dataType != null) {
                 throw new Stack.InvalidStackObjectConstructionException(
                         "Non-variable/non-constant objects should not specify DataType"
                 );

@@ -152,7 +152,12 @@ public class Memory {
         // Ensure declared type matches given value type
         DataType declared = entry.getDataType();
         if (declared != givenDataType) {
-            throw new IllegalArgumentException("Type mismatch when affecting value to '" + identifier + "' : declared=" + declared + " given=" + givenDataType);
+            if(declared == DataType.UNKNOWN) {
+                // This is the first declaration, we change the type, and continue
+                entry.setDataType(givenDataType);
+            } else {
+                throw new IllegalArgumentException("Type mismatch when affecting value to '" + identifier + "' : declared=" + declared + " given=" + givenDataType);
+            }
         }
 
         // Handle according to the kind
@@ -175,7 +180,7 @@ public class Memory {
         }
 
         // TODO : For other kinds, we don't support assignment yet
-        throw new IllegalArgumentException("affectValue is not supported for EntryKind: " + entry.getKind());
+        throw new IllegalArgumentException("affectValue is not supported YET for EntryKind: " + entry.getKind());
     }
 
     public void declVarClass(String identifier) {
@@ -190,7 +195,7 @@ public class Memory {
             throw new IllegalStateException("The class variable is already defined in the Stack, cannot create a new one");
         }
         // Everything checks out, we create the var, with null type, and null value
-        declVar(identifier, null, null);
+        declVar(identifier, null, DataType.UNKNOWN);
         identifierVarClass = identifier;
     }
 
