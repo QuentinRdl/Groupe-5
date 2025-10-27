@@ -42,4 +42,14 @@ public class WriterTest {
         assertFalse(flags[1]);
         assertTrue(flags[2]);
     }
+
+    @Test
+    @DisplayName("Event trigger - Erase")
+    public void EventTrigger_Erase() throws Exception{
+        var future = writer.eraseAsync(5);
+        future.get();
+        assertFalse(flags[0]);
+        assertTrue(flags[1]);
+        assertTrue(flags[2]);
+    }
 }
