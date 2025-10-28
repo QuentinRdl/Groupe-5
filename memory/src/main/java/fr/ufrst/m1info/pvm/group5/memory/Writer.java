@@ -166,7 +166,7 @@ public class Writer {
         else{
             _innerText = _innerText.substring(0, lineIndex);
             removed = oldText.length() - lineIndex;
-            removedText = _innerText.substring(removed+1);
+            removedText = oldText.substring(lineIndex);
         }
         return onTextRemovedAsync(new TextRemovedData(
                 oldText,
