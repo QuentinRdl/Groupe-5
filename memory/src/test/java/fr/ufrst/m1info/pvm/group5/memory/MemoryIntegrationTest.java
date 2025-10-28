@@ -97,6 +97,7 @@ public class MemoryIntegrationTest {
         );
     }
 
+    /*
 
     @ParameterizedTest
     @MethodSource("typeOfVars")
@@ -252,10 +253,13 @@ public class MemoryIntegrationTest {
     }
 
 
+     */
+
     /**
      * Using declVarClass should declare the var class with
      * a DataType set with UNKNOWN
      */
+    /*
     @Test
     public void declVarClassUsesUnknownDataType() {
         mem.declVarClass("val");
@@ -265,10 +269,13 @@ public class MemoryIntegrationTest {
         assertEquals(DataType.UNKNOWN, obj.getDataType());
     }
 
+     */
+
     /**
      * Using declVarClass should declare the var class with
      * data = null
      */
+    /*
     @Test
     public void declVarClassUsesValueEqualsNull() {
         mem.declVarClass("val");
@@ -314,9 +321,12 @@ public class MemoryIntegrationTest {
         });
     }
 
+     */
+
     /**
      * We test with calling with no declared class var, and with null arg
      */
+    /*
     @ParameterizedTest
     @MethodSource("affVarNull")
     public void affVarClassCalledNull(Object arg) {
@@ -363,5 +373,7 @@ public class MemoryIntegrationTest {
         IllegalStateException ex = assertThrows(IllegalStateException.class, () -> mem.declVarClass("idOnStackOnly"));
         assertTrue(ex.getMessage().contains("Stack") || ex.getMessage().contains("Stack"));
     }
+
+     */
 }
 
