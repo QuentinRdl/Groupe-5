@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.ast.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidDynamicTypeException;
 import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidMemoryException;
 import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidOperationException;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
@@ -39,4 +40,16 @@ public class MainNode extends ASTNode {
         if(vars != null)
             ((WithradawableNode)vars).withradawInterpret(m);
     }
+
+    @Override
+    public String checkType() throws ASTInvalidDynamicTypeException {
+        if (vars != null) {
+            vars.checkType();
+        }
+        if (instrs != null) {
+            instrs.checkType();
+        }
+        return "void";
+    }
+
 }

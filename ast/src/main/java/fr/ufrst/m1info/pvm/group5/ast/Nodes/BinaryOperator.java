@@ -15,17 +15,18 @@ public abstract class BinaryOperator extends ASTNode implements EvaluableNode {
 
     /**
      * Constructs a binary operator from it's two operands
-     * @param left left operand of the operator
+     *
+     * @param left  left operand of the operator
      * @param right right operand of the operator
      * @throws ASTBuildException throws an exception if one of the operator is null or not evaluable
      */
     public BinaryOperator(ASTNode left, ASTNode right) {
         this.left = left;
         this.right = right;
-        if(this.left == null || this.right == null){
+        if (this.left == null || this.right == null) {
             throw new ASTBuildException("Binary operator cannot have a null operand");
         }
-        if(!(left instanceof  EvaluableNode) ||  !(right instanceof EvaluableNode)){
+        if (!(left instanceof EvaluableNode) || !(right instanceof EvaluableNode)) {
             throw new ASTBuildException("Binary operator cannot have a non-evaluable operand");
         }
     }
@@ -35,12 +36,12 @@ public abstract class BinaryOperator extends ASTNode implements EvaluableNode {
     }
 
     public Value eval(Memory m) throws ASTInvalidMemoryException, ASTInvalidOperationException {
-        Value l = ((EvaluableNode)left).eval(m);
-        Value r = ((EvaluableNode)right).eval(m);
-        return mainOperation(l,r);
+        Value l = ((EvaluableNode) left).eval(m);
+        Value r = ((EvaluableNode) right).eval(m);
+        return mainOperation(l, r);
     }
 
-    public List<String> compile(int address){
+    public List<String> compile(int address) {
         List<String> JJCodes = new ArrayList<>();
         JJCodes.addAll(left.compile(address));
         JJCodes.addAll(right.compile(address + JJCodes.size()));
@@ -50,16 +51,31 @@ public abstract class BinaryOperator extends ASTNode implements EvaluableNode {
 
     /**
      * Get the name of the JaJaCode operation of the node
+     *
      * @return Name of the JaJaCode operation corresponding to the node
      */
     protected abstract String getCompileName();
 
     /**
      * Operation performed by the node when evaluated
-     * @param leftOperand Value of the left operand
+     *
+     * @param leftOperand  Value of the left operand
      * @param rightOperand Value of the right operand
      * @return Result of the operations performed on the 2 operands
      * @throws Exception
      */
     protected abstract Value mainOperation(Value leftOperand, Value rightOperand) throws ASTInvalidMemoryException, ASTInvalidOperationException;
+
+    @Override
+    public String checkType() throws ASTInvalidDynamicTypeException {
+        String leftType = left.checkType();
+        String rightType = right.checkType();
+
+        if (!leftType.equals("int") || !rightType.equals("int")) {
+            throw new ASTInvalidDynamicTypeException(
+                    "The operands of " + getClass().getSimpleName() + "must be integers"
+            );
+        }
+        return "int";
+    }
 }

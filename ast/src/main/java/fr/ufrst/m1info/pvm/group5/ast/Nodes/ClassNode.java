@@ -1,9 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.ast.Nodes;
 
-import fr.ufrst.m1info.pvm.group5.ast.ASTBuildException;
-import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidMemoryException;
-import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidOperationException;
-import fr.ufrst.m1info.pvm.group5.ast.WithradawableNode;
+import fr.ufrst.m1info.pvm.group5.ast.*;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 
 import java.util.ArrayList;
@@ -54,4 +51,17 @@ public class ClassNode extends ASTNode {
         }
         m.withdrawDecl(ident.identifier);
     }
+
+    @Override
+    public String checkType() throws ASTInvalidDynamicTypeException {
+        if (decls != null) {
+            decls.checkType();
+        }
+        main.checkType();
+
+        return "void";
+    }
+
+
+
 }

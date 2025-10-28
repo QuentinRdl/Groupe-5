@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.ast.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidDynamicTypeException;
 import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidOperationException;
 import fr.ufrst.m1info.pvm.group5.ast.EvaluableNode;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
@@ -30,6 +31,10 @@ public class BooleanNode extends ASTNode implements EvaluableNode {
         throw new ASTInvalidOperationException("Cannot interpret Boolean node");
     }
 
+    @Override
+    public String checkType() throws ASTInvalidDynamicTypeException {
+        return "bool";
+    }
     @Override
     public Value eval(Memory m) {
         return new Value(this.bool);
