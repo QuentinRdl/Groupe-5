@@ -175,4 +175,20 @@ public class Writer {
                 removed
         ));
     }
+
+    /**
+     * Removes all the text of the writer
+     *
+     * @return Completable future to when the task of running the event is over
+     */
+    public CompletableFuture<Void> clear(){
+        String oldText = _innerText;
+        _innerText = "";
+        return onTextRemovedAsync(new TextRemovedData(
+                oldText,
+                "",
+                oldText,
+                oldText.length()
+        ));
+    }
 }

@@ -3,8 +3,19 @@ package fr.ufrst.m1info.pvm.group5.interpreter;
 
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.ast.AbstractSyntaxTree;
+import fr.ufrst.m1info.pvm.group5.memory.Writer;
 
 public class InterpreterMiniJaja implements Interpreter{
+    Writer output;
+
+    protected InterpreterMiniJaja(){
+        output = null;
+    }
+
+    public InterpreterMiniJaja(Writer output) {
+        this.output = output;
+    }
+
     /**
      * Interpret the given code
      *

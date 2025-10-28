@@ -18,6 +18,10 @@ public class Console {
         textArea.setEditable(false);
         writer = new Writer();
         writer.TextAddedEvent.subscribe(e -> textArea.appendText(e.diff()));
+        writer.TextRemovedEvent.subscribe(e -> {
+            int l = textArea.getText().length();
+            textArea.deleteText(l-e.nbRemoved(), l);
+        });
     }
 
     /**
