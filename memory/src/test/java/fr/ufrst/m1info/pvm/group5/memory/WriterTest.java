@@ -225,4 +225,33 @@ public class WriterTest {
         var future = writer.eraseAsync(5);
         future.get();
     }
+
+    @Test
+    @DisplayName("Event info - Erase / Text removed event / less text than erased")
+    public void EventInfo_Erase_TextRemoved_notEnough() throws Exception{
+        writer.writeAsync("Hello world").get();
+        writer.TextRemovedEvent.subscribe(e -> {
+            assertEquals("Hello world", e.diff());
+            assertEquals("Hello world", e.oldText());
+            assertEquals("", e.newText());
+            assertEquals(11, e.nbRemoved());
+        });
+        var future = writer.eraseAsync(20);
+        future.get();
+    }
+
+    @Test
+    @DisplayName("Event info - Erase / Text changed event / less text than erased")
+    public void EventInfo_Erase_TextChanged_notEnough() throws Exception{
+        writer.writeAsync("Hello world").get();
+        writer.TextChangedEvent.subscribe(e -> {
+            assertEquals("Hello world", e.diff());
+            assertEquals("Hello world", e.oldText());
+            assertEquals("", e.newText());
+            assertEquals(-11, e.nbAdded());
+            assertEquals(Writer.TextChangeEvent.TEXT_REMOVED, e.change());
+        });
+        var future = writer.eraseAsync(20);
+        future.get();
+    }
 }

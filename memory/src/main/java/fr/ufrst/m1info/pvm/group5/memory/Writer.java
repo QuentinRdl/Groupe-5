@@ -131,8 +131,8 @@ public class Writer {
         int erased;
         String removedText;
         if(nbChars>=_innerText.length()){ // Special case
-            _innerText = "";
             removedText = _innerText;
+            _innerText = "";
             erased = oldText.length();
         }
         else {
@@ -159,8 +159,8 @@ public class Writer {
         int removed = 0;
         String removedText;
         if(lineIndex == -1){
-            _innerText = "";
             removedText = _innerText;
+            _innerText = "";
             removed = oldText.length();
         }
         else{
