@@ -364,4 +364,11 @@ public class NodeCompileTest {
         ReturnNode tested = new ReturnNode(ident);
         assertEquals(List.of("load(x)"),tested.compile(1));
     }
+
+    @Test
+    public void UnMinusNode(){
+        IdentNode ident = new IdentNode("x");
+        UnMinusNode tested = new UnMinusNode(ident);
+        assertEquals(List.of("load(x)","neg"),tested.compile(1));
+    }
 }
