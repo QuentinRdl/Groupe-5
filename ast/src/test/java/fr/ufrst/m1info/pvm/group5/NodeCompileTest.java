@@ -482,4 +482,31 @@ public class NodeCompileTest {
         assertEquals(List.of("VAR2","VAR1"),tested.withdrawCompile(1));
     }
 
+    @Test
+    public void WhileNode(){
+        EqualNode condition = ASTMocks.createNode(
+                EqualNode.class,
+                null,
+                i-> List.of("CMP")
+        );
+        InstructionsNode iss = ASTMocks.createNode(
+                InstructionsNode.class,
+                null,
+                i-> List.of("ISS")
+        );
+        WhileNode tested = new WhileNode(condition,iss);
+        assertEquals(List.of("CMP","not","if(6)","ISS","goto(1)"),tested.compile(1));
+    }
+
+    @Test
+    public void WhileNodeWithoutInstrs(){
+        EqualNode condition = ASTMocks.createNode(
+                EqualNode.class,
+                null,
+                i-> List.of("CMP")
+        );
+        WhileNode tested = new WhileNode(condition,null);
+        assertEquals(List.of("CMP","not","if(5)","goto(1)"),tested.compile(1));
+    }
+
 }
