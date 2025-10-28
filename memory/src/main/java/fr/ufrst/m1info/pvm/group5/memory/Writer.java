@@ -191,4 +191,11 @@ public class Writer {
                 oldText.length()
         ));
     }
+
+    /**
+     * Clears the inner text of the writer without triggering any events.
+     */
+    public void reset(){
+        _innerText = "";
+    }
 }

@@ -18,10 +18,6 @@ public class Console {
         textArea.setEditable(false);
         writer = new Writer();
         writer.TextAddedEvent.subscribe(e -> textArea.appendText(e.diff()));
-        writer.TextRemovedEvent.subscribe(e -> {
-            int l = textArea.getText().length();
-            textArea.deleteText(l-e.nbRemoved(), l);
-        });
     }
 
     /**
@@ -30,5 +26,21 @@ public class Console {
      */
     public Writer getWriter() {
         return writer;
+    }
+
+    /**
+     * Removes all the text from the console
+     */
+    public void clear(){
+        writer.clear();
+        textArea.clear();
+    }
+
+    /**
+     * Writes a line to the console without using the writer
+     * @param content text to write to the console
+     */
+    public void write(String content){
+        textArea.appendText(content);
     }
 }
