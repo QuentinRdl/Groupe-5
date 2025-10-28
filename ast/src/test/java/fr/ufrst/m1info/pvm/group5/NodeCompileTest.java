@@ -385,6 +385,46 @@ public class NodeCompileTest {
         assertEquals(List.of("load(x)","neg"),tested.compile(1));
     }
 
-    
+    @Test
+    public void VariableNodeInt(){
+        IdentNode ident = new IdentNode("x");
+        TypeNode type = new TypeNode(ValueType.INT);
+        NumberNode exp = ASTMocks.createNode(
+                NumberNode.class,
+                null,
+                i-> List.of("5")
+        );
+        VariableNode tested = new VariableNode(type,ident,exp);
+        assertEquals(List.of("5","new(x,INT,var,0)"),tested.compile(1));
+    }
+
+    @Test
+    public void VariableNodeBool(){
+        IdentNode ident = new IdentNode("x");
+        TypeNode type = new TypeNode(ValueType.BOOL);
+        NumberNode exp = ASTMocks.createNode(
+                NumberNode.class,
+                null,
+                i-> List.of("5")
+        );
+        VariableNode tested = new VariableNode(type,ident,exp);
+        assertEquals(List.of("5","new(x,BOOL,var,0)"),tested.compile(1));
+    }
+
+    @Test
+    public void VariableNodeWithoutExp(){
+        IdentNode ident = new IdentNode("x");
+        TypeNode type = new TypeNode(ValueType.INT);
+        VariableNode tested = new VariableNode(type,ident,null);
+        assertEquals(List.of("new(x,INT,var,0)"),tested.compile(1));
+    }
+
+    @Test
+    public void VariableNodeWithdraw(){
+        IdentNode ident = new IdentNode("x");
+        TypeNode type = new TypeNode(ValueType.INT);
+        VariableNode tested = new VariableNode(type,ident,null);
+        assertEquals(List.of("swap","pop"),tested.withdrawCompile(1));
+    }
 
 }
