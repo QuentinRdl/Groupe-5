@@ -3,6 +3,8 @@ package fr.ufrst.m1info.pvm.group5.driver;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -16,7 +18,10 @@ import javafx.scene.Scene;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.matcher.control.LabeledMatchers;
@@ -234,5 +239,220 @@ public class MainControllerTest extends ApplicationTest {
 
         assertEquals("int y = 12;\nx++;", controller.getModifiedCode());
     }
+
+    @Test
+    public void testSingleEnterAddsLineBelow() throws Exception{
+        File testFile = createTestFile("test.mjj", "main () {", "int x = 10;", "}");
+
+        interact(() -> {
+            boolean success = controller.loadFile(testFile);
+            assertTrue(success);
+        });
+
+        assertEquals(3, controller.getCodeLines().size());
+
+        // force the display of the first cell
+        interact(() -> {
+            controller.getCodeListView().scrollTo(0);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        TextField firstField = (TextField) controller.getCodeListView().lookup(".code-field");
+        assertNotNull(firstField, "The first TextField should exist");
+
+        clickOn(firstField);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        type(KeyCode.ENTER);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals(4, controller.getCodeLines().size());
+        assertEquals(1, controller.getCodeListView().getSelectionModel().getSelectedIndex(), "Line 2 (index 1) should be selected");
+    }
+
+
+    @Test
+    public void testMultipleEnterPresses() throws Exception {
+        File testFile = createTestFile("test.mjj", "main () {", "int x = 10;", "}");
+
+        interact(() -> {
+            boolean success = controller.loadFile(testFile);
+            assertTrue(success);
+        });
+        assertEquals(3, controller.getCodeLines().size());
+
+        // force the display of the first cell
+        interact(() -> {
+            controller.getCodeListView().scrollTo(0);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        TextField field = (TextField) controller.getCodeListView().lookup(".code-field");
+        assertNotNull(field);
+
+        clickOn(field);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        for (int i = 0; i < 10; i++){
+            type(KeyCode.ENTER);
+            WaitForAsyncUtils.waitForFxEvents();
+        }
+
+        assertEquals(13, controller.getCodeLines().size());
+        assertEquals(10, controller.getCodeListView().getSelectionModel().getSelectedIndex(), "Line 11 (index 10) should be selected");
+    }
+
+
+    @Test
+    public void testSaveButtonCurrentFileExisting() throws Exception {
+        File testFile = createTestFile("test.mjj", "int x = 10;", "x++");
+
+        interact(() -> {
+            boolean success = controller.loadFile(testFile);
+            assertTrue(success);
+        });
+
+        assertEquals(testFile, controller.getCurrentFile());
+        assertEquals(2, controller.getCodeLines().size());
+
+        interact(() -> {
+            controller.getCodeListView().scrollTo(0);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        TextField firstField = (TextField) controller.getCodeListView().lookup(".code-field");
+        assertNotNull(firstField);
+
+        clickOn(firstField).eraseText(controller.getCodeLines().get(0).getCode().length()).write("boolean x = true;");
+        WaitForAsyncUtils.waitForFxEvents();
+
+        interact(() -> {
+            controller.saveButton();
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals(testFile, controller.getCurrentFile());
+        List<String> savedLines = Files.readAllLines(testFile.toPath(), StandardCharsets.UTF_8);
+        assertEquals(2, controller.getCodeLines().size());
+        assertEquals("boolean x = true;", savedLines.get(0));
+        assertEquals("x++", savedLines.get(1));
+    }
+
+    @Test
+    public void testSavePreservesModifications() throws Exception {
+        File testFile = createTestFile("test.mjj", "line 1", "line 2", "line 3");
+
+        interact(() -> {
+            boolean success = controller.loadFile(testFile);
+            assertTrue(success);
+        });
+
+        assertEquals(testFile, controller.getCurrentFile());
+
+        controller.getCodeLines().get(0).setCode("modified line 1");
+        controller.getCodeLines().get(1).setCode("modified line 2");
+        controller.getCodeLines().get(2).setCode("modified line 3");
+
+        interact(() -> {
+            controller.saveButton();
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        interact(() -> {
+            controller.loadFile(testFile);
+        });
+
+        assertEquals("modified line 1", controller.getCodeLines().get(0).getCode());
+        assertEquals("modified line 2", controller.getCodeLines().get(1).getCode());
+        assertEquals("modified line 3", controller.getCodeLines().get(2).getCode());
+    }
+
+    @Test
+    public void testSaveAfterAddingLine() throws Exception {
+        File testFile = createTestFile("test.mjj", "line 1", "line 2");
+
+        interact(() -> {
+            controller.loadFile(testFile);
+        });
+
+        assertEquals(testFile, controller.getCurrentFile());
+
+        interact(() -> {
+            controller.getCodeListView().scrollTo(0);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        TextField firstField = (TextField) controller.getCodeListView().lookup(".code-field");
+        assertNotNull(firstField);
+
+        clickOn(firstField).type(KeyCode.ENTER);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        interact(() -> {
+            controller.saveButton();
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals(testFile, controller.getCurrentFile());
+        List<String> savedLines = Files.readAllLines(testFile.toPath(), StandardCharsets.UTF_8);
+        assertEquals(3, savedLines.size());
+        assertEquals("line 1", savedLines.get(0));
+        assertEquals("", savedLines.get(1));
+        assertEquals("line 2", savedLines.get(2));
+    }
+
+    @Test
+    public void testSaveEmptyFile() throws Exception {
+        File emptyFile = createTestFile("empty.mjj");
+
+        interact(() -> {
+            controller.loadFile(emptyFile);
+        });
+
+        assertEquals(emptyFile, controller.getCurrentFile());
+        assertTrue(controller.getCodeLines().isEmpty());
+
+        interact(() -> {
+            controller.saveButton();
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals(emptyFile, controller.getCurrentFile());
+        List<String> savedLines = Files.readAllLines(emptyFile.toPath(), StandardCharsets.UTF_8);
+        assertTrue(savedLines.isEmpty());
+    }
+
+    @Test
+    public void testSaveButtonWhenCurrentFileNull() throws Exception {
+        controller.getCodeLines().add(new CodeLine(1, "int x = 10;"));
+        controller.getCodeLines().add(new CodeLine(2, "x++;"));
+
+        assertNull(controller.getCurrentFile());
+
+        // We cannot test saveButton() directly because it opens a FileChooser
+        // But we can simulate the behaviour: saveAs with a file
+        File newFile = tempDir.resolve("newFile.mjj").toFile();
+
+        interact(() -> {
+            controller.saveAs(newFile);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals(newFile, controller.getCurrentFile());
+        assertTrue(newFile.exists());
+
+        List<String> savedLines = Files.readAllLines(newFile.toPath(), StandardCharsets.UTF_8);
+        assertEquals(2, savedLines.size());
+        assertEquals("int x = 10;", savedLines.get(0));
+        assertEquals("x++;", savedLines.get(1));
+    }
+
+    @Test
+    public void testSaveAsWithNullFile() throws Exception {}
+
+    @Test
+    public void testSaveAsWithNewFile() throws Exception {}
+
+    //TODO: tests for file saving
 
 }

@@ -1,7 +1,11 @@
 package fr.ufrst.m1info.pvm.group5.driver;
 
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -23,6 +27,8 @@ public class CodeLineCell extends ListCell<CodeLine> {
     private TextField codeField;
     private Circle breakpointCircle;
 
+    private CodeLineCellListener listener;
+    private boolean wasEmptyOnLastBackspace = false;
 
     /**
      * Creates a new CodeLineCell and initializes its layout.
@@ -50,12 +56,49 @@ public class CodeLineCell extends ListCell<CodeLine> {
         codeField.getStyleClass().add("code-field");
         HBox.setHgrow(codeField, Priority.ALWAYS);
 
-        // listen to changes in the code
+        // listens for changes in the text field to synchronise the changes
         codeField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(getItem() != null){
                 getItem().setCode(newValue);
             }
         });
+
+        // if the Enter key is pressed, a new line is added to the list view
+        // when Backspace is pressed, remove the line only if it's empty and was already empty before
+        // this reproduces the typical IDE behavior when deleting empty lines
+        codeField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER && listener != null){
+                listener.onEnterPressed(getItem());
+            } else if(event.getCode() == KeyCode.BACK_SPACE && listener != null){
+                String currentText = codeField.getText();
+                int caretPos = codeField.getCaretPosition();
+
+                System.out.println("BACKSPACE index "+ getIndex() +"- texte actuel: '" + currentText + "' | caret: " + caretPos + " | wasEmpty: " + wasEmptyOnLastBackspace);
+
+                if (currentText.isEmpty() && caretPos == 0 && wasEmptyOnLastBackspace){
+                    listener.onDeletePressed(getItem());
+                    event.consume();
+                    wasEmptyOnLastBackspace = false;
+                }
+                else if (currentText.isEmpty() && caretPos == 0){
+                    wasEmptyOnLastBackspace = true;
+                    event.consume();
+                }
+                else if (currentText.length() == 1 && caretPos == 1){
+                    wasEmptyOnLastBackspace = false;
+                }
+                else {
+                    wasEmptyOnLastBackspace = false;
+                }
+
+                /*
+                if(codeField.getText().isEmpty() && codeField.getCaretPosition() == 0){
+                    listener.onDeletePressed(getItem());
+                }
+                */
+            }
+        });
+
 
         container = new HBox();
         container.getStyleClass().add("code-line");
@@ -83,6 +126,11 @@ public class CodeLineCell extends ListCell<CodeLine> {
             updateItem(item, false);
         }
     }
+
+    public void setListener(CodeLineCellListener listener){
+        this.listener = listener;
+    }
+
 
     /**
      * Updates the content of this cell to display a specific CodeLine.
@@ -115,4 +163,19 @@ public class CodeLineCell extends ListCell<CodeLine> {
             setGraphic(container);
         }
     }
+
+    public void focusTextField(){
+        if (codeField != null){
+            codeField.requestFocus();
+            Platform.runLater(() -> {
+                codeField.end();
+                if (codeField.getText().isEmpty()){
+                    wasEmptyOnLastBackspace = true;
+                }
+            });
+
+        }
+    }
+
+
 }

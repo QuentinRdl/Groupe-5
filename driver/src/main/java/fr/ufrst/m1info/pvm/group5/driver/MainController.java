@@ -1,10 +1,12 @@
 package fr.ufrst.m1info.pvm.group5.driver;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -53,7 +55,21 @@ public class MainController {
         codeListView.setItems(codeLines);
 
         // allows ListView to know how to create its cells
-        codeListView.setCellFactory(lv -> new CodeLineCell());
+        codeListView.setCellFactory(lv -> {
+            CodeLineCell cell = new CodeLineCell();
+            cell.setListener(new CodeLineCellListener() {
+                @Override
+                public void onEnterPressed(CodeLine codeLine) {
+                    handleEnterPressed(codeLine);
+                }
+
+                @Override
+                public void onDeletePressed(CodeLine codeLine) {
+                    handleDeleteEmptyLine(codeLine);
+                }
+            });
+            return cell;
+        });
 
     }
 
@@ -174,10 +190,14 @@ public class MainController {
         }
 
         File fileToSave = fc.showSaveDialog(splitPane.getScene().getWindow());
-        if(fileToSave != null){
-            saveToFile(fileToSave);
-            currentFile = fileToSave;
-            fileLabel.setText(currentFile.getName());
+        saveAs(fileToSave);
+    }
+
+    public void saveAs(File file){
+        if (file != null){
+          saveToFile(file);
+          currentFile = file;
+          fileLabel.setText(currentFile.getName());
         }
     }
 
@@ -187,7 +207,7 @@ public class MainController {
             Files.write(file.toPath(), lines , StandardCharsets.UTF_8);
 
             if (output != null) {
-                output.appendText("File saved : " + currentFile.getName() + "\n");
+                output.appendText("File saved : " + file.getName() + "\n");
             }
 
         } catch (IOException e){
@@ -198,4 +218,94 @@ public class MainController {
         }
     }
 
+    private void handleEnterPressed(CodeLine codeLine){
+        int index = codeLines.indexOf(codeLine);
+        System.out.println("ENTER reçu sur ligne " + index);
+        if (index >= 0 && index < codeLines.size()){
+            // Add a new line of code
+            CodeLine newLine = new CodeLine(index + 2, "");
+            codeLines.add(index + 1, newLine);
+
+            // Renumber all lines
+            renumberAllLines();
+
+
+            // Select and focus on the new line
+            final int targetIndex = index + 1;
+            Platform.runLater(() -> {
+                codeListView.layout(); //force refresh of the ListView
+                codeListView.getSelectionModel().clearAndSelect(targetIndex);
+
+                int firstCellVisibleIndex = getFirstVisibleIndex();
+                codeListView.scrollTo(firstCellVisibleIndex + 1);
+
+                // Give focus after updating the selection
+                Platform.runLater(() -> focusSelectedCell());
+
+            });
+        }
+    }
+
+    private void handleDeleteEmptyLine(CodeLine codeLine){
+        int index = codeLines.indexOf(codeLine);
+        if (codeLines.isEmpty() || index < 0 || index >= codeLines.size()){
+            return;
+        }
+
+        if(codeLines.size() == 1){
+            return;
+        }
+
+        codeLines.remove(index);
+
+        renumberAllLines();;
+
+        int targetIndex = Math.max(0, index - 1);
+        Platform.runLater(() -> {
+            codeListView.layout();
+            codeListView.getSelectionModel().clearAndSelect(targetIndex);
+
+            int firstCellVisibleIndex = getFirstVisibleIndex();
+            if (index <= firstCellVisibleIndex && firstCellVisibleIndex > 0){
+                codeListView.scrollTo(firstCellVisibleIndex - 1);
+            }
+
+            Platform.runLater(() -> focusSelectedCell());
+        });
+    }
+
+    private void renumberAllLines(){
+        for (int i = 0; i < codeLines.size(); i++){
+            codeLines.get(i).setLineNumber(i + 1);
+        }
+        codeListView.refresh();
+    }
+
+    private void focusSelectedCell(){
+        int selectedIndex = codeListView.getSelectionModel().getSelectedIndex();
+        if (selectedIndex < 0){
+            return;
+        }
+
+        for (Object node : codeListView.lookupAll(".list-cell")) {
+            if (node instanceof CodeLineCell cell) {
+                if (cell.getIndex() == selectedIndex) {
+                    cell.focusTextField();
+                    break;
+                }
+            }
+        }
+    }
+
+    private int getFirstVisibleIndex() {
+        VirtualFlow<?> virtualFlow = (VirtualFlow<?>) codeListView.lookup(".virtual-flow");
+        if(virtualFlow != null && virtualFlow.getFirstVisibleCell() != null) {
+            return virtualFlow.getFirstVisibleCell().getIndex();
+        }
+        return 0;
+    }
+
+    public File getCurrentFile() {
+        return currentFile;
+    }
 }
