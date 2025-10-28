@@ -44,7 +44,7 @@ public class SumNode extends ASTNode{
     @Override
     public String checkType(Memory m) throws ASTInvalidDynamicTypeException {
         String exprType = expression.checkType(m);
-        if (!"int".equals(exprType)) {
+        if (!exprType.equals("int")) {
             throw new ASTInvalidDynamicTypeException(
                     "The operand of SumNode must be of type int, found: " + exprType
             );
