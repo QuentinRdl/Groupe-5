@@ -153,7 +153,7 @@ public class NodeCompileTest {
     }
 
     @Test
-    public void FinalNodeWithExp(){
+    public void FinalNodeInt(){
         IdentNode ident = new IdentNode("x");
         AddNode exp = ASTMocks.createNode(
                 AddNode.class,
@@ -163,6 +163,19 @@ public class NodeCompileTest {
         TypeNode type = new TypeNode(ValueType.INT);
         FinalNode tested = new FinalNode(type,ident,exp);
         assertEquals(List.of("ADD","new(x,INT,cst,0)"),tested.compile(1));
+    }
+
+    @Test
+    public void FinalNodeBool(){
+        IdentNode ident = new IdentNode("x");
+        AddNode exp = ASTMocks.createNode(
+                AddNode.class,
+                null,
+                i -> List.of("ADD")
+        );
+        TypeNode type = new TypeNode(ValueType.BOOL);
+        FinalNode tested = new FinalNode(type,ident,exp);
+        assertEquals(List.of("ADD","new(x,BOOL,cst,0)"),tested.compile(1));
     }
 
     @Test
@@ -371,4 +384,7 @@ public class NodeCompileTest {
         UnMinusNode tested = new UnMinusNode(ident);
         assertEquals(List.of("load(x)","neg"),tested.compile(1));
     }
+
+    
+
 }
