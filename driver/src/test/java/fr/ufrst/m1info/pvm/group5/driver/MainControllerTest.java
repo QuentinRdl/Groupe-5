@@ -448,11 +448,56 @@ public class MainControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void testSaveAsWithNullFile() throws Exception {}
+    public void testSaveAsWithNullFile() throws Exception {
+        File initialFile = createTestFile("initial.mjj", "line 1", "line 2");
+
+        interact(() -> {
+            controller.loadFile(initialFile);
+        });
+
+        assertEquals(initialFile, controller.getCurrentFile());
+        assertEquals("initial.mjj", controller.getFileLabel().getText());
+
+        interact(() -> {
+            controller.saveAs(null);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals(initialFile, controller.getCurrentFile());
+        assertEquals("initial.mjj", controller.getFileLabel().getText());
+    }
 
     @Test
-    public void testSaveAsWithNewFile() throws Exception {}
+    public void testSaveAsWithNewFile() throws Exception {
+        File initialFile = createTestFile("initial.mjj", "line 1", "line 2");
 
-    //TODO: tests for file saving
+        interact(() -> {
+            controller.loadFile(initialFile);
+        });
+
+        assertEquals(initialFile, controller.getCurrentFile());
+        assertEquals("initial.mjj", controller.getFileLabel().getText());
+
+        controller.getCodeLines().get(0).setCode("modified line 1");
+
+        File newFile = tempDir.resolve("newFile.mjj").toFile();
+        assertFalse(newFile.exists());
+
+        interact(() -> {
+            controller.saveAs(newFile);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertTrue(newFile.exists());
+        assertEquals(newFile, controller.getCurrentFile());
+        assertEquals("newFile.mjj", controller.getFileLabel().getText());
+
+        List<String> savedLines = Files.readAllLines(newFile.toPath(), StandardCharsets.UTF_8);
+        assertEquals(2, savedLines.size());
+        assertEquals("modified line 1", savedLines.get(0));
+        assertEquals("line 2", savedLines.get(1));
+    }
+
+    //TODO: tests when the backspace key is pressed
 
 }
