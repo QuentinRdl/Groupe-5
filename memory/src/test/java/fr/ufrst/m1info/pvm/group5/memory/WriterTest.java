@@ -325,4 +325,62 @@ public class WriterTest {
         var future = writer.eraseLineAsync();
         future.get();
     }
+
+    @Test
+    @DisplayName("Event info - EraseLine / Text removed event / emptyLastLine")
+    public void EventInfo_Erase_TextRemoved_noLastLine() throws Exception{
+        writer.writeAsync("Hello world\n").get();
+        writer.TextRemovedEvent.subscribe(e -> {
+            assertEquals("\n", e.diff());
+            assertEquals("Hello world\n", e.oldText());
+            assertEquals("Hello world", e.newText());
+            assertEquals(1, e.nbRemoved());
+        });
+        var future = writer.eraseLineAsync();
+        future.get();
+    }
+
+    @Test
+    @DisplayName("Event info - EraseLine / Text changed event / emptyLastLine")
+    public void EventInfo_Erase_TextChanged_noLastLine() throws Exception{
+        writer.writeAsync("Hello world\n").get();
+        writer.TextChangedEvent.subscribe(e -> {
+            assertEquals("\n", e.diff());
+            assertEquals("Hello world\n", e.oldText());
+            assertEquals("Hello world", e.newText());
+            assertEquals(-1, e.nbAdded());
+            assertEquals(Writer.TextChangeEvent.TEXT_REMOVED, e.change());
+        });
+        var future = writer.eraseLineAsync();
+        future.get();
+    }
+/*
+    @Test
+    @DisplayName("Event info - EraseLine / Text removed event / onlyEmptyLastLine")
+    public void EventInfo_Erase_TextRemoved_noLastLine2() throws Exception{
+        writer.writeAsync("\n").get();
+        writer.TextRemovedEvent.subscribe(e -> {
+            assertEquals("\n", e.diff());
+            assertEquals("\n", e.oldText());
+            assertEquals("", e.newText());
+            assertEquals(1, e.nbRemoved());
+        });
+        var future = writer.eraseLineAsync();
+        future.get();
+    }
+
+    @Test
+    @DisplayName("Event info - EraseLine / Text changed event / onlyEmptyLastLine")
+    public void EventInfo_Erase_TextChanged_noLastLine2() throws Exception{
+        writer.writeAsync("Hello world\n").get();
+        writer.TextChangedEvent.subscribe(e -> {
+            assertEquals("\n", e.diff());
+            assertEquals("\n", e.oldText());
+            assertEquals("", e.newText());
+            assertEquals(-1, e.nbAdded());
+            assertEquals(Writer.TextChangeEvent.TEXT_REMOVED, e.change());
+        });
+        var future = writer.eraseLineAsync();
+        future.get();
+    }*/
 }
