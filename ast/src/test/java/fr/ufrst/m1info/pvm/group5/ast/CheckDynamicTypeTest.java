@@ -204,7 +204,7 @@ public class CheckDynamicTypeTest {
         TypeNode typeNode = new TypeNode(ValueType.INT);
         IdentNode ident = new IdentNode("x");
 
-        ASTNode expr = mock(ASTNode.class);
+        ASTNode expr = mock(ASTNode.class, withSettings().extraInterfaces(EvaluableNode.class));
         when(expr.checkType()).thenReturn("int");
 
         FinalNode finalNode = new FinalNode(typeNode, ident, expr);
@@ -219,7 +219,7 @@ public class CheckDynamicTypeTest {
         TypeNode typeNode = new TypeNode(ValueType.BOOL);
         IdentNode ident = new IdentNode("flag");
 
-        ASTNode expr = mock(ASTNode.class);
+        ASTNode expr = mock(ASTNode.class, withSettings().extraInterfaces(EvaluableNode.class));
         when(expr.checkType()).thenReturn("bool");
 
         FinalNode finalNode = new FinalNode(typeNode, ident, expr);
@@ -230,11 +230,11 @@ public class CheckDynamicTypeTest {
 
     @Test
     @DisplayName("FinalNode - checkType() fails if incompatible type")
-    public void testFinalNode_TypeMismatch() {
+    public void testFinalNode_TypeMismatch() throws Exception {
         TypeNode typeNode = new TypeNode(ValueType.INT);
         IdentNode ident = new IdentNode("x");
 
-        ASTNode expr = mock(ASTNode.class);
+        ASTNode expr = mock(ASTNode.class, withSettings().extraInterfaces(EvaluableNode.class));
         when(expr.checkType()).thenReturn("bool");
 
         FinalNode finalNode = new FinalNode(typeNode, ident, expr);
@@ -242,19 +242,20 @@ public class CheckDynamicTypeTest {
         assertThrows(ASTInvalidDynamicTypeException.class, finalNode::checkType);
     }
 
+
     @Test
     @DisplayName("FinalNode - checkType() fails if type not supported")
-    public void testFinalNode_UnsupportedType() {
+    public void testFinalNode_UnsupportedType() throws Exception {
         TypeNode typeNode = new TypeNode(ValueType.VOID);
         IdentNode ident = new IdentNode("x");
-
-        ASTNode expr = mock(ASTNode.class);
+        ASTNode expr = mock(ASTNode.class, withSettings().extraInterfaces(EvaluableNode.class));
         when(expr.checkType()).thenReturn("void");
 
         FinalNode finalNode = new FinalNode(typeNode, ident, expr);
 
         assertThrows(ASTInvalidDynamicTypeException.class, finalNode::checkType);
     }
+
 
     @Test
     @DisplayName("IfNode - checkType() valid with condition bool")
