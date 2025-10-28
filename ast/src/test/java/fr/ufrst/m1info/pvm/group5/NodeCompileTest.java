@@ -352,5 +352,9 @@ public class NodeCompileTest {
         assertEquals(List.of("load(x)","not"),tested.compile(1));
     }
 
-    
+    @Test
+    public void NumberNode(){
+        NumberNode tested = new NumberNode(5);
+        assertEquals(List.of("push(5)"),tested.compile(1));
+    }
 }
