@@ -188,4 +188,72 @@ public class NodeCompileTest {
     }
 
 
+    @Test
+    public void IfNodeWithoutElse(){
+        AddNode condition = ASTMocks.createNode(
+                AddNode.class,
+                null,
+                i -> List.of("ADD")
+        );
+        InstructionsNode instr_then = ASTMocks.createNode(
+                InstructionsNode.class,
+                null,
+                i-> List.of("instr1")
+        );
+
+        IfNode tested = new IfNode(condition,instr_then,null);
+        assertEquals(List.of("ADD","if(4)","goto(5)","instr1"),tested.compile(1));
+    }
+
+    @Test
+    public void IfNodeWithElse(){
+        AddNode condition = ASTMocks.createNode(
+                AddNode.class,
+                null,
+                i -> List.of("ADD")
+        );
+        InstructionsNode instr_then = ASTMocks.createNode(
+                InstructionsNode.class,
+                null,
+                i-> List.of("instr1")
+        );
+        InstructionsNode instr_else = ASTMocks.createNode(
+                InstructionsNode.class,
+                null,
+                i-> List.of("instr2")
+        );
+
+        IfNode tested = new IfNode(condition,instr_then,instr_else);
+        assertEquals(List.of("ADD","if(5)","instr2" ,"goto(6)","instr1"),tested.compile(1));
+    }
+
+    @Test
+    public void IfNodeWithoutElseAndElse(){
+        AddNode condition = ASTMocks.createNode(
+                AddNode.class,
+                null,
+                i -> List.of("ADD")
+        );
+
+        IfNode tested = new IfNode(condition,null,null);
+        assertEquals(List.of("ADD","if(4)","goto(4)"),tested.compile(1));
+    }
+
+    @Test
+    public void IfNodeWithoutThen(){
+        AddNode condition = ASTMocks.createNode(
+                AddNode.class,
+                null,
+                i -> List.of("ADD")
+        );
+        InstructionsNode instr_else = ASTMocks.createNode(
+                InstructionsNode.class,
+                null,
+                i-> List.of("instr2")
+        );
+
+        IfNode tested = new IfNode(condition,null,instr_else);
+        assertEquals(List.of("ADD","if(5)","instr2","goto(5)"),tested.compile(1));
+    }
+
 }
