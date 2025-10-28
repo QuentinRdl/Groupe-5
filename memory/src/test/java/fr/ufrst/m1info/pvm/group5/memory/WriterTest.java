@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WriterTest {
@@ -21,7 +23,7 @@ public class WriterTest {
     }
 
     /*
-     * The following 4 tests ensure the right event are triggered by the method calls
+     * The following 5 tests ensure the right event are triggered by the method calls
      */
 
     @Test
@@ -354,7 +356,7 @@ public class WriterTest {
         var future = writer.eraseLineAsync();
         future.get();
     }
-/*
+
     @Test
     @DisplayName("Event info - EraseLine / Text removed event / onlyEmptyLastLine")
     public void EventInfo_Erase_TextRemoved_noLastLine2() throws Exception{
@@ -372,7 +374,7 @@ public class WriterTest {
     @Test
     @DisplayName("Event info - EraseLine / Text changed event / onlyEmptyLastLine")
     public void EventInfo_Erase_TextChanged_noLastLine2() throws Exception{
-        writer.writeAsync("Hello world\n").get();
+        writer.writeAsync("\n").get();
         writer.TextChangedEvent.subscribe(e -> {
             assertEquals("\n", e.diff());
             assertEquals("\n", e.oldText());
@@ -382,5 +384,5 @@ public class WriterTest {
         });
         var future = writer.eraseLineAsync();
         future.get();
-    }*/
+    }
 }
