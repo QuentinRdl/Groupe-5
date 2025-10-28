@@ -263,4 +263,38 @@ public class NodeCompileTest {
         assertEquals(List.of("push(1)","load(x)"),tested.compile(1));
     }
 
+    @Test
+    public void InstructionsNode(){
+        IncNode instr = ASTMocks.createNode(
+                IncNode.class,
+                null,
+                i-> List.of("INC")
+        );
+        InstructionsNode tested = new InstructionsNode(instr,null);
+        assertEquals(List.of("INC"),tested.compile(1));
+    }
+
+    @Test
+    public void InstructionsNodeManyInstrs(){
+        IncNode instr1 = ASTMocks.createNode(
+                IncNode.class,
+                null,
+                i-> List.of("INC1")
+        );
+        IncNode instr2 = ASTMocks.createNode(
+                IncNode.class,
+                null,
+                i-> List.of("INC2")
+        );
+        IncNode instr3 = ASTMocks.createNode(
+                IncNode.class,
+                null,
+                i-> List.of("INC3")
+        );
+        InstructionsNode instrs3 = new InstructionsNode(instr3,null);
+        InstructionsNode instrs2 = new InstructionsNode(instr2,instrs3);
+        InstructionsNode tested = new InstructionsNode(instr1,instrs2);
+        assertEquals(List.of("INC1","INC2","INC3"),tested.compile(1));
+    }
+
 }
