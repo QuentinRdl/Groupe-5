@@ -30,7 +30,7 @@ public class WhileNode extends ASTNode{
         // Node compilation
         JJCodes.addAll(pe);
         JJCodes.add("not");
-        JJCodes.add("if(" + address + pe.size() + piss.size() + 3 +")");
+        JJCodes.add("if(" + (address + pe.size() + piss.size() + 3) +")");
         JJCodes.addAll(piss);
         JJCodes.add("goto("+address+")");
         return JJCodes;
