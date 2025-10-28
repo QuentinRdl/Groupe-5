@@ -357,4 +357,11 @@ public class NodeCompileTest {
         NumberNode tested = new NumberNode(5);
         assertEquals(List.of("push(5)"),tested.compile(1));
     }
+
+    @Test
+    public void ReturnNode(){
+        IdentNode ident = new IdentNode("x");
+        ReturnNode tested = new ReturnNode(ident);
+        assertEquals(List.of("load(x)"),tested.compile(1));
+    }
 }
