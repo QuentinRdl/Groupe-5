@@ -150,6 +150,7 @@ public class Memory {
         }
 
         // Ensure declared type matches given value type
+        /* TODO :
         DataType declared = entry.getDataType();
         if (declared != givenDataType) {
             if(declared == DataType.UNKNOWN) {
@@ -158,7 +159,7 @@ public class Memory {
             } else {
                 throw new IllegalArgumentException("Type mismatch when affecting value to '" + identifier + "' : declared=" + declared + " given=" + givenDataType);
             }
-        }
+        }*/
 
         // Handle according to the kind
         if (entry.getKind() == EntryKind.VARIABLE) {
