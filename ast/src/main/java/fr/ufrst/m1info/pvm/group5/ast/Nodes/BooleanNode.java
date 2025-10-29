@@ -1,9 +1,10 @@
 package fr.ufrst.m1info.pvm.group5.ast.Nodes;
 
+import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidDynamicTypeException;
 import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidOperationException;
 import fr.ufrst.m1info.pvm.group5.ast.EvaluableNode;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
-import fr.ufrst.m1info.pvm.group5.ast.Value;
+import fr.ufrst.m1info.pvm.group5.memory.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class BooleanNode extends ASTNode implements EvaluableNode {
         if (this.bool){
             jajacodes.add("push(jcvrai)");
         } else {
-            jajacodes.add("push(jcvrai)");
+            jajacodes.add("push(jcfaux)");
         }
         return jajacodes;
     }
@@ -30,6 +31,10 @@ public class BooleanNode extends ASTNode implements EvaluableNode {
         throw new ASTInvalidOperationException("Cannot interpret Boolean node");
     }
 
+    @Override
+    public String checkType(Memory m) throws ASTInvalidDynamicTypeException {
+        return "bool";
+    }
     @Override
     public Value eval(Memory m) {
         return new Value(this.bool);

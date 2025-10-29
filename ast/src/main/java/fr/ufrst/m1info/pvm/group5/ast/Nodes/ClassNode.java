@@ -1,9 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.ast.Nodes;
 
-import fr.ufrst.m1info.pvm.group5.ast.ASTBuildException;
-import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidMemoryException;
-import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidOperationException;
-import fr.ufrst.m1info.pvm.group5.ast.WithradawableNode;
+import fr.ufrst.m1info.pvm.group5.ast.*;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ public class ClassNode extends ASTNode {
         if(main == null){
             throw new ASTBuildException("Class must contain a main method");
         }
-        if(decls != null && !(decls instanceof WithradawableNode)){
+        if(decls != null && !(decls instanceof WithdrawalNode)){
             throw new ASTBuildException("Class node declaration must be withradawable");
         }
     }
@@ -37,7 +34,7 @@ public class ClassNode extends ASTNode {
             JJCodes.addAll(decls.compile(address + JJCodes.size()));
         JJCodes.addAll(main.compile(address + JJCodes.size()));
         if(decls!=null)
-            JJCodes.addAll(((WithradawableNode)decls).withdrawCompile(address + JJCodes.size()));
+            JJCodes.addAll(((WithdrawalNode)decls).withdrawCompile(address + JJCodes.size()));
         JJCodes.add("pop");
         JJCodes.add("jcstop");
         return JJCodes;
@@ -50,8 +47,21 @@ public class ClassNode extends ASTNode {
             decls.interpret(m);
         main.interpret(m);
         if(decls != null){
-            ((WithradawableNode) decls).withradawInterpret(m);
+            ((WithdrawalNode) decls).withdrawInterpret(m);
         }
         m.withdrawDecl(ident.identifier);
     }
+
+    @Override
+    public String checkType(Memory m) throws ASTInvalidDynamicTypeException {
+        if (decls != null) {
+            decls.checkType(m);
+        }
+        main.checkType(m);
+
+        return "void";
+    }
+
+
+
 }

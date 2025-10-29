@@ -1,4 +1,4 @@
-package fr.ufrst.m1info.pvm.group5.ast;
+package fr.ufrst.m1info.pvm.group5.memory;
 
 /**
  * Class defining a boolean or integer value within the AST
@@ -20,5 +20,13 @@ public class Value {
 
     public Value(){
         this.Type=ValueType.EMPTY;
+    }
+    
+    public String toString(){
+        return switch (Type) {
+            case INT -> valueInt + "";
+            case BOOL -> valueBool + "";
+            default -> "";
+        };
     }
 }

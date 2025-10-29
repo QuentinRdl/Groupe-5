@@ -2,6 +2,7 @@ package fr.ufrst.m1info.pvm.group5.ast.Nodes;
 
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.ast.*;
+import fr.ufrst.m1info.pvm.group5.memory.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,4 +36,16 @@ public class NotNode extends ASTNode implements EvaluableNode {
     public void interpret(Memory m) throws ASTInvalidOperationException {
         throw new ASTInvalidOperationException("Not node cannot be interpreted");
     }
+
+    @Override
+    public String checkType(Memory m) throws ASTInvalidDynamicTypeException {
+        String exprType = expr.checkType(m);
+        if (!exprType.equals("bool")) {
+            throw new ASTInvalidDynamicTypeException(
+                    "'not' operator applied to a non-bool type : " + exprType
+            );
+        }
+        return "bool";
+    }
+
 }
