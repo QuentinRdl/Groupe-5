@@ -146,7 +146,6 @@ public class CompilerTest {
     }
 
     // Sum node not compiled
-    @Disabled
     @Test
     @DisplayName("Compile File LocalVariables")
     public void CompileLocalVariables()  {
