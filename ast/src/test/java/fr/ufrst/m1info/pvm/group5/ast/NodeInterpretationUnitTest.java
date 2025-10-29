@@ -1089,7 +1089,7 @@ public class NodeInterpretationUnitTest {
 
     @Test
     public void WhileNode_Stressed(){
-        memoryStorage.put("x", new Value(1000));
+        memoryStorage.put("x", new Value(100000));
         BooleanNode node = ASTMocks.createEvalNode(
                 BooleanNode.class,
                 null,
