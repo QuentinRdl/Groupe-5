@@ -2,7 +2,8 @@ package fr.ufrst.m1info.pvm.group5.ast.Nodes;
 
 import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidDynamicTypeException;
 import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidMemoryException;
-import fr.ufrst.m1info.pvm.group5.ast.ValueType;
+import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType;
+import fr.ufrst.m1info.pvm.group5.memory.ValueType;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 
