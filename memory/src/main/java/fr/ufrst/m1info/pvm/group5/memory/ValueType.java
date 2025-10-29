@@ -27,4 +27,17 @@ public enum ValueType {
         }
         return DataType.UNKNOWN;
     }
+
+    public String toString(){
+        switch(this){
+            case INT:
+                return "INT";
+            case BOOL:
+                return "BOOL";
+            case VOID:
+                return "VOID";
+            default:
+                return "UNKNOWN";
+        }
+    }
 }

@@ -11,16 +11,28 @@ import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.SymbolTableEntry;
  * All methods will be used by the abstract syntax tree for the interpretation/compilation
  */
 public class Memory {
-    public Stack stack;
-    public SymbolTable symbolTable;
+    Stack stack = new Stack();
+    SymbolTable symbolTable = new SymbolTable();
     private String identifierVarClass;
+    /**
+     * Writer used for the "write" and "writeline" methods
+     * If left null, the said methods will have no effect
+     */
+    Writer output = null;
 
+    /* Constructors */
 
     public Memory() {
         stack = new Stack();
         symbolTable = new SymbolTable();
         identifierVarClass = null;
     }
+
+    public Memory(Writer output){
+        this();
+        this.output = output;
+    }
+
     /* Operations directly related to the stack */
 
     /**
@@ -254,6 +266,26 @@ public class Memory {
             throw new IllegalArgumentException("Cannot call affVarClass with null object");
         }
         affectValue(identifierVarClass, value);
+    }
+
+    /**
+     * Writes text to the output
+     * @param text text to write
+     */
+    public void write(String text){
+        if(output != null){
+            output.writeAsync(text);
+        }
+    }
+
+    /**
+     * Writes a new line of text to the output
+     * @param text new line of text to write
+     */
+    public void writeLine(String text){
+        if(output != null){
+            output.writeLineAsync(text);
+        }
     }
 
     // Method related methods (context, etc...) will have to be added later

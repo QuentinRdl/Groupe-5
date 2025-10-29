@@ -8,4 +8,8 @@ public class TypeNode {
     public TypeNode(ValueType valueType){
         this.valueType = valueType;
     }
+
+    public String toString(){
+        return valueType.toString();
+    }
 }

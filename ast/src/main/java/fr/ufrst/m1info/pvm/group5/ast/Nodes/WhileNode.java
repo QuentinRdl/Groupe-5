@@ -31,7 +31,7 @@ public class WhileNode extends ASTNode{
         // Node compilation
         JJCodes.addAll(pe);
         JJCodes.add("not");
-        JJCodes.add("if(" + address + pe.size() + piss.size() + 3 +")");
+        JJCodes.add("if(" + (address + pe.size() + piss.size() + 3) +")");
         JJCodes.addAll(piss);
         JJCodes.add("goto("+address+")");
         return JJCodes;
@@ -46,4 +46,19 @@ public class WhileNode extends ASTNode{
             interpret(m);
         }
     }
+
+    @Override
+    public String checkType(Memory m) throws ASTInvalidDynamicTypeException {
+        String condType = condition.checkType(m);
+        if (!condType.equals("bool")) {
+            throw new ASTInvalidDynamicTypeException(
+                    "While loop condition must be bool, found : " + condType
+            );
+        }
+        if (iss != null) {
+            iss.checkType(m);
+        }
+        return "void";
+    }
+
 }

@@ -1,8 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.ast.Nodes;
 
-import fr.ufrst.m1info.pvm.group5.ast.ASTBuildException;
-import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidMemoryException;
-import fr.ufrst.m1info.pvm.group5.ast.EvaluableNode;
+import fr.ufrst.m1info.pvm.group5.ast.*;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 
@@ -42,4 +40,38 @@ public class SumNode extends ASTNode{
         int res = u.valueInt + v.valueInt;
         m.affectValue(identifier.identifier, new Value(res));
     }
+
+    @Override
+    public String checkType(Memory m) throws ASTInvalidDynamicTypeException {
+        String exprType = expression.checkType(m);
+        if (!"int".equals(exprType)) {
+            throw new ASTInvalidDynamicTypeException(
+                    "The operand of SumNode must be of type int, found: " + exprType
+            );
+        }
+        Value v;
+        try {
+            v = (Value) m.val(identifier.identifier);
+        } catch (Exception e) {
+            throw new ASTInvalidDynamicTypeException(
+                    "Error accessing variable " + identifier.identifier
+            );
+        }
+
+        if (v == null) {
+            throw new ASTInvalidDynamicTypeException(
+                    "Variable " + identifier.identifier + " not defined"
+            );
+        }
+        DataType dt = ValueType.toDataType(v.Type);
+        if (dt != DataType.INT) {
+            throw new ASTInvalidDynamicTypeException(
+                    "SumNode impossible : variable " + identifier.identifier + " is not an int"
+            );
+        }
+
+        return "int";
+    }
+
+
 }

@@ -1,8 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.ast.Nodes;
 
-import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidMemoryException;
-import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidOperationException;
-import fr.ufrst.m1info.pvm.group5.ast.EvaluableNode;
+import fr.ufrst.m1info.pvm.group5.ast.*;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 
@@ -28,4 +26,14 @@ public class ReturnNode extends ASTNode{
         Value v = ((EvaluableNode)expr).eval(m);
         m.affectValue(m.identVarClass(), v);
     }
+
+    @Override
+    public String checkType(Memory m) throws ASTInvalidDynamicTypeException {
+        if (expr == null) {
+            throw new ASTInvalidDynamicTypeException("Return without expression");
+        }
+        String exprType = expr.checkType(m);
+        return exprType;
+    }
+
 }
