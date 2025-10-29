@@ -1,6 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.driver;
 
 import fr.ufrst.m1info.pvm.group5.driver.Console;
+import fr.ufrst.m1info.pvm.group5.interpreter.InterpreterMiniJaja;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -365,5 +366,20 @@ public class MainController {
             return virtualFlow.getFirstVisibleCell().getIndex();
         }
         return 0;
+    }
+
+    public void onRunClicked(){
+        String code = getModifiedCode();
+
+        InterpreterMiniJaja interpreterMiniJaja = new InterpreterMiniJaja(console.getWriter());
+
+        String err = interpreterMiniJaja.interpretCode(code);
+
+        if(err == null){
+            console.getWriter().writeLineAsync("[INFO] Interpretation successfully completed");
+        } else {
+            console.getWriter().writeLineAsync("[ERROR] " + err);
+        }
+
     }
 }

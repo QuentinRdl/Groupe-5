@@ -24,13 +24,14 @@ public class InterpreterMiniJaja implements Interpreter{
      */
     @Override
     public String interpretCode(String code) {
-        Memory mem = new Memory();
+        Memory mem = new Memory(output);
         String errMessage= null;
         try{
             AbstractSyntaxTree ast = AbstractSyntaxTree.fromString(code);
             ast.interpret(mem);
         } catch (Exception e) {
             errMessage=e.getClass()+" : "+e.getMessage();
+            output.writeLineAsync(errMessage);
         }
         return errMessage;
     }
@@ -43,13 +44,14 @@ public class InterpreterMiniJaja implements Interpreter{
      */
     @Override
     public String interpretFile(String path)  {
-        Memory mem = new Memory();
+        Memory mem = new Memory(output);
         String errMessage= null;
         try{
             AbstractSyntaxTree ast = AbstractSyntaxTree.fromFile(path);
             ast.interpret(mem);
         } catch (Exception e) {
             errMessage=e.getClass()+" : "+e.getMessage();
+            output.writeLineAsync(errMessage);
         }
         return errMessage;
     }
