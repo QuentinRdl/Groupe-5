@@ -21,7 +21,7 @@ public class BooleanNode extends ASTNode implements EvaluableNode {
         if (this.bool){
             jajacodes.add("push(jcvrai)");
         } else {
-            jajacodes.add("push(jcvrai)");
+            jajacodes.add("push(jcfaux)");
         }
         return jajacodes;
     }
