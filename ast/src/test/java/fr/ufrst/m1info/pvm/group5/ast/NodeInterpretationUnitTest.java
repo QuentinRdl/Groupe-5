@@ -717,4 +717,27 @@ public class NodeInterpretationUnitTest {
         not = new NotNode(f);
         assertTrue(not.eval(memory).valueBool);
     }
+
+    @Test
+    public void NotNode_InvalidOperation() {
+        NumberNode t = ASTMocks.createEvalNode(NumberNode.class, null,null, m -> new Value(true));
+        NotNode not = new NotNode(t);
+        assertThrows(ASTInvalidOperationException.class, ()->not.interpret(memory));
+    }
+
+    @Test
+    public void NotNode_InvalidOperand(){
+        ASTNode node = ASTMocks.createNode(ASTNode.class, null, null);
+        assertThrows(ASTBuildException.class, () -> new NotNode(node));
+    }
+
+    /**
+     * NumberNode
+     */
+    @Test
+    public void NumberNode_Evaluation(){
+        NumberNode n = new NumberNode(5);
+        
+    }
+
 }
