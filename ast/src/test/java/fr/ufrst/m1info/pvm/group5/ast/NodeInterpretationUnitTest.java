@@ -691,4 +691,30 @@ public class NodeInterpretationUnitTest {
         assertFalse(memoryStorage.containsKey("x"));
         assertEquals(5, memoryStorage.get("y").valueInt);
     }
+
+    /**
+     * Mul node
+     */
+
+    @Test
+    public void MulNode_Operation(){
+        NumberNode lop = ASTMocks.createEvalNode(NumberNode.class, null,null, m -> new Value(5));
+        NumberNode rop = ASTMocks.createEvalNode(NumberNode.class, null,null, m -> new Value(10));
+        MulNode tested = new MulNode(lop,rop);
+        assertEquals(50, tested.eval(memory).valueInt);
+    }
+
+    /**
+     * Not node
+     */
+
+    @Test
+    public void NotNode_Operation() {
+        NumberNode t = ASTMocks.createEvalNode(NumberNode.class, null,null, m -> new Value(true));
+        NumberNode f = ASTMocks.createEvalNode(NumberNode.class, null,null, m -> new Value(false));
+        NotNode not = new NotNode(t);
+        assertFalse(not.eval(memory).valueBool);
+        not = new NotNode(f);
+        assertTrue(not.eval(memory).valueBool);
+    }
 }
