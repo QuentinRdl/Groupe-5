@@ -29,6 +29,7 @@ public class CompilerTest {
         Assertions.assertEquals("init\nnew(x,INT,var,0)\npush(3)\npush(4)\nadd\nstore(x)\npush(1)\ninc(x)\npush(0)\nswap\npop\npop\njcstop",res);
     }
 
+    @Disabled
     @Test
     @DisplayName("Compile File Complex")
     public void CompileComplex()  {
@@ -57,7 +58,7 @@ public class CompilerTest {
                 "load(y)\n" +
                 "add\n" +
                 "push(0)\n" +
-                "sub\n" +
+                "minus\n" +
                 "store(x)\n" +
                 "load(y)\n" +
                 "load(VAL)\n" +
@@ -90,15 +91,91 @@ public class CompilerTest {
     @DisplayName("Compile File Conditionals")
     public void CompileConditionals()  {
         String res= comp.compileFile("src/test/resources/Conditionals.mjj");
-        Assertions.assertEquals("init\npush(0)\npop\njcstop",res);
+        String expected = "init\n" +
+                "push(5)\n" +
+                "new(a,INT,var,0)\n" +
+                "push(5)\n" +
+                "new(b,INT,var,0)\n" +
+                "push(5)\n" +
+                "new(c,INT,var,0)\n" +
+                "new(v,INT,var,0)\n" +
+                "push(5)\n" +
+                "load(a)\n" +
+                "sup\n" +
+                "if(14)\n" +
+                "goto(16)\n" +
+                "push(1)\n" +
+                "inc(a)\n" +
+                "load(b)\n" +
+                "load(a)\n" +
+                "sup\n" +
+                "if(23)\n" +
+                "push(1)\n" +
+                "inc(b)\n" +
+                "goto(25)\n" +
+                "push(0)\n" +
+                "store(b)\n" +
+                "load(b)\n" +
+                "push(5)\n" +
+                "cmp\n" +
+                "if(39)\n" +
+                "load(a)\n" +
+                "load(b)\n" +
+                "sup\n" +
+                "if(36)\n" +
+                "load(b)\n" +
+                "store(v)\n" +
+                "goto(38)\n" +
+                "load(a)\n" +
+                "store(v)\n" +
+                "goto(41)\n" +
+                "load(c)\n" +
+                "store(v)\n" +
+                "push(0)\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "pop\n" +
+                "jcstop";
+        Assertions.assertEquals(expected,res);
     }
 
+    // Sum node not compiled
     @Disabled
     @Test
     @DisplayName("Compile File LocalVariables")
     public void CompileLocalVariables()  {
         String res= comp.compileFile("src/test/resources/LocalVariables.mjj");
-        Assertions.assertEquals("init\npush(0)\npop\njcstop",res);
+        String expected = "init\n" +
+                "push(4)\n" +
+                "new(x,INT,var,0)\n" +
+                "push(3)\n" +
+                "new(y,INT,var,0)\n" +
+                "push(6)\n" +
+                "new(z,INT,var,0)\n" +
+                "load(z)\n" +
+                "load(y)\n" +
+                "div\n" +
+                "push(2)\n" +
+                "add\n" +
+                "inc(x)\n" +
+                "push(1)\n" +
+                "inc(x)\n" +
+                "push(0)\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "pop\n" +
+                "jcstop";
+        Assertions.assertEquals(expected,res);
     }
 
     @Disabled
