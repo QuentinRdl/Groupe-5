@@ -1,5 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.driver;
 
+import fr.ufrst.m1info.pvm.group5.driver.Console;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,6 +39,8 @@ public class MainController {
     @FXML
     private TextArea output;
 
+    private Console console;
+
     private ObservableList<CodeLine> codeLines;
 
     @FXML
@@ -49,6 +53,9 @@ public class MainController {
      */
     @FXML
     public void initialize(){
+        console = new Console();
+        console.textArea = output;
+
         splitPane.setDividerPositions(0.75);
         splitPane.setOrientation(Orientation.VERTICAL);
 
@@ -105,6 +112,7 @@ public class MainController {
         }
 
         if(!selectedFile.exists()){
+            console.getWriter().writeLineAsync("[ERROR] File doesn't exist :" + selectedFile.getName());
             System.err.println("File doesn't exist : " + selectedFile.getName());
             return false;
         }
@@ -126,16 +134,12 @@ public class MainController {
             fileLabel.setText(selectedFile.getName());
             currentFile = selectedFile;
 
-            if (output != null) {
-                output.appendText("File loaded : " + selectedFile.getName() + "\n");
-            }
+            console.getWriter().writeLineAsync("[INFO] File loaded : " + selectedFile.getName());
             return true;
 
         } catch (IOException e){
             System.err.println("Error reading file : " + e.getMessage());
-            if (output != null) {
-                output.appendText("Error : " + e.getMessage() + "\n");
-            }
+            console.getWriter().writeLineAsync("[ERROR] " + e.getMessage());
             return false;
         }
     }
@@ -244,15 +248,11 @@ public class MainController {
             List<String> lines = codeLines.stream().map(CodeLine::getCode).toList();
             Files.write(file.toPath(), lines , StandardCharsets.UTF_8);
 
-            if (output != null) {
-                output.appendText("File saved : " + file.getName() + "\n");
-            }
+            console.getWriter().writeLineAsync("[INFO] File saved " + file.getName());
 
         } catch (IOException e){
             System.err.println("Error during saving : " + e.getMessage());
-            if (output != null) {
-                output.appendText("Error saving file\n");
-            }
+            console.getWriter().writeLineAsync("[ERROR] Error during saving : " + e.getMessage());
         }
     }
 
