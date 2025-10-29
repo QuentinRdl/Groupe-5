@@ -560,6 +560,52 @@ public class NodeInterpretationUnitTest {
     }
 
     /**
-     * 
+     * InstructionsNode
      */
+    @Test
+    public void InstructionsNode_MissingInstruction(){
+        assertThrows(ASTBuildException.class, () -> new InstructionsNode(null, null));
+    }
+
+    @Test
+    public void InstructionsNode_OneInstruction(){
+        ASTNode node = ASTMocks.createNode(
+                ASTNode.class,
+                m -> m.affectValue("x", new Value(5)),
+                null
+        );
+        memoryStorage.put("x", new Value());
+        InstructionsNode instrs = new InstructionsNode(node, null);
+        instrs.interpret(memory);
+        assertEquals(5, memoryStorage.get("x").valueInt);
+    }
+
+    @Test
+    public void InstructionsNode_MultipleInstructions(){
+        ASTNode first = ASTMocks.createNode(
+                ASTNode.class,
+                m -> m.affectValue("x", new Value(5)),
+                null
+        );
+        ASTNode second = ASTMocks.createNode(
+                ASTNode.class,
+                m -> {
+                    assertEquals(5, memoryStorage.get("x").valueInt);
+                    m.affectValue("x", new Value(6));
+                },
+                null
+        );
+        ASTNode third = ASTMocks.createNode(
+                ASTNode.class,
+                m -> {
+                    assertEquals(6, memoryStorage.get("x").valueInt);
+                    m.affectValue("x", new Value(7));
+                },
+                null
+        );
+        memoryStorage.put("x", new Value());
+        InstructionsNode instrs = new InstructionsNode(first, new InstructionsNode(second, new InstructionsNode(third, null)));
+        instrs.interpret(memory);
+        assertEquals(7, memoryStorage.get("x").valueInt);
+    }
 }
