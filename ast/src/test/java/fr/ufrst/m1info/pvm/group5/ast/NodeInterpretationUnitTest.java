@@ -77,6 +77,19 @@ public class NodeInterpretationUnitTest {
     }
 
     @Test
+    public void AffectationNode_UndefinedOperand(){
+        IdentNode lop = new IdentNode("x");
+        NumberNode rop = ASTMocks.createEvalNode(NumberNode.class, null,null, m -> new Value(5));
+        AffectationNode tested = new AffectationNode(lop,rop);
+        assertThrows(ASTInvalidMemoryException.class, ()->tested.interpret(memory));
+    }
+
+    @Test
+    public void AffectationNode_MissingOperand(){
+        assertThrows(ASTBuildException.class, () -> new AffectationNode(new IdentNode("x"),null));
+    }
+
+    @Test
     public void AffectationNode_InvalidOperand(){
         IdentNode lop = new IdentNode("x");
         NumberNode rop = ASTMocks.createEvalNode(NumberNode.class, null,null, m -> new Value(5));

@@ -517,7 +517,7 @@ public class CheckDynamicTypeTest {
 
         assertEquals("bool", returnNode.checkType(memoryMock));
     }
-    
+
     @Test
     @DisplayName("SumNode - checkType() valid with int")
     public void testSumNode_IntOk() throws Exception {
