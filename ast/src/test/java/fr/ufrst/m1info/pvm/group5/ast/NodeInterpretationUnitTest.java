@@ -737,7 +737,29 @@ public class NodeInterpretationUnitTest {
     @Test
     public void NumberNode_Evaluation(){
         NumberNode n = new NumberNode(5);
-        
+        assertEquals(5, n.eval(memory).valueInt);
     }
 
+    @Test
+    public void NumberNode_InvalidOperation(){
+        NumberNode n = new NumberNode(5);
+        assertThrows(ASTInvalidOperationException.class, ()->n.interpret(memory));
+    }
+
+    /**
+     * OrNode
+     */
+    @Test
+    public void OrNode_Operation(){
+        BooleanNode TNode = ASTMocks.createEvalNode(BooleanNode.class, null,null, m -> new Value(true));
+        BooleanNode FNode = ASTMocks.createEvalNode(BooleanNode.class, null,null, m -> new Value(false));
+        OrNode tested = new OrNode(TNode,FNode);
+        assertEquals(true, tested.eval(memory).valueBool);
+        tested = new OrNode(TNode,TNode);
+        assertEquals(true, tested.eval(memory).valueBool);
+        tested = new OrNode(FNode,FNode);
+        assertEquals(false, tested.eval(memory).valueBool);
+        tested = new OrNode(FNode,TNode);
+        assertEquals(true, tested.eval(memory).valueBool);
+    }
 }
