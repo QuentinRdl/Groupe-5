@@ -8,7 +8,9 @@ import org.junit.jupiter.api.*;
 
 import fr.ufrst.m1info.pvm.group5.ast.Nodes.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.mockito.Mock;
@@ -1104,5 +1106,91 @@ public class NodeInterpretationUnitTest {
         WhileNode wn = new WhileNode(node, instr);
         wn.interpret(memory);
         assertEquals(0,  memoryStorage.get("x").valueInt);
+    }
+
+    /**
+     * WriteLineNode
+     */
+    @Test
+    public void WriteLineNode_String(){
+        List<String> ref = new ArrayList<String>();
+        ASTMocks.addWriterToMock(memory, ref);
+        WriteLineNode wln = new WriteLineNode("abcd");
+        wln.interpret(memory);
+        assertEquals(1, ref.size());
+        assertEquals("abcd\n", ref.get(0));
+    }
+
+    @Test
+    public void WriteLineNode_Ident_int(){
+        List<String> ref = new ArrayList<String>();
+        memoryStorage.put("x", new Value(5));
+        ASTMocks.addWriterToMock(memory, ref);
+        WriteLineNode wln = new WriteLineNode(new IdentNode("x"));
+        wln.interpret(memory);
+        assertEquals(1, ref.size());
+        assertEquals("5\n", ref.get(0));
+    }
+
+    @Test
+    public void WriteLineNode_Ident_bool(){
+        List<String> ref = new ArrayList<String>();
+        memoryStorage.put("x", new Value(true));
+        ASTMocks.addWriterToMock(memory, ref);
+        WriteLineNode wln = new WriteLineNode(new IdentNode("x"));
+        wln.interpret(memory);
+        assertEquals(1, ref.size());
+        assertEquals("true\n", ref.get(0));
+    }
+
+    @Test
+    public void WriteLineNode_InvalidIdentifier(){
+        List<String> ref = new ArrayList<String>();
+        ASTMocks.addWriterToMock(memory, ref);
+        WriteLineNode wln = new WriteLineNode(new IdentNode("x"));
+        assertThrows(ASTInvalidMemoryException.class, ()->wln.interpret(memory));
+    }
+
+    /**
+     * WriteNode
+     */
+    @Test
+    public void WriteNode_String(){
+        List<String> ref = new ArrayList<String>();
+        ASTMocks.addWriterToMock(memory, ref);
+        WriteNode wln = new WriteNode("abcd");
+        wln.interpret(memory);
+        assertEquals(1, ref.size());
+        assertEquals("abcd", ref.get(0));
+    }
+
+    @Test
+    public void WriteNode_Ident_int(){
+        List<String> ref = new ArrayList<String>();
+        memoryStorage.put("x", new Value(5));
+        ASTMocks.addWriterToMock(memory, ref);
+        WriteNode wln = new WriteNode(new IdentNode("x"));
+        wln.interpret(memory);
+        assertEquals(1, ref.size());
+        assertEquals("5", ref.get(0));
+    }
+
+    @Test
+    public void WriteNode_Ident_bool(){
+        List<String> ref = new ArrayList<String>();
+        memoryStorage.put("x", new Value(true));
+        ASTMocks.addWriterToMock(memory, ref);
+        WriteNode wln = new WriteNode(new IdentNode("x"));
+        wln.interpret(memory);
+        assertEquals(1, ref.size());
+        assertEquals("true", ref.get(0));
+    }
+
+    @Test
+    public void WriteNode_InvalidIdentifier(){
+        List<String> ref = new ArrayList<String>();
+        ASTMocks.addWriterToMock(memory, ref);
+        WriteNode wln = new WriteNode(new IdentNode("x"));
+        assertThrows(ASTInvalidMemoryException.class, ()->wln.interpret(memory));
     }
 }

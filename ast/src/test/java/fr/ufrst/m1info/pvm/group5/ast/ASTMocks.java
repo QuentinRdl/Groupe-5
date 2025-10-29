@@ -83,6 +83,26 @@ public class ASTMocks {
     }
 
     /**
+     * Add primitives related to the writer to a memory mock
+     *
+     * @param mock mock of the memory class created earlier
+     * @param writerReference Reference to store the content of the writer calls
+     * @return modified mock
+     */
+    public static Memory addWriterToMock(Memory mock, List<String> writerReference){
+        doAnswer(invocationOnMock -> {
+            writerReference.add(invocationOnMock.getArgument(0));
+            return null;
+        }).when(mock).write(any(String.class));
+
+        doAnswer(invocationOnMock -> {
+            writerReference.add(invocationOnMock.getArgument(0) + "\n");
+            return null;
+        }).when(mock).writeLine(any(String.class));
+        return mock;
+    }
+
+    /**
      * Creates a mock that mimics memory storage and withdrawal using a map
      * @param storage map using to store the mock data
      * @return mock created
