@@ -51,4 +51,13 @@ public class Console {
     public void write(String content){
         textArea.appendText(content);
     }
+
+    /**
+     * Writes a line to the console without using the writer and adds a new line at the end
+     *
+     * @param content text to write to the console
+     */
+    public void writeLine(String content) {
+        textArea.appendText(content + "\n");
+    }
 }

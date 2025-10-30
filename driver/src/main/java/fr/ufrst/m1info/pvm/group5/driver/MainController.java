@@ -364,8 +364,17 @@ public class MainController {
         return 0;
     }
 
+    /**
+     * Executes the current code when the "Run" button is clicked
+     * Retrieves the code from the editor and passes it to the InterpreterMiniJaja for interpretation
+     * After interpretation, logs either a success message or an error message to the console
+     */
     public void onRunClicked(){
         String code = getModifiedCode();
+
+        if (code.isEmpty()){
+            return;
+        }
 
         InterpreterMiniJaja interpreterMiniJaja = new InterpreterMiniJaja(console.getWriter());
 
