@@ -67,4 +67,9 @@ public class IncNode extends ASTNode{
         }
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(ident);
+    }
+
 }

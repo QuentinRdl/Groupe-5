@@ -73,6 +73,10 @@ public class AffectationNode extends ASTNode{
         return "void"; // Affectation n'a pas de type
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(identifier,expression);
+    }
 
 
 }

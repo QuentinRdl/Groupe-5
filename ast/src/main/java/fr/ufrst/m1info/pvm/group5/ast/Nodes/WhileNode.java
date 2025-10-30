@@ -61,4 +61,13 @@ public class WhileNode extends ASTNode{
         return "void";
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        List<ASTNode> children = new ArrayList<>();
+        children.add(condition);
+        if(iss != null)
+            children.add(iss);
+        return children;
+    }
+
 }

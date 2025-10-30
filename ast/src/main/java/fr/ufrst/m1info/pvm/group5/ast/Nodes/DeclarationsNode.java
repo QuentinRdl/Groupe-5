@@ -48,6 +48,15 @@ public class DeclarationsNode extends ASTNode implements WithdrawalNode {
     }
 
     @Override
+    protected List<ASTNode> getChildren() {
+        List<ASTNode>  children = new ArrayList<>();
+        children.add(declaration);
+        if(declarations != null)
+            children.add(declarations);
+        return children;
+    }
+
+    @Override
     public void withdrawInterpret(Memory m) {
         if(declarations != null)
             ((WithdrawalNode)declarations).withdrawInterpret(m);

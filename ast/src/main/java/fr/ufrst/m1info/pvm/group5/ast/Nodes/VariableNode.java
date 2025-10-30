@@ -5,8 +5,10 @@ import fr.ufrst.m1info.pvm.group5.ast.*;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 import fr.ufrst.m1info.pvm.group5.memory.ValueType;
 
+import javax.print.DocFlavor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class VariableNode extends ASTNode implements WithdrawalNode {
     TypeNode typemeth;
@@ -63,6 +65,20 @@ public class VariableNode extends ASTNode implements WithdrawalNode {
         }
         m.declVar(ident.identifier, new Value(), ValueType.toDataType(typemeth.valueType));
         return "void";
+    }
+
+    @Override
+    protected Map<String, String> getProperties(){
+        return Map.ofEntries(Map.entry("type", typemeth.toString()));
+    }
+
+    @Override
+    protected List<ASTNode> getChildren() {
+        List<ASTNode> children = new ArrayList<>();
+        children.add(ident);
+        if(vexp!=null)
+            children.add(vexp);
+        return children;
     }
 
 

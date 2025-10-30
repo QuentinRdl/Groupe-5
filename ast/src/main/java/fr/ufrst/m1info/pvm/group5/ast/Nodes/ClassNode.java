@@ -62,6 +62,15 @@ public class ClassNode extends ASTNode {
         return "void";
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        List<ASTNode> children = new ArrayList<>();
+        children.add(ident);
+        if(decls!=null)
+            children.add(decls);
+        children.add(main);
+        return children;
+    }
 
 
 }
