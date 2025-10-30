@@ -19,7 +19,6 @@ public class InterpreterMiniJajaTest {
         imj=new InterpreterMiniJaja();
     }
 
-    @Disabled
     @Test
     @DisplayName("Interpret Code Without Error")
     public void InterpretCodeNoError() {
@@ -29,13 +28,12 @@ public class InterpreterMiniJajaTest {
         Assertions.assertNull(imj.interpretCode(input));
     }
 
-    /*@Test
+    @Test
     @DisplayName("Interpret File BasicOperations")
     public void InterpretFileBasicOperations() {
         Assertions.assertNull(imj.interpretFile("src/test/resources/BasicOperations.mjj"));
-    }*/
+    }
 
-    @Disabled
     @Test
     @DisplayName("Interpret File That Doesn't Exist")
     public void InterpretNotExistingFile() {
@@ -44,7 +42,7 @@ public class InterpreterMiniJajaTest {
         Assertions.assertEquals(NoSuchFileException.class.toString(),errMessage.split(":")[0].trim());
     }
 
-    /*@Test
+    @Test
     @DisplayName("Interpret File BasicOperations")
     public void BasicOperations() {
         Assertions.assertNull(imj.interpretFile("src/test/resources/BasicOperations.mjj"));
@@ -72,23 +70,20 @@ public class InterpreterMiniJajaTest {
     @DisplayName("Interpret File Loops")
     public void Loops() {
         Assertions.assertNull(imj.interpretFile("src/test/resources/Loops.mjj"));
-    }*/
+    }
 
-    @Disabled
     @Test
     @DisplayName("Interpret File OperationPrevalence")
     public void OperationPrevalence() {
         Assertions.assertNull(imj.interpretFile("src/test/resources/OperationPrevalence.mjj"));
     }
 
-    @Disabled
     @Test
     @DisplayName("Interpret File Simple")
     public void Simple() {
         Assertions.assertNull(imj.interpretFile("src/test/resources/Simple.mjj"));
     }
 
-    @Disabled
     @Test
     @DisplayName("Interpret Undefined Variable / sum")
     public void UndefinedVariableSum() {
@@ -97,7 +92,6 @@ public class InterpreterMiniJajaTest {
         Assertions.assertEquals(IllegalArgumentException.class.toString(),errMessage.split(":")[0].trim());
     }
 
-    @Disabled
     @Test
     @DisplayName("Interpret Undefined Variable / Inc")
     public void UndefinedVariableInc() {
@@ -106,7 +100,6 @@ public class InterpreterMiniJajaTest {
         Assertions.assertEquals(IllegalArgumentException.class.toString(),errMessage.split(":")[0].trim());
     }
 
-    @Disabled
     @Test
     @DisplayName("Interpret Undefined Variable / Evaluation")
     public void UndefinedVariableEval() {
@@ -163,12 +156,12 @@ public class InterpreterMiniJajaTest {
         Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
     }
 
-    /*@Test
+    @Test
     @DisplayName("Interpret Increment")
     public void increment() {
         String errMessage=imj.interpretCode("class C {int y; main {y++;}}");
         Assertions.assertNull(errMessage);
-    }*/
+    }
 
     @Disabled // TODO : Re-enable this test when the issue is fixed
     @Test
@@ -259,7 +252,6 @@ public class InterpreterMiniJajaTest {
         Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
     }
 
-    @Disabled
     @Test
     @DisplayName("Interpret Variable Named Int2")
     public void variableNamedInt2() {
