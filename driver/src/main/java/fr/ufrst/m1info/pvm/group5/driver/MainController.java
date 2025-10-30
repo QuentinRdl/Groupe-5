@@ -218,7 +218,7 @@ public class MainController {
 
         // Default name if file exists
         if (currentFile != null){
-            fc.setInitialFileName(currentFile.getName());
+            fc.setInitialFileName(getBaseFileName(currentFile.getName()));
             fc.setInitialDirectory(currentFile.getParentFile());
         }
 
@@ -429,5 +429,12 @@ public class MainController {
 
             Platform.runLater(this::focusSelectedCell);
         }
+    }
+
+    public String getBaseFileName(String fileName){
+        if (fileName == null) return null;
+
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex == - 1) ? fileName : fileName.substring(0, dotIndex);
     }
 }

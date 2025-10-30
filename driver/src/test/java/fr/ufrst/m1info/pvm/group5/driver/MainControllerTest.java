@@ -773,4 +773,24 @@ public class MainControllerTest extends ApplicationTest {
         assertEquals(1, controller.getCodeLines().size());
     }
 
+    @Test
+    public void getBaseFileNameNullFileReturnsNull(){
+        assertNull(controller.getBaseFileName(null));
+    }
+
+    @Test
+    public void getBaseFileNameReturnsNameWithoutExtension(){
+        assertEquals("test", controller.getBaseFileName("test.mjj"));
+    }
+
+    @Test
+    public void getBaseFileNameNoExtensionReturnsFullName(){
+        assertEquals("test", controller.getBaseFileName("test"));
+    }
+
+    @Test
+    public void getBaseFileNameMultipleExtensionsReturnsBeforeLastDot(){
+        assertEquals("test.jjc", controller.getBaseFileName("test.jjc.mjj"));
+    }
+
 }
