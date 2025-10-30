@@ -381,6 +381,118 @@ public class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret Declaration Wrong Type")
+    public void declarationWrongType() {
+        String errMessage=imj.interpretCode("class C {int y=false; main{}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Declaration Wrong Type 2")
+    public void declarationWrongType2() {
+        String errMessage=imj.interpretCode("class C {boolean y=0; main{}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Declaration Void")
+    public void declarationVoid() {
+        String errMessage=imj.interpretCode("class C {void y; main{}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Affectation Wrong Type")
+    public void affectationWrongType() {
+        String errMessage=imj.interpretCode("class C {int y; main{y=false;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Affectation Wrong Type 2")
+    public void affectationWrongType2() {
+        String errMessage=imj.interpretCode("class C {boolean y; main{y=0;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Add Boolean")
+    public void addBoolean() {
+        String errMessage=imj.interpretCode("class C {int y; main{y=true+false;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Minus Boolean")
+    public void minusBoolean() {
+        String errMessage=imj.interpretCode("class C {int y; main{y=true-false;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Mul Boolean")
+    public void mulBoolean() {
+        String errMessage=imj.interpretCode("class C {int y; main{y=true*false;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Div Boolean")
+    public void divBoolean() {
+        String errMessage=imj.interpretCode("class C {int y; main{y=true/false;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Neg Boolean")
+    public void negBoolean() {
+        String errMessage=imj.interpretCode("class C {int y; main{y=-false;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Not Int")
+    public void notInt() {
+        String errMessage=imj.interpretCode("class C {boolean y; main{y=!4;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret And Int")
+    public void andInt() {
+        String errMessage=imj.interpretCode("class C {boolean y; main{y=81 && 1;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Or Int")
+    public void orInt() {
+        String errMessage=imj.interpretCode("class C {boolean y; main{y=4 || 81;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Writeln Int")
+    public void WritelnInt() {
+        String errMessage=imj.interpretCode("class C {int y; main{writeln(2);}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
     @DisplayName("Interpret Random String")
     public void randomString() {
         String errMessage=imj.interpretCode("ezudzedezezbclassdezdoncCdzedo{dezodjintezpodjy;podkezdmain{ydpocke=dozejd10;}}");
