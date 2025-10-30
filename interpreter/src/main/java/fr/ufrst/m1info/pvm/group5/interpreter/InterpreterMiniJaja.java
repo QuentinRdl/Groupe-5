@@ -31,7 +31,7 @@ public class InterpreterMiniJaja implements Interpreter{
             ast.interpret(mem);
         } catch (Exception e) {
             errMessage=e.getClass()+" : "+e.getMessage();
-            output.writeLineAsync(errMessage);
+            output.writeLine(errMessage);
         }
         return errMessage;
     }

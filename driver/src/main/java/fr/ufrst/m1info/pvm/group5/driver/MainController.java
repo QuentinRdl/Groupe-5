@@ -1,6 +1,5 @@
 package fr.ufrst.m1info.pvm.group5.driver;
 
-import fr.ufrst.m1info.pvm.group5.driver.Console;
 import fr.ufrst.m1info.pvm.group5.interpreter.InterpreterMiniJaja;
 
 import javafx.application.Platform;
@@ -21,8 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -112,7 +109,7 @@ public class MainController {
         }
 
         if(!selectedFile.exists()){
-            console.getWriter().writeLineAsync("[ERROR] File doesn't exist :" + selectedFile.getName());
+            console.getWriter().writeLine("[ERROR] File doesn't exist :" + selectedFile.getName());
             System.err.println("File doesn't exist : " + selectedFile.getName());
             return false;
         }
@@ -134,12 +131,12 @@ public class MainController {
             fileLabel.setText(selectedFile.getName());
             currentFile = selectedFile;
 
-            console.getWriter().writeLineAsync("[INFO] File loaded : " + selectedFile.getName());
+            console.getWriter().writeLine("[INFO] File loaded : " + selectedFile.getName());
             return true;
 
         } catch (IOException e){
             System.err.println("Error reading file : " + e.getMessage());
-            console.getWriter().writeLineAsync("[ERROR] " + e.getMessage());
+            console.getWriter().writeLine("[ERROR] " + e.getMessage());
             return false;
         }
     }
@@ -248,11 +245,11 @@ public class MainController {
             List<String> lines = codeLines.stream().map(CodeLine::getCode).toList();
             Files.write(file.toPath(), lines , StandardCharsets.UTF_8);
 
-            console.getWriter().writeLineAsync("[INFO] File saved " + file.getName());
+            console.getWriter().writeLine("[INFO] File saved " + file.getName());
 
         } catch (IOException e){
             System.err.println("Error during saving : " + e.getMessage());
-            console.getWriter().writeLineAsync("[ERROR] Error during saving : " + e.getMessage());
+            console.getWriter().writeLine("[ERROR] Error during saving : " + e.getMessage());
         }
     }
 
@@ -375,9 +372,9 @@ public class MainController {
         String err = interpreterMiniJaja.interpretCode(code);
 
         if(err == null){
-            console.getWriter().writeLineAsync("[INFO] Interpretation successfully completed");
+            console.getWriter().writeLine("[INFO] Interpretation successfully completed");
         } else {
-            console.getWriter().writeLineAsync("[ERROR] " + err);
+            console.getWriter().writeLine("[ERROR] " + err);
         }
 
     }
