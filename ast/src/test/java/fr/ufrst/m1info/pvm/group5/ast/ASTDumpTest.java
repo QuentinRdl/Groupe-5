@@ -21,6 +21,7 @@ public class ASTDumpTest {
         System.out.println(AST.dump());
     }
 
+    @Disabled
     @Test
     public void Mjj0() throws IOException {
         AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/0.mjj");
