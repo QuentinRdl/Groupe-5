@@ -52,4 +52,9 @@ public class MainNode extends ASTNode {
         return "void";
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(vars, instrs);
+    }
+
 }

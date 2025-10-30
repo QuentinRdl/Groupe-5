@@ -7,6 +7,7 @@ import fr.ufrst.m1info.pvm.group5.memory.Memory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class ASTNode {
 
@@ -49,7 +50,27 @@ public abstract class ASTNode {
      * @param depth depth at which to print the properties of the node
      * @return properties of the node in the JSON format
      */
-    protected abstract String dumpProperties(int depth);
+    protected String dumpProperties(int depth){
+        Map<String,String> props = getProperties();
+        if(props==null) return "";
+        StringBuilder sb = new StringBuilder();
+        for(var e : props.entrySet()) {
+            if (sb.length() > 0)
+                sb.append(",\n");
+            addTabDepth(sb, depth);
+            sb.append("\"").append(e.getKey()).append("\" : ").append(e.getValue());
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
+
+    /**
+     * Gets the non-children properties of the node
+     * @return non-children properties of the node
+     */
+    protected Map<String, String> getProperties(){
+        return null;
+    }
 
     /**
      * Utility method. Add depth \t at the end of the stringBuilder
@@ -68,12 +89,12 @@ public abstract class ASTNode {
     protected String dump(int depth){
         StringBuilder sb = new StringBuilder();
         addTabDepth(sb,depth);
-        sb.append(this.getClass().getSimpleName());
+        sb.append("\"").append(this.getClass().getSimpleName()).append("\" : ");
         sb.append(" {\n");
         sb.append(dumpProperties(depth+1));
         List<ASTNode> children = this.getChildren();
         for(ASTNode node : children){
-            sb.append(node.dump(depth+1));
+            sb.append(",").append(node.dump(depth+1));
         }
         addTabDepth(sb,depth);
         sb.append("}\n");

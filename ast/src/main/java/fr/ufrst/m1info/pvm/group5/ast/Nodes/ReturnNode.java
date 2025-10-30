@@ -36,4 +36,9 @@ public class ReturnNode extends ASTNode{
         return exprType;
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(expr);
+    }
+
 }

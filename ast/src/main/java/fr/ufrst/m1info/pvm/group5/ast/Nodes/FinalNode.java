@@ -8,6 +8,7 @@ import fr.ufrst.m1info.pvm.group5.memory.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FinalNode extends ASTNode implements WithdrawalNode {
     TypeNode type;
@@ -72,6 +73,16 @@ public class FinalNode extends ASTNode implements WithdrawalNode {
         }
         m.declCst(ident.identifier, new Value(), ValueType.toDataType(type.valueType));
         return "void";
+    }
+
+    @Override
+    protected Map<String,String> getProperties(){
+        return Map.ofEntries(Map.entry("type",type.toString()));
+    }
+
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(ident, expression);
     }
 
 

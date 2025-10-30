@@ -73,4 +73,9 @@ public class IfNode extends ASTNode{
         return "void";
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(condition, instrThen, instrElse);
+    }
+
 }

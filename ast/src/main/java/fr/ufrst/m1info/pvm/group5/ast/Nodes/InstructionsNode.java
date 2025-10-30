@@ -47,4 +47,9 @@ public class InstructionsNode extends ASTNode{
         return "void";
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(instruction, otherInstructions);
+    }
+
 }

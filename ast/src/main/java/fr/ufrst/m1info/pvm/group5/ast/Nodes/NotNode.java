@@ -48,4 +48,9 @@ public class NotNode extends ASTNode implements EvaluableNode {
         return "bool";
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(expr);
+    }
+
 }

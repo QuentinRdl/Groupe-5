@@ -61,4 +61,9 @@ public class WhileNode extends ASTNode{
         return "void";
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(condition, iss);
+    }
+
 }

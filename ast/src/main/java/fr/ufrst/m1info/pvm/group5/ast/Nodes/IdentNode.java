@@ -8,6 +8,7 @@ import fr.ufrst.m1info.pvm.group5.memory.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class IdentNode extends ASTNode implements EvaluableNode {
     String identifier;
@@ -65,8 +66,15 @@ public class IdentNode extends ASTNode implements EvaluableNode {
         }
     }
 
+    @Override
+    protected Map<String, String> getProperties(){
+        return Map.ofEntries(Map.entry("identifier",identifier));
+    }
 
-
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of();
+    }
 
 
     @Override

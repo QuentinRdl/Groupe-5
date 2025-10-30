@@ -75,5 +75,10 @@ public class SumNode extends ASTNode{
         return "int";
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(identifier, expression);
+    }
+
 
 }

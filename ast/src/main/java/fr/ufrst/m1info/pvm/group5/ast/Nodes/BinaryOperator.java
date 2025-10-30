@@ -68,6 +68,13 @@ public abstract class BinaryOperator extends ASTNode implements EvaluableNode {
     protected abstract Value mainOperation(Value leftOperand, Value rightOperand) throws ASTInvalidMemoryException, ASTInvalidOperationException;
 
     @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(left,right);
+    }
+
+
+    //TODO : redo this properly
+    @Override
     public String checkType(Memory m) throws ASTInvalidDynamicTypeException {
         String leftType = left.checkType(m);
         String rightType = right.checkType(m);

@@ -8,6 +8,7 @@ import fr.ufrst.m1info.pvm.group5.memory.Value;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class NumberNode extends ASTNode implements EvaluableNode {
     int number;
@@ -31,6 +32,16 @@ public class NumberNode extends ASTNode implements EvaluableNode {
     @Override
     public String checkType(Memory m) throws ASTInvalidDynamicTypeException {
         return "int";
+    }
+
+    @Override
+    protected Map<String,String> getProperties(){
+        return Map.ofEntries(Map.entry("value", String.valueOf(this.number)));
+    }
+
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of();
     }
 
     @Override
