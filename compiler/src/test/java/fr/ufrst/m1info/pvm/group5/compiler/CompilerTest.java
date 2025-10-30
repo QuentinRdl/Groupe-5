@@ -20,8 +20,6 @@ public class CompilerTest {
         Assertions.assertEquals("init\npush(0)\npop\njcstop",res);
     }
 
-    // Line x++; return push(1) load(x) instead of push(1) inc(x)
-    @Disabled
     @Test
     @DisplayName("Compile File BasicOperations")
     public void CompileBasicOperations()  {
@@ -29,7 +27,6 @@ public class CompilerTest {
         Assertions.assertEquals("init\nnew(x,INT,var,0)\npush(3)\npush(4)\nadd\nstore(x)\npush(1)\ninc(x)\npush(0)\nswap\npop\npop\njcstop",res);
     }
 
-    @Disabled
     @Test
     @DisplayName("Compile File Complex")
     public void CompileComplex()  {
@@ -86,7 +83,6 @@ public class CompilerTest {
         Assertions.assertEquals(expected,res);
     }
 
-    @Disabled
     @Test
     @DisplayName("Compile File Conditionals")
     public void CompileConditionals()  {
@@ -145,7 +141,7 @@ public class CompilerTest {
         Assertions.assertEquals(expected,res);
     }
 
-    // Sum node not compiled
+
     @Test
     @DisplayName("Compile File LocalVariables")
     public void CompileLocalVariables()  {
@@ -177,7 +173,6 @@ public class CompilerTest {
         Assertions.assertEquals(expected,res);
     }
 
-    @Disabled
     @Test
     @DisplayName("Compile File Loops")
     public void CompileLoops()  {
