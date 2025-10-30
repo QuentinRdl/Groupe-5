@@ -73,6 +73,12 @@ public class MainController {
                 public void onDeletePressed(CodeLine codeLine) {
                     handleDeleteEmptyLine(codeLine);
                 }
+
+                @Override
+                public void onUpPressed(int index) { handleUpPressed(index);}
+
+                @Override
+                public void onDownPressed(int index) { handleDownPressed(index);}
             });
             return cell;
         });
@@ -364,6 +370,14 @@ public class MainController {
         return 0;
     }
 
+    private int getLastVisibleIndex(){
+        VirtualFlow<?> virtualFlow = (VirtualFlow<?>) codeListView.lookup(".virtual-flow");
+        if(virtualFlow != null && virtualFlow.getLastVisibleCell() != null) {
+            return virtualFlow.getLastVisibleCell().getIndex();
+        }
+        return codeListView.getItems().size() - 1;
+    }
+
     /**
      * Executes the current code when the "Run" button is clicked
      * Retrieves the code from the editor and passes it to the InterpreterMiniJaja for interpretation
@@ -386,5 +400,34 @@ public class MainController {
             console.getWriter().writeLine("[ERROR] " + err);
         }
 
+    }
+
+    private void handleUpPressed(int index){
+        if (index > 0){
+
+            codeListView.getSelectionModel().clearAndSelect(index - 1);
+
+            int firstCellVisibleIndex = getFirstVisibleIndex();
+            if (index <= firstCellVisibleIndex){
+                codeListView.scrollTo(Math.max(0, firstCellVisibleIndex - 1));
+            }
+
+            Platform.runLater(this::focusSelectedCell);
+
+        }
+    }
+
+    private void handleDownPressed(int index){
+        if (index < codeLines.size() -1 ){
+            codeListView.getSelectionModel().clearAndSelect(index + 1);
+
+            int lastCellVisibleIndex = getLastVisibleIndex();
+            int firstCellVisibleIndex = getFirstVisibleIndex();
+            if (index + 1 > lastCellVisibleIndex){
+                codeListView.scrollTo(Math.min(codeLines.size() - 1, firstCellVisibleIndex + 1));
+            }
+
+            Platform.runLater(this::focusSelectedCell);
+        }
     }
 }

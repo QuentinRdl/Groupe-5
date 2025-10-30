@@ -22,4 +22,8 @@ public interface CodeLineCellListener {
      */
     void onDeletePressed(CodeLine codeLine);
 
+    void onUpPressed(int index);
+
+    void onDownPressed(int index);
+
 }
