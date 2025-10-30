@@ -421,6 +421,46 @@ public class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret Affectation Boolean Add")
+    public void affectationBooleanAdd() {
+        String errMessage=imj.interpretCode("class C {boolean y; main{y=1+5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Affectation Boolean Minus")
+    public void affectationBooleanMinus() {
+        String errMessage=imj.interpretCode("class C {boolean y; main{y=1-5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Affectation Boolean Mul")
+    public void affectationBooleanMul() {
+        String errMessage=imj.interpretCode("class C {boolean y; main{y=1*5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Affectation Boolean Div")
+    public void affectationBooleanDiv() {
+        String errMessage=imj.interpretCode("class C {boolean y; main{y=1/5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Affectation Boolean Neg")
+    public void affectationBooleanNeg() {
+        String errMessage=imj.interpretCode("class C {boolean y; main{y=-5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
     @DisplayName("Interpret Add Boolean")
     public void addBoolean() {
         String errMessage=imj.interpretCode("class C {int y; main{y=true+false;}}");
@@ -448,6 +488,14 @@ public class InterpreterMiniJajaTest {
     @DisplayName("Interpret Div Boolean")
     public void divBoolean() {
         String errMessage=imj.interpretCode("class C {int y; main{y=true/false;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Sup Boolean")
+    public void supBoolean() {
+        String errMessage=imj.interpretCode("class C {boolean y; main{y=true>false;}}");
         Assertions.assertNotEquals(null,errMessage);
         Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
     }
