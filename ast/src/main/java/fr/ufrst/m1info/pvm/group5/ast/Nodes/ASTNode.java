@@ -89,16 +89,18 @@ public abstract class ASTNode {
     protected String dump(int depth){
         StringBuilder sb = new StringBuilder();
         addTabDepth(sb,depth);
-        sb.append("\"").append(this.getClass().getSimpleName()).append("\" : ");
-        sb.append(" {\n");
-        sb.append(dumpProperties(depth+1));
+        sb.append("{\n");
+        depth++;
+        addTabDepth(sb,depth);
+        //;
+        sb.append(dumpProperties(depth));
         List<ASTNode> children = this.getChildren();
         for(ASTNode node : children){
-            sb.append(",").append(node.dump(depth+1));
+            sb.append("\"").append(node.getClass().getSimpleName()).append("\" : ");
+            sb.append(",").append(node.dump(depth));
         }
         addTabDepth(sb,depth);
         sb.append("}\n");
         return sb.toString();
     }
-
 }
