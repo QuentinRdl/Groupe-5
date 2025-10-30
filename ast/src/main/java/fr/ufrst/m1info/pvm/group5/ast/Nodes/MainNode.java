@@ -54,7 +54,12 @@ public class MainNode extends ASTNode {
 
     @Override
     protected List<ASTNode> getChildren() {
-        return List.of(vars, instrs);
+        List<ASTNode> children = new ArrayList<>();
+        if(vars != null)
+            children.add(vars);
+        if(instrs != null)
+            children.add(instrs);
+        return children;
     }
 
 }

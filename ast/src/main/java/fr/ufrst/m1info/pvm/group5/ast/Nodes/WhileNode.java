@@ -63,7 +63,11 @@ public class WhileNode extends ASTNode{
 
     @Override
     protected List<ASTNode> getChildren() {
-        return List.of(condition, iss);
+        List<ASTNode> children = new ArrayList<>();
+        children.add(condition);
+        if(iss != null)
+            children.add(iss);
+        return children;
     }
 
 }

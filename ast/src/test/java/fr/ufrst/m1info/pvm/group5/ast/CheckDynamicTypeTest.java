@@ -780,6 +780,10 @@ public class CheckDynamicTypeTest {
         public List<String> withdrawCompile(int address) { return List.of(); }
         @Override
         public String checkType(Memory m) { return "void"; }
+        @Override
+        protected List<ASTNode> getChildren() {
+            return List.of();
+        }
     }
 
 

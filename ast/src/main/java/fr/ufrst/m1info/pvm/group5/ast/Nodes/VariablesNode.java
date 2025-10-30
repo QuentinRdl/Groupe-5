@@ -50,7 +50,11 @@ public class VariablesNode extends ASTNode implements WithdrawalNode {
 
     @Override
     protected List<ASTNode> getChildren() {
-        return List.of(variable, variables);
+        List<ASTNode> children = new ArrayList<>();
+        children.add(variable);
+        if(variables!=null)
+            children.add(variables);
+        return children;
     }
 
 

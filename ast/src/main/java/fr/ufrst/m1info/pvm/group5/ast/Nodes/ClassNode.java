@@ -64,7 +64,12 @@ public class ClassNode extends ASTNode {
 
     @Override
     protected List<ASTNode> getChildren() {
-        return List.of(ident, decls, main);
+        List<ASTNode> children = new ArrayList<>();
+        children.add(ident);
+        if(decls!=null)
+            children.add(decls);
+        children.add(main);
+        return children;
     }
 
 

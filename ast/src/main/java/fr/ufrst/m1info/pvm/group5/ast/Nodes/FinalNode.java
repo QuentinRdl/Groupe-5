@@ -82,7 +82,11 @@ public class FinalNode extends ASTNode implements WithdrawalNode {
 
     @Override
     protected List<ASTNode> getChildren() {
-        return List.of(ident, expression);
+        List<ASTNode> children = new ArrayList<>();
+        children.add(ident);
+        if(expression != null)
+            children.add(expression);
+        return children;
     }
 
 

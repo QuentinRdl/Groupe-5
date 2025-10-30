@@ -49,7 +49,11 @@ public class InstructionsNode extends ASTNode{
 
     @Override
     protected List<ASTNode> getChildren() {
-        return List.of(instruction, otherInstructions);
+        List<ASTNode> children = new ArrayList<>();
+        children.add(instruction);
+        if(otherInstructions!=null)
+            children.add(otherInstructions);
+        return children;
     }
 
 }
