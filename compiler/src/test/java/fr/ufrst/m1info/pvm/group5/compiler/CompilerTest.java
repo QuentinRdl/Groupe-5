@@ -290,14 +290,14 @@ public class CompilerTest {
     @Test
     @DisplayName("Compile Number")
     public void number() {
-        String errMessage=comp.compileCode("class C { main{10;}}");
-        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+        String res=comp.compileCode("class C { main{10;}}");
+        Assertions.assertNull(res);
     }
 
     @Test
     @DisplayName("Compile File That Doesn't Exist")
     public void InterpretNotExistingFile() {
-        String errMessage=comp.compileFile("src/test/resources/FileThatDoesntExist.mjj");
-        Assertions.assertEquals(NoSuchFileException.class.toString(),errMessage.split(":")[0].trim());
+        String res=comp.compileFile("src/test/resources/FileThatDoesntExist.mjj");
+        Assertions.assertNull(res);
     }
 }

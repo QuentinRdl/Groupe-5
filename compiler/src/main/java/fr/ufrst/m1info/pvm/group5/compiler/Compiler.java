@@ -8,7 +8,7 @@ public class Compiler {
     Writer output;
 
     protected Compiler(){
-        output = null;
+        output = new Writer();
     }
 
     public Compiler(Writer output) {
@@ -22,12 +22,12 @@ public class Compiler {
      * @return the compiled code or the error message if an exception is thrown
      */
     public String compileCode(String code) {
-        String res;
+        String res=null;
         try{
             AbstractSyntaxTree ast = AbstractSyntaxTree.fromString(code);
             res=ast.compileAsString();
         } catch (Exception e) {
-            res=e.getClass()+" : "+e.getMessage();
+            output.writeLine(e.getClass()+" : "+e.getMessage());
         }
         return res;
     }
@@ -39,12 +39,12 @@ public class Compiler {
      * @return the compiled code or the error message if an exception is thrown
      */
     public String compileFile(String path) {
-        String res;
+        String res=null;
         try{
             AbstractSyntaxTree ast = AbstractSyntaxTree.fromFile(path);
             res=ast.compileAsString();
         } catch (Exception e) {
-            res=e.getClass()+" : "+e.getMessage();
+            output.writeLine(e.getClass()+" : "+e.getMessage());
         }
         return res;
     }
