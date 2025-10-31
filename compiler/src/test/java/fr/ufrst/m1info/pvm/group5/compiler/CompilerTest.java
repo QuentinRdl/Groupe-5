@@ -1,6 +1,9 @@
 package fr.ufrst.m1info.pvm.group5.compiler;
 
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.junit.jupiter.api.*;
+
+import java.nio.file.NoSuchFileException;
 
 public class CompilerTest {
     Compiler comp;
@@ -282,5 +285,19 @@ public class CompilerTest {
                 "pop\n" +
                 "jcstop";
         Assertions.assertEquals(expected,res);
+    }
+
+    @Test
+    @DisplayName("Compile Number")
+    public void number() {
+        String errMessage=comp.compileCode("class C { main{10;}}");
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Compile File That Doesn't Exist")
+    public void InterpretNotExistingFile() {
+        String errMessage=comp.compileFile("src/test/resources/FileThatDoesntExist.mjj");
+        Assertions.assertEquals(NoSuchFileException.class.toString(),errMessage.split(":")[0].trim());
     }
 }
