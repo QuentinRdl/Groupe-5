@@ -2,7 +2,6 @@ package fr.ufrst.m1info.pvm.group5.driver;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.Test;
@@ -27,6 +26,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.matcher.control.LabeledMatchers;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
+
 import static org.testfx.util.NodeQueryUtils.isVisible;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -996,9 +996,25 @@ public class MainControllerTest extends ApplicationTest {
                 "}"
         );
 
-        String consoleText = createFileLoadRunAndGetConsole("test.mjj", content);
+        String consoleText = createFileLoadRunAndGetConsoleByButton("test.mjj", content);
         assertTrue(consoleText.contains("[INFO] Interpretation successfully completed"));
     }
+    @Test
+    public void interpreterWorksActualBtn() throws Exception{
+        String content = String.join("\n",
+                "class C {",
+                "    int x;",
+                "    main {",
+                "        x = 3 + 4;",
+                "        x++;",
+                "    }",
+                "}"
+        );
+
+        String consoleText = createFileLoadRunAndGetConsoleByButton("test.mjj", content);
+        assertTrue(consoleText.contains("[INFO] Interpretation successfully completed"));
+    }
+
 
     @Test
     public void interpreterDoesNotWork() throws Exception{
@@ -1012,6 +1028,22 @@ public class MainControllerTest extends ApplicationTest {
         );
 
         String consoleText = createFileLoadRunAndGetConsole("test.mjj", content);
+        assertTrue(consoleText.contains("[ERROR]"));
+        assertTrue(consoleText.contains("line 6:5 missing '}' at '<EOF>'"));
+    }
+
+    @Test
+    public void interpreterDoesNotWorkActualBtn() throws Exception{
+        String content = String.join("\n",
+                "class C {",
+                "    int x;",
+                "    main {",
+                "        x = 3 + 4;",
+                "        x++;",
+                "    }"
+        );
+
+        String consoleText = createFileLoadRunAndGetConsoleByButton("test.mjj", content);
         assertTrue(consoleText.contains("[ERROR]"));
         assertTrue(consoleText.contains("line 6:5 missing '}' at '<EOF>'"));
     }
@@ -1030,7 +1062,6 @@ public class MainControllerTest extends ApplicationTest {
         if (content == null || content.isEmpty()){
             lines = new String[0];
         } else {
-            // split on any newline sequence and preserve trailing empty lines
             lines = content.split("\\R", -1);
         }
 
@@ -1046,13 +1077,42 @@ public class MainControllerTest extends ApplicationTest {
         interact(() -> {
             controller.onRunClicked();
         });
-        WaitForAsyncUtils.waitForFxEvents();
-
-        // Give a small additional delay to ensure Platform.runLater from Console appends are processed
         Thread.sleep(50);
         WaitForAsyncUtils.waitForFxEvents();
 
-        // The output TextArea is package-private in MainController, tests are in the same package so we can access it
+        return controller.output.getText();
+    }
+
+    /**
+     * Just like createFileLoadRunAndGetConsole but triggers the actual Run button (#btnRun)
+     *
+     * @param filename name of the file to create in the test temp directory
+     * @param content full file content
+     * @return the text currently present in the controller's output TextArea (console)
+     * @throws Exception
+     */
+    private String createFileLoadRunAndGetConsoleByButton(String filename, String content) throws Exception{
+        String[] lines;
+        if (content == null || content.isEmpty()){
+            lines = new String[0];
+        } else {
+            // split on any newline sequence and preserve trailing empty lines
+            lines = content.split("\\R", -1);
+        }
+
+        File testFile = createTestFile(filename, lines);
+
+        // Load the file on the JavaFX application thread
+        interact(() -> controller.loadFile(testFile));
+        WaitForAsyncUtils.waitForFxEvents();
+
+        // Click the Run button in the UI to trigger interpretation
+        clickOn("#btnRun");
+
+        // Allow small delay for Platform.runLater appends from Console
+        Thread.sleep(50);
+        WaitForAsyncUtils.waitForFxEvents();
+
         return controller.output.getText();
     }
 
