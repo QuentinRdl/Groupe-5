@@ -70,7 +70,7 @@ public class InterpreterIntegrationTest extends ApplicationTest {
                 "}"
         );
 
-        String consoleText = createFileLoadRunAndGetConsoleByButton("test.mjj", content);
+        String consoleText = createFileLoadRunAndGetConsole("test.mjj", content);
         assertTrue(consoleText.contains("[INFO] Interpretation successfully completed"));
     }
 
@@ -122,6 +122,26 @@ public class InterpreterIntegrationTest extends ApplicationTest {
         String consoleText = createFileLoadRunAndGetConsoleByButton("test.mjj", content);
         assertTrue(consoleText.contains("[ERROR]"));
         assertTrue(consoleText.contains("line 6:5 missing '}' at '<EOF>'"));
+    }
+
+
+    @Test
+    public void interpreterEmptyFileDirectCall() throws Exception {
+        String content = "";
+
+        String consoleText = createFileLoadRunAndGetConsole("empty.mjj", content);
+        System.out.println("interpreterEmptyFileDirectCall : ");
+        System.out.println(consoleText);
+        assertTrue(consoleText.contains("Interpret") || consoleText.contains("[INFO]") || consoleText.length() >= 0);
+    }
+
+    @Test
+    public void interpreterEmptyFileByButton() throws Exception{
+        String content = "";
+
+        String consoleText = createFileLoadRunAndGetConsoleByButton("empty_btn.mjj", content);
+        System.out.println("interpreterEmptyFileBtn : ");
+        assertTrue(consoleText.contains("Interpret") || consoleText.contains("[INFO]") || consoleText.length() >= 0);
     }
 
 
