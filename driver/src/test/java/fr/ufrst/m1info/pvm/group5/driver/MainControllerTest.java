@@ -432,7 +432,7 @@ public class MainControllerTest extends ApplicationTest {
 
         // We cannot test saveButton() directly because it opens a FileChooser
         // But we can simulate the behaviour: saveAs with a file
-        File newFile = tempDir.resolve("newFile.mjj").toFile();
+        File newFile = tempDir.resolve("newFile1.mjj").toFile();
 
         interact(() -> {
             controller.saveAs(newFile);
@@ -481,7 +481,7 @@ public class MainControllerTest extends ApplicationTest {
 
         controller.getCodeLines().get(0).setCode("modified line 1");
 
-        File newFile = tempDir.resolve("newFile.mjj").toFile();
+        File newFile = tempDir.resolve("newFile2.mjj").toFile();
         assertFalse(newFile.exists());
 
         interact(() -> {
@@ -491,7 +491,7 @@ public class MainControllerTest extends ApplicationTest {
 
         assertTrue(newFile.exists());
         assertEquals(newFile, controller.getCurrentFile());
-        assertEquals("newFile.mjj", controller.getFileLabel().getText());
+        assertEquals("newFile2.mjj", controller.getFileLabel().getText());
 
         List<String> savedLines = Files.readAllLines(newFile.toPath(), StandardCharsets.UTF_8);
         assertEquals(2, savedLines.size());
