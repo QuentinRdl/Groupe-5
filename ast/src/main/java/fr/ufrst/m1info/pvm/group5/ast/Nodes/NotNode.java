@@ -16,6 +16,8 @@ public class NotNode extends ASTNode implements EvaluableNode {
         if(expr==null){
             throw new ASTBuildException("Not operator must have an operand");
         }
+        else if(!(expr instanceof EvaluableNode))
+            throw new ASTBuildException("Not operator must have an evaluable operand");
     }
 
     @Override
@@ -46,6 +48,11 @@ public class NotNode extends ASTNode implements EvaluableNode {
             );
         }
         return "bool";
+    }
+
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(expr);
     }
 
 }

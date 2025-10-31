@@ -8,6 +8,7 @@ import fr.ufrst.m1info.pvm.group5.memory.Memory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class WriteLineNode extends ASTNode{
     String text;
@@ -40,6 +41,8 @@ public class WriteLineNode extends ASTNode{
     public void interpret(Memory m) throws ASTInvalidOperationException, ASTInvalidMemoryException {
         if(text == null){
             Value v = ident.eval(m);
+            if(v == null)
+                throw new ASTInvalidMemoryException("Unknown variable : " + ident.identifier);
             m.writeLine(v.toString());
         }
         else{
@@ -60,5 +63,19 @@ public class WriteLineNode extends ASTNode{
             }
         }
         return "void";
+    }
+
+    @Override
+    protected Map<String, String> getProperties(){
+        if(text == null)
+            return null;
+        return Map.ofEntries(Map.entry("text", text));
+    }
+
+    @Override
+    protected List<ASTNode> getChildren() {
+        if(ident != null)
+            return List.of(ident);
+        return null;
     }
 }

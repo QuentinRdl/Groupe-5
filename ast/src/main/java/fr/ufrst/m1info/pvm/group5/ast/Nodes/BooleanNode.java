@@ -8,6 +8,7 @@ import fr.ufrst.m1info.pvm.group5.memory.Value;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BooleanNode extends ASTNode implements EvaluableNode {
     boolean bool;
@@ -35,6 +36,17 @@ public class BooleanNode extends ASTNode implements EvaluableNode {
     public String checkType(Memory m) throws ASTInvalidDynamicTypeException {
         return "bool";
     }
+
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of();
+    }
+
+    @Override
+    protected Map<String,String> getProperties(){
+        return Map.ofEntries(Map.entry("value", String.valueOf(this.bool)));
+    }
+
     @Override
     public Value eval(Memory m) {
         return new Value(this.bool);

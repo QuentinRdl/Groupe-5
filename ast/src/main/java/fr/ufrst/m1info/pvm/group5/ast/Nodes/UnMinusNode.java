@@ -45,6 +45,11 @@ public class UnMinusNode extends ASTNode implements EvaluableNode {
         return "int";
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(exp);
+    }
+
 
     @Override
     public Value eval(Memory m) throws ASTInvalidOperationException, ASTInvalidMemoryException {

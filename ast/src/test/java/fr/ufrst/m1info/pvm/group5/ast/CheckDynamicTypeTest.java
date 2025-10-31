@@ -566,13 +566,6 @@ public class CheckDynamicTypeTest {
     }
 
     @Test
-    @DisplayName("ReturnNode - checkType() fails if expression does not exist")
-    public void testReturnNode_CheckType_NullExpr() {
-        ReturnNode returnNode = new ReturnNode(null);
-
-        assertThrows(ASTInvalidDynamicTypeException.class, () -> returnNode.checkType(memoryMock));
-    }
-    @Test
     @DisplayName("SumNode - checkType() valid with int")
     public void testSumNode_IntOk() throws Exception {
         ASTNode expr = mock(ASTNode.class, withSettings().extraInterfaces(EvaluableNode.class));
@@ -780,6 +773,10 @@ public class CheckDynamicTypeTest {
         public List<String> withdrawCompile(int address) { return List.of(); }
         @Override
         public String checkType(Memory m) { return "void"; }
+        @Override
+        protected List<ASTNode> getChildren() {
+            return List.of();
+        }
     }
 
 

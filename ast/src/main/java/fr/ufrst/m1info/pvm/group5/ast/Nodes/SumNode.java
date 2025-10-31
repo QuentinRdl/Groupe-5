@@ -22,14 +22,17 @@ public class SumNode extends ASTNode{
         if(this.expression == null){
             throw new ASTBuildException("Sum operand cannot be null");
         }
+        else if(!(this.expression instanceof EvaluableNode)){
+            throw new ASTBuildException("Sum operand must be evaluable");
+        }
     }
 
     @Override
     public List<String> compile(int address) {
         List<String> JJCodes = new ArrayList<>();
         JJCodes.addAll(expression.compile(address));
-        JJCodes.add("inc(" + identifier + ")");
-        return List.of();
+        JJCodes.add("inc(" + identifier.identifier + ")");
+        return JJCodes;
     }
 
     @Override
@@ -73,6 +76,11 @@ public class SumNode extends ASTNode{
         }
 
         return "int";
+    }
+
+    @Override
+    protected List<ASTNode> getChildren() {
+        return List.of(identifier, expression);
     }
 
 

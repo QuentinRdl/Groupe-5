@@ -40,10 +40,10 @@ public class WhileNode extends ASTNode{
     @Override
     public void interpret(Memory m) throws ASTInvalidMemoryException, ASTInvalidOperationException {
         Value e = ((EvaluableNode)condition).eval(m);
-        if(e.valueBool){ // Rule [tantquevrai]
+        while(e.valueBool){ // Rule [tantquevrai]
             if(iss != null)
                 iss.interpret(m);
-            interpret(m);
+            e = ((EvaluableNode)condition).eval(m);
         }
     }
 
@@ -59,6 +59,15 @@ public class WhileNode extends ASTNode{
             iss.checkType(m);
         }
         return "void";
+    }
+
+    @Override
+    protected List<ASTNode> getChildren() {
+        List<ASTNode> children = new ArrayList<>();
+        children.add(condition);
+        if(iss != null)
+            children.add(iss);
+        return children;
     }
 
 }

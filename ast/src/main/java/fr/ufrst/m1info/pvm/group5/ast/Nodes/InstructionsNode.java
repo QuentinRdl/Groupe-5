@@ -47,4 +47,13 @@ public class InstructionsNode extends ASTNode{
         return "void";
     }
 
+    @Override
+    protected List<ASTNode> getChildren() {
+        List<ASTNode> children = new ArrayList<>();
+        children.add(instruction);
+        if(otherInstructions!=null)
+            children.add(otherInstructions);
+        return children;
+    }
+
 }

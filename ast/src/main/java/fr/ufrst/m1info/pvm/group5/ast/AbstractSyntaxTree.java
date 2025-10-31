@@ -7,6 +7,8 @@ import org.antlr.v4.runtime.*;
 import fr.ufrst.m1info.pvm.group5.ast.Nodes.ClassNode;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -118,5 +120,33 @@ public class AbstractSyntaxTree {
      */
     public void compileToFile(String filePath, int startingAddress){
         // TODO
+    }
+
+    /**
+     * Dumps the content of the tree in a JSON string
+     * @return dump of the tree
+     */
+    public String dump(){
+        return root.dump();
+    }
+
+    /**
+     * Dumps the content of the tree as a JSON string in a file
+     * @param filePath path to the output file. The file must exist and have sufficient permission to write to it.
+     * @throws IOException can throw IOException in case of IO error.
+     *                     Any file opened by the method is closed, even if this exception is thrown.
+     */
+    public void dumpToFile(String filePath) throws IOException{
+        BufferedWriter out = null;
+        try {
+            FileWriter fstream = new FileWriter("out.txt", false);
+            out = new BufferedWriter(fstream);
+            out.write(dump());
+            out.close();
+        }
+        catch (IOException e) {
+            if(out != null) out.close();
+            throw e;
+        }
     }
 }
