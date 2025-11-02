@@ -4,7 +4,7 @@
 
     <groupId>fr.ufrst.m1info.pvm.group5</groupId>
     <artifactId>group5</artifactId>
-    <version>1</version>
+    <version>2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>group5</name>
 
@@ -12,7 +12,7 @@
         <developerConnection>
             scm:git:https://disc.univ-fcomte.fr/cr700-gitlab/projet-amv-2025/groupe-5.git
         </developerConnection>
-        <tag>1</tag>
+        <tag>group5-1.1</tag>
     </scm>
 
     <modules>
