@@ -48,8 +48,11 @@ vexp returns [ASTNode node]
      ;
 
 methode returns [ASTNode node]
-    : . {$node = null;}
+    : typemeth ident '(' entetes ')' '{'
+        vars instrs
+      '}' {$node = new MethodeNode($typemeth.node, $ident.node, $entetes.node, $vars.node, $instrs.node);}
     ;
+
 
 methmain returns [MainNode node]
     @init{boolean varsflag = false; boolean instrsflag = false;}
@@ -61,13 +64,19 @@ methmain returns [MainNode node]
     '}' {$node = new MainNode((varsflag)?$vars.node:null, (instrsflag)?$instrs.node:null);}
     ;
 
-entetes returns [ASTNode node]
-    : . {$node = null;}
+entete returns [ASTNode node]
+    : type ident
+      {
+          $node = new ParamNode($type.node, $ident.node);
+      }
     ;
 
-entete returns [ASTNode node]
-    : . {$node = null;}
+
+entetes returns [ASTNode node]
+    : entete {$node = new ParamListNode($entete.node, null);}
+    ( ',' entetes {$node = new ParamListNode($entete.node, $entetes.node);} )?
     ;
+
 
 instrs returns [InstructionsNode node]
     : instr ';' {$node = new InstructionsNode($instr.node, null);}
@@ -102,12 +111,15 @@ instr returns [ASTNode node]
     ) ')'
     | 'writeln' '('
     ( ident {$node = new WriteLineNode($ident.node);}
+    | ident '(' listexp ')' {$node = new AppelINode($ident.node, $listexp.node);}
     | e=STRING {$node = new WriteLineNode($e.text);}
     ) ')'
     ;
 
 listexp returns [ASTNode node]
-    : . {$node = null;}
+    : exp {$node = $exp.node;}
+    (',' exp {$node = new ExpListNode($node, $exp.node);}
+    )*
     ;
 
 exp returns [ASTNode node]
