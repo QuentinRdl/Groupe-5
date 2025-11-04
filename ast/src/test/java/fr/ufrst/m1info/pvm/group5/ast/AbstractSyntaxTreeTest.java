@@ -150,7 +150,7 @@ public class AbstractSyntaxTreeTest {
     @Test
     @DisplayName("Evaluation - Unassigned variable usage")
     public void UnassignedVar() throws IOException {
-        AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/Unassined.mjj");
+        AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/Unassigned.mjj");
         assertThrows(ASTInvalidMemoryException.class, () -> AST.interpret(memory));
     }
 }
