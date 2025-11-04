@@ -525,7 +525,7 @@ public class MainController {
     /**
      * Handles the action triggered when the user clicks the "Compile" button
      *
-     * This method werifies that the currently loaded file is a MiniJaja file,
+     * This method verifies that the currently loaded file is a MiniJaja file,
      * then retrieves the modified code from the editor and, if not empty, sends it
      * to the Compiler for compilation.
      * Upon success, the complied JajaCode is printed in the console along with a confirmation message.
