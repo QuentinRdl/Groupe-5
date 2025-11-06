@@ -63,7 +63,13 @@ public class VariableNode extends ASTNode implements WithdrawalNode {
                 );
             }
         }
-        m.declVar(ident.identifier, new Value(), ValueType.toDataType(typemeth.valueType));
+        if(vexp == null){
+            m.declVar(ident.identifier, new Value(), ValueType.toDataType(typemeth.valueType));
+        }
+        else {
+            Value v = ((EvaluableNode) vexp).eval(m);
+            m.declVar(ident.identifier, v, ValueType.toDataType(typemeth.valueType));
+        }
         return "void";
     }
 
