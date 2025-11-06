@@ -60,7 +60,7 @@ public class AffectationNode extends ASTNode{
         if (varDataType == DataType.INT) varTypeStr = "int";
         else if (varDataType == DataType.BOOL) varTypeStr = "bool";
         else throw new ASTInvalidDynamicTypeException(
-                    "AffectationNode: variable type not supported for" + identifier.identifier
+                    "AffectationNode: variable type not supported for " + identifier.identifier
             );
 
         if (!exprType.equals(varTypeStr)) {
