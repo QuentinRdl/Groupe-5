@@ -402,6 +402,23 @@ public class MainController {
         return codeListView.getItems().size() - 1;
     }
 
+
+
+    /*
+     */
+
+    /**
+     * This func checks if the code we gave (as a String), is just empty chars or not
+     * @param code the given code as a String
+     * @return true if the code is just empty chars, false otherwise
+     */
+    private boolean isCodeEmptyChars(String code) {
+        String justBlank = code.trim();
+        // If the code we got is just empty chars, do not run it
+        return justBlank.isEmpty();
+    }
+
+
     /**
      * Executes the current code when the "Run" button is clicked
      * Retrieves the code from the editor and passes it to the InterpreterMiniJaja for interpretation
@@ -410,10 +427,15 @@ public class MainController {
     public void onRunClicked(){
         String code = getModifiedCode();
 
-        //find another solution to better intercept empty code (with multiple lines)
         if (code.isEmpty()){
             return;
         }
+
+        // If the code is just empty chars, do not run it
+        if(isCodeEmptyChars(code)) {
+            return;
+        }
+
 
         InterpreterMiniJaja interpreterMiniJaja = new InterpreterMiniJaja(console.getWriter());
 
