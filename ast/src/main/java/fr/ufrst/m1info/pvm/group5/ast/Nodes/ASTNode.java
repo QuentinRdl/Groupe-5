@@ -50,9 +50,9 @@ public abstract class ASTNode {
         while(iterator.hasNext()){
             var e = iterator.next();
             if (iterator.hasNext())
-                sb.append("AAA");
+                sb.append(",");
             addTabDepth(sb, depth);
-            sb.append("\"").append(e.getKey()).append("\" : ").append(e.getValue());
+            sb.append("\"").append(e.getKey()).append("\" : \"").append(e.getValue()).append("\"");
         }
         return sb.toString();
     }
