@@ -242,6 +242,22 @@ public class MainController {
         return currentFile;
     }
 
+    public TabPane getEditorTabPane(){
+        return editorTabPane;
+    }
+
+    public Tab getCompiledTab(){
+        return compiledTab;
+    }
+
+    public ListView<CodeLine> getCompiledCodeListView(){
+        return compiledCodeListView;
+    }
+
+    public ObservableList<CodeLine> getCompiledCodeLines(){
+        return compiledCodeLines;
+    }
+
     /**
      * Saves the current code to the currently loaded file
      * If no file is loaded, it triggers the "Save As" dialog instead
@@ -451,10 +467,6 @@ public class MainController {
     }
 
 
-
-    /*
-     */
-
     /**
      * This func checks if the code we gave (as a String), is just empty chars or not
      * @param code the given code as a String
@@ -616,8 +628,8 @@ public class MainController {
         String res = compiler.compileCode(getModifiedCode());
 
         if (res != null){
-            loadCompiledCodeToListView(res);
             showCompiledTab();
+            loadCompiledCodeToListView(res);
             console.getWriter().writeLine("[INFO] Compilation successful!");
         }
     }
