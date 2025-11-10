@@ -4,4 +4,5 @@ module fr.ufrst.m1info.pvm.group5.ast {
     requires java.desktop;
 
     exports fr.ufrst.m1info.pvm.group5.ast;
+    exports fr.ufrst.m1info.pvm.group5.ast.Instructions;
 }
