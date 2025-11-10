@@ -15,10 +15,17 @@ public class HeapElement {
     HeapElement prev;
     HeapElement next;
 
-    public class InsufficientSizeException extends Exception {
+    /**
+     * Exception thrown when trying to split the current element with a size bigger that the current element's one
+     */
+    public class InsufficientSizeException extends RuntimeException {
         InsufficientSizeException(String message) {
             super(message);
         }
+    }
+
+    public class InvalidOperationException extends RuntimeException {
+        InvalidOperationException(String message) {super(message);}
     }
 
     /**
@@ -26,46 +33,71 @@ public class HeapElement {
      * @param internalAddress internal address of the storage referenced by the element
      * @param externalAddress external address of the element stored
      * @param size size of the block to create
-     * @param storageType data stored in the element
      */
-    public HeapElement(int internalAddress, int externalAddress, int size, DataType storageType) {}
+    public HeapElement(int internalAddress, int externalAddress, int size) throws IllegalArgumentException {
+
+    }
+
+    /**
+     * Indicates to the element the block it matches has been allocated
+     * @param storageType type of data stored in the block
+     * @throws InvalidOperationException throws an exception if the block is already allocated
+     */
+    public void allocate(DataType storageType) throws InvalidOperationException {}
+
+    /**
+     * Indicates to the element the block is matched has been freed.
+     * The element will attempt to merge with the adjacent blocks
+     * @throws InvalidOperationException throws an exception if the block is not allocated
+     */
+    public void free() throws InvalidOperationException {}
 
     /**
      * Tries to merge the element with an adjacent one.
      * If one of the elements is not free, the merge will fail.
      * @param other other element to merge with this one.
+     * @throws InvalidOperationException throws an exception when attempting to merge while either of the elements are allocated
      */
-    private void TryMerge(HeapElement other){}
+    private boolean tryMerge(HeapElement other) throws InvalidOperationException {
+        return false;
+    }
 
     /**
      * Tries to merge the element with every adjacent element.
      * If this element or it's adjacent ones are not free, the merge will fail.
+     * @throws InvalidOperationException throws an exception when attempting to merge while this element is allocated
      */
-    public void TryMerge(){
-        TryMerge(prev);
-        TryMerge(next);
+    public boolean tryMerge() throws InvalidOperationException {
+        tryMerge(prev);
+        tryMerge(next);
+        return false;
     }
 
     /**
      * Creates a new heap element by reducing the size of this one.
-     * By default, the new element will be placed after this one.
-     * @param size size of the new element to create
+     * By default, the new element will be placed before this one.
+     * The newly created element will share it's external address with its parent
+     * @param size size of the new element to created
      * @return newly created element
      * @throws InsufficientSizeException throws an exception if the requested size is bigger than the size of the element
+     * @throws IllegalArgumentException throws an exception if the requested size is invalid
+     * @throws InvalidOperationException throws an exception when trying to split a non-free element
      */
-    public HeapElement split(int size) throws InsufficientSizeException {
+    public HeapElement split(int size) throws InsufficientSizeException, IllegalArgumentException, InvalidOperationException {
         return null;
     }
 
     /**
      * Creates a new heap element by reducing the size of this one.
-     * By default, the new element will be placed after this one.
+     * By default, the new element will be placed before this one.
      * @param size size of the new element to create
-     * @param before if true, the new element will be placed before this one instead of after
+     * @param after if true, the new element will be placed after this one instead of before
      * @return newly created element
      * @throws InsufficientSizeException throws an exception if the requested size is bigger than the size of the element
+     * @throws IllegalArgumentException throws an exception if the requested size is invalid
+     * @throws InvalidOperationException throws an exception when trying to split a non-free element
      */
-    public HeapElement split(int size, boolean before) throws InsufficientSizeException {
+    public HeapElement split(int size, boolean after) throws InsufficientSizeException, IllegalArgumentException, InvalidOperationException {
         return null;
     }
 
