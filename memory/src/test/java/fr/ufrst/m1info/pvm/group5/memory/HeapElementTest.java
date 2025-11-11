@@ -198,5 +198,22 @@ public class HeapElementTest {
         assertEquals(60, e.getInternalAddress());
     }
 
+    // Belongs to
+    @Test
+    @DisplayName("Belongs to - Within it")
+    public void BelongsToWithinIt(){
+        HeapElement e = new HeapElement(20, 50, 10);
+        assertTrue(e.belongsTo(20));
+        assertTrue(e.belongsTo(21));
+        assertTrue(e.belongsTo(69));
+    }
 
+    @Test
+    @DisplayName("Belongs to - Outside it")
+    public void BelongsToOusideIt(){
+        HeapElement e = new HeapElement(20, 50, 10);
+        assertTrue(e.belongsTo(19));
+        assertTrue(e.belongsTo(70));
+        assertTrue(e.belongsTo(71));
+    }
 }
