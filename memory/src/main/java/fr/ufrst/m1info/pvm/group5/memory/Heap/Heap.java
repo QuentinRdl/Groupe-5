@@ -3,6 +3,7 @@ package fr.ufrst.m1info.pvm.group5.memory.Heap;
 import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,8 +92,8 @@ public class Heap {
         HeapElement target = checkAddress(address);
         target.free();
         addresses.remove(address);
-        currentElement = target;
-    }
+        currentElement = target; //ensures "currentElements" points to a valid element
+    }                            //(could be one of the merged blocks)
 
     /**
      * Removed a memory space from the heap
@@ -146,19 +147,71 @@ public class Heap {
     }
 
     /**
+     * Sets the value of an element given by the starting address of an objet and an offset
+     * @param address address of a block of the heap
+     * @param offset offset of the element
+     * @param value value to store at the given address
+     * @throws InvalidMemoryAddressException throws an exception if the address is not allocated in the heap
+     */
+    public void setValue(int address, int offset, Value value) throws InvalidMemoryAddressException{
+        HeapElement target = checkAddress(address);
+        if(!target.contains(address + offset))
+            throw new UnmappedMemoryAddressException("Offset " + offset + " is beyond the allocated block for address " + address, address + offset);
+        storage[target.internalAddress + offset] = switch (target.getStorageType()){
+            case INT -> (byte) value.valueInt;
+            case BOOL -> (byte)((value.valueBool)? 1 : 0);
+            default -> 0;
+        };
+    }
+
+    /**
+     * Copies the content of the memory from an address to another
+     * No check is done to ensure the address is free, valid, and does not create a new block to store the information of the moved content
+     * @param origin memory block to move
+     * @param target address to move the block to
+     */
+    private void copy(HeapElement origin, int target){
+        int originAddress = origin.internalAddress;
+        int targetAddress = target;
+        for(int i = 0; i < origin.size(); i++){
+            storage[originAddress + i] =  storage[targetAddress + i];
+        }
+    }
+
+    /**
      * Relocate every allocated element of the heap at the start of the array, and merge the remaining ones at the end.
      * This allows to minimize the internal fragmentation of the heap.
      * This operation is extremely expensive, and should only be called if necessary
      */
     private void defragment(){
-
+        List<Integer> allBlocks = new ArrayList<>(addresses.keySet());
+        allBlocks.sort(Integer::compareTo);
+        int lastAvailableAddress = 0;
+        for(int i : allBlocks){
+            HeapElement current = addresses.get(i);
+            if(current.internalAddress == lastAvailableAddress) {
+                lastAvailableAddress += current.size();
+                continue;
+            }
+            copy(current, lastAvailableAddress);
+            current.internalAddress += lastAvailableAddress;
+            lastAvailableAddress += current.size();
+        }
     }
 
     /**
      * Check if any element were left in the heap, and not de-referenced
-     * @return list of element not de-referenced
+     * @return list of errors containing the elements that were not de-referenced
      */
     public List<String> sanitize(){
-        return List.of();
+        List<String> errors = new ArrayList<>();
+        HeapElement current = currentElement;
+        HeapElement start = current;
+        do{
+            if(!current.isFree())
+                errors.add(current.size() + " bytes still allocated at address " + current.externalAddress);
+            current = current.getNext();
+        }while(current != start);
+        return errors;
     }
 }
