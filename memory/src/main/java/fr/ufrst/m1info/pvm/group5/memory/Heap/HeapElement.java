@@ -6,14 +6,43 @@ import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType;
  * Storage block of the heap
  */
 public class HeapElement {
-    public int internalAddress;
-    public int externalAddress;
-    public int size;
-    public DataType storageType;
-    public boolean isFree;
-    public int references;
-    HeapElement prev;
-    HeapElement next;
+    int internalAddress;
+    int externalAddress;
+    int size;
+    private DataType storageType;
+    private boolean isFree;
+    int references;
+    private HeapElement prev;
+    private HeapElement next;
+
+    // Getters
+    public DataType getStorageType() {
+        return storageType;
+    }
+
+    public int size(){
+        return size;
+    }
+
+    public boolean isFree(){
+        return isFree;
+    }
+
+    public HeapElement getPrev() {
+        return prev;
+    }
+
+    public HeapElement getNext() {
+        return next;
+    }
+
+    public int getInternalAddress() {
+        return internalAddress;
+    }
+
+    public int getExternalAddress() {
+        return externalAddress;
+    }
 
     /**
      * Exception thrown when trying to split the current element with a size bigger that the current element's one
