@@ -6,13 +6,38 @@ import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType;
  * Storage block of the heap
  */
 public class HeapElement {
+    /**
+     * Address in the memory of the matching block
+     */
     int internalAddress;
+    /**
+     * External address, given by the structure managing the memory to give it a name
+     */
     int externalAddress;
+    /**
+     * Size of the memory block
+     */
     int size;
+    /**
+     * Data stored in the block
+     */
     private DataType storageType;
+    /**
+     * Indicates if the block is free
+     */
     private boolean isFree;
+    /**
+     * Number of references pointed to the block.
+     * Managed by the class managing the memory
+     */
     int references;
+    /**
+     * Previous element
+     */
     private HeapElement prev;
+    /**
+     * Next element
+     */
     private HeapElement next;
 
     // Getters
@@ -57,6 +82,8 @@ public class HeapElement {
         InvalidOperationException(String message) {super(message);}
     }
 
+    private HeapElement() {}
+
     /**
      * Creates a new heap element with no adjacent element
      * @param internalAddress internal address of the storage referenced by the element
@@ -64,7 +91,16 @@ public class HeapElement {
      * @param size size of the block to create
      */
     public HeapElement(int internalAddress, int externalAddress, int size) throws IllegalArgumentException {
-
+        if(size <= 0)
+            throw new IllegalArgumentException("Block creation failed, block size must be a positive integer. Given : " + size);
+        this.internalAddress = internalAddress;
+        this.externalAddress = externalAddress;
+        this.size = size;
+        this.isFree = true;
+        this.references = 0;
+        this.prev = this;
+        this.next = this;
+        this.storageType = DataType.UNKNOWN;
     }
 
     /**
@@ -72,14 +108,25 @@ public class HeapElement {
      * @param storageType type of data stored in the block
      * @throws InvalidOperationException throws an exception if the block is already allocated
      */
-    public void allocate(DataType storageType) throws InvalidOperationException {}
+    public void allocate(DataType storageType) throws InvalidOperationException {
+        if(!isFree)
+            throw new InvalidOperationException("Invalid allocation, block "+externalAddress+" is already allocated");
+        this.storageType = storageType;
+        this.isFree = false;
+    }
 
     /**
      * Indicates to the element the block is matched has been freed.
      * The element will attempt to merge with the adjacent blocks
      * @throws InvalidOperationException throws an exception if the block is not allocated
      */
-    public void free() throws InvalidOperationException {}
+    public void free() throws InvalidOperationException {
+        if(isFree)
+            throw new InvalidOperationException("Invalid free, block "+externalAddress+" has already been freed");
+        this.isFree = true;
+        this.storageType = DataType.UNKNOWN;
+        tryMerge();
+    }
 
     /**
      * Tries to merge the element with an adjacent one.
@@ -89,7 +136,22 @@ public class HeapElement {
      * @throws InvalidOperationException throws an exception when attempting to merge while either of the elements are allocated
      */
     private boolean tryMerge(HeapElement other) throws InvalidOperationException {
-        return false;
+        // Check if the merge is possible
+        if(!isFree)
+            throw new InvalidOperationException("Invalid merge attempt, block "+externalAddress+" is allocated");
+        if(!other.isFree || other.equals(this))
+            return false;
+
+        // Merge
+        size += other.size;
+        if(other.internalAddress < this.internalAddress) {
+            this.internalAddress = other.internalAddress;
+            this.prev = other.prev;
+        }
+        else{
+            this.next = other.next;
+        }
+        return true;
     }
 
     /**
@@ -99,7 +161,11 @@ public class HeapElement {
      * @throws InvalidOperationException throws an exception when attempting to merge while this element is allocated
      */
     public boolean tryMerge() throws InvalidOperationException {
-        return false;
+        boolean success = false;
+        // The first condition prevents the method to use the loop structure to merge
+        while(prev.internalAddress < internalAddress && tryMerge(prev)) success = true;
+        while(next.internalAddress > internalAddress && tryMerge(next)) success = true;
+        return success;
     }
 
     /**
@@ -113,7 +179,7 @@ public class HeapElement {
      * @throws InvalidOperationException throws an exception when trying to split a non-free element
      */
     public HeapElement split(int size) throws InsufficientSizeException, IllegalArgumentException, InvalidOperationException {
-        return null;
+        return split(size, false);
     }
 
     /**
@@ -127,7 +193,38 @@ public class HeapElement {
      * @throws InvalidOperationException throws an exception when trying to split a non-free element
      */
     public HeapElement split(int size, boolean after) throws InsufficientSizeException, IllegalArgumentException, InvalidOperationException {
-        return null;
+        // Invalid split cases
+        if(!isFree)
+            throw new InvalidOperationException("Invalid split attempt, block "+externalAddress+" is allocated");
+        if(size <= 0)
+            throw new IllegalArgumentException("Invalid split, size for a split must be a positive integer. Given : " + size);
+        if(size >= this.size)
+            throw new InsufficientSizeException("Invalid split, block "+externalAddress+" has insufficient size. Given : " + size + " available : "+this.size);
+
+        // Performing split
+        HeapElement result = new HeapElement();
+        result.externalAddress = this.externalAddress;
+        result.isFree = true;
+        result.size = size;
+        this.size -= size;
+        if(after) {
+            result.internalAddress = this.internalAddress + this.size;
+            result.prev = this;
+            result.next = this.next;
+            this.next = result;
+            if(this.prev == this)
+                this.prev = result;
+        }
+        else {
+            result.internalAddress = this.internalAddress;
+            this.internalAddress = this.internalAddress + size;
+            result.next = this;
+            result.prev = this.prev;
+            this.prev = result;
+            if(this.next == this)
+                this.next = result;
+        }
+        return result;
     }
 
     /**
@@ -136,6 +233,24 @@ public class HeapElement {
      * @return true if the address is located within this element, false otherwise
      */
     public boolean belongsTo(int internalAddress){
-        return false;
+        return internalAddress >= this.internalAddress && internalAddress < this.internalAddress + size;
+    }
+
+    public String toString(){
+        return "@" + this.externalAddress + ":" + this.internalAddress;
+    }
+
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(!(o instanceof HeapElement)) return false;
+        return equals((HeapElement)o);
+    }
+
+    public boolean equals(HeapElement other){
+        return this.externalAddress == other.externalAddress && this.internalAddress == other.internalAddress;
+    }
+
+    public int hashCode(){
+        return (internalAddress << 5) | externalAddress;
     }
 }

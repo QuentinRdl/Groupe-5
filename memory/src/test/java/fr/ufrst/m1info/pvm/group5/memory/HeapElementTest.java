@@ -83,7 +83,11 @@ public class HeapElementTest {
         assertEquals(4, e.size());
         assertEquals(f.getExternalAddress(), e.getExternalAddress());
         assertEquals(0, f.getInternalAddress());
-        assertEquals(4, e.getInternalAddress());
+        assertEquals(6, e.getInternalAddress());
+        assertEquals(f, e.getPrev());
+        assertEquals(f, e.getNext());
+        assertEquals(e, f.getPrev());
+        assertEquals(e, f.getNext());
     }
 
     @Test
@@ -113,14 +117,14 @@ public class HeapElementTest {
     @DisplayName("Split - Null size")
     public void SplitNotSameSize(){
             HeapElement e = new HeapElement(0, 50, 10);
-            assertThrows(HeapElement.InsufficientSizeException.class,()->e.split(0));
+            assertThrows(IllegalArgumentException.class,()->e.split(0));
     }
 
     @Test
     @DisplayName("Split - Negative size")
     public void SplitNegativeSameSize(){
             HeapElement e = new HeapElement(0, 50, 10);
-            assertThrows(HeapElement.InsufficientSizeException.class,()->e.split(-1));
+            assertThrows(IllegalArgumentException.class,()->e.split(-1));
     }
 
     @Test
@@ -198,6 +202,19 @@ public class HeapElementTest {
         assertEquals(60, e.getInternalAddress());
     }
 
+    @Test
+    @DisplayName("TryMerge - After free")
+    public void TryMergeAfterFree(){
+        HeapElement e = new HeapElement(0, 50, 100);
+        e.split(40);
+        e.split(20);
+        e.split(30,true);
+        e.allocate(DataType.INT);
+        e.free();
+        assertEquals(100, e.size());
+        assertEquals(0, e.getInternalAddress());
+    }
+
     // Belongs to
     @Test
     @DisplayName("Belongs to - Within it")
@@ -205,15 +222,15 @@ public class HeapElementTest {
         HeapElement e = new HeapElement(20, 50, 10);
         assertTrue(e.belongsTo(20));
         assertTrue(e.belongsTo(21));
-        assertTrue(e.belongsTo(69));
+        assertTrue(e.belongsTo(29));
     }
 
     @Test
     @DisplayName("Belongs to - Outside it")
     public void BelongsToOusideIt(){
         HeapElement e = new HeapElement(20, 50, 10);
-        assertTrue(e.belongsTo(19));
-        assertTrue(e.belongsTo(70));
-        assertTrue(e.belongsTo(71));
+        assertFalse(e.belongsTo(19));
+        assertFalse(e.belongsTo(30));
+        assertFalse(e.belongsTo(31));
     }
 }
