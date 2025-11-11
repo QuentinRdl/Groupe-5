@@ -599,11 +599,109 @@ public class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret Write Variable Bool")
+    public void WriteVarBool() {
+        String errMessage=imj.interpretCode("class C {boolean y=false; main{write(y);}}");
+        Assertions.assertNull(errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Write Variable Int")
+    public void WriteVarInt() {
+        String errMessage=imj.interpretCode("class C {int y=4; main{write(y);}}");
+        Assertions.assertNull(errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Write String")
+    public void WriteString() {
+        String errMessage=imj.interpretCode("class C {int y; main{write(\"Hello World\");}}");
+        Assertions.assertNull(errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Write Bool")
+    public void WriteBool() {
+        String errMessage=imj.interpretCode("class C {int y; main{write(false);}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Write Int")
+    public void WriteInt() {
+        String errMessage=imj.interpretCode("class C {int y; main{write(2);}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Write Undefined Variable")
+    public void WriteUndefinedVar() {
+        String errMessage=imj.interpretCode("class C {int y; main{write(y);}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidMemoryException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Write Not Existing Variable")
+    public void WriteNotExistingVar() {
+        String errMessage=imj.interpretCode("class C { main{write(y);}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidMemoryException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Writeln Variable Bool")
+    public void WritelnVarBool() {
+        String errMessage=imj.interpretCode("class C {boolean y=false; main{writeln(y);}}");
+        Assertions.assertNull(errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Writeln Variable Int")
+    public void WritelnVarInt() {
+        String errMessage=imj.interpretCode("class C {int y=4; main{writeln(y);}}");
+        Assertions.assertNull(errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Writeln String")
+    public void WritelnString() {
+        String errMessage=imj.interpretCode("class C {int y; main{writeln(\"Hello World\");}}");
+        Assertions.assertNull(errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Writeln Bool")
+    public void WritelnBool() {
+        String errMessage=imj.interpretCode("class C {int y; main{writeln(false);}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
     @DisplayName("Interpret Writeln Int")
     public void WritelnInt() {
         String errMessage=imj.interpretCode("class C {int y; main{writeln(2);}}");
         Assertions.assertNotEquals(null,errMessage);
         Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Writeln Undefined Variable")
+    public void WritelnUndefinedVar() {
+        String errMessage=imj.interpretCode("class C {int y; main{writeln(y);}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidMemoryException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Writeln Not Existing Variable")
+    public void WritelnNotExistingVar() {
+        String errMessage=imj.interpretCode("class C { main{writeln(y);}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidMemoryException.class.toString(),errMessage.split(":")[0].trim());
     }
 
     @Test
