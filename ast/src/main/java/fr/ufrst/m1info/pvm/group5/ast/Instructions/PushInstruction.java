@@ -15,6 +15,6 @@ public class PushInstruction extends Instruction {
     @Override
     public int execute(int address, Memory m) {
         m.push(".", this.v, ValueType.toDataType(v.Type), EntryKind.CONSTANT);
-        return 0;
+        return address+1;
     }
 }
