@@ -478,6 +478,38 @@ public class InterpreterMiniJajaTest {
         Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
     }
 
+    @Test
+    @DisplayName("Interpret Affectation Int And")
+    public void affectationIntAnd() {
+        String errMessage=imj.interpretCode("class C {int y; main{y=false && true;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Affectation Int Or")
+    public void affectationIntOr() {
+        String errMessage=imj.interpretCode("class C {int y; main{y=false || true;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Affectation Int Not")
+    public void affectationIntNot() {
+        String errMessage=imj.interpretCode("class C {int y; main{y=! true;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Affectation Int Sup")
+    public void affectationIntSup() {
+        String errMessage=imj.interpretCode("class C {int y; main{y=4 > 1;}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
 
     @Test
     @DisplayName("Interpret Add Boolean")
@@ -567,9 +599,25 @@ public class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret If Variable Int")
+    public void ifVarInt() {
+        String errMessage=imj.interpretCode("class C {int y=4; main{if(y){};}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
     @DisplayName("Interpret While Int")
     public void whileInt() {
         String errMessage=imj.interpretCode("class C { main{while(4){};}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret While Variable Int")
+    public void whileVarInt() {
+        String errMessage=imj.interpretCode("class C {int y=4; main{while(y){};}}");
         Assertions.assertNotEquals(null,errMessage);
         Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
     }
