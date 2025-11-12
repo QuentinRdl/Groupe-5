@@ -7,6 +7,6 @@ public class ReturnInstruction extends Instruction {
     @Override
     public int execute(int address, Memory m) throws Exception {
         var top = m.pop();
-        return ((Value) top.getValue()).valueInt;
+        return ((Value) top).valueInt;
     }
 }

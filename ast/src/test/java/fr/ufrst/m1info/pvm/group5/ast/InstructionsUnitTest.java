@@ -45,7 +45,6 @@ public class InstructionsUnitTest {
         assertEquals(0, storage.pop().second().valueInt);
     }
 
-    @Disabled
     @Test
     public void pop_simple() throws Exception{
         PushInstruction p1 = new PushInstruction(new Value(5));
