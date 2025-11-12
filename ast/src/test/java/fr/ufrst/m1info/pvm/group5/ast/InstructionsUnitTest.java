@@ -45,6 +45,42 @@ public class InstructionsUnitTest {
         assertEquals(0, storage.pop().second().valueInt);
     }
 
+    //load
+    @Test
+    public void load_simple(){
+        storage.add(new ASTMocks.Pair<>("test",new Value(5)));
+        LoadInstruction l = new LoadInstruction("test");
+        var res = l.execute(0,memory);
+        ASTMocks.Pair<String, Value> top = storage.pop();
+        assertEquals(5, top.second().valueInt);
+        assertEquals(".", top.first());
+        assertEquals(1, res);
+    }
+
+    @Test
+    public void load_many(){
+        storage.add(new ASTMocks.Pair<>("test1",new Value(1)));
+        storage.add(new ASTMocks.Pair<>("test2",new Value(2)));
+        storage.add(new ASTMocks.Pair<>("test3",new Value(3)));
+        storage.add(new ASTMocks.Pair<>("test4",new Value(4)));
+
+        LoadInstruction l = new LoadInstruction("test3");
+        var res = l.execute(0,memory);
+        ASTMocks.Pair<String, Value> top = storage.pop();
+        assertEquals(3, top.second().valueInt);
+        assertEquals(".", top.first());
+        assertEquals(1, res);
+    }
+
+    @Test
+    public void load_notExist(){
+        storage.add(new ASTMocks.Pair<>("test1",new Value(1)));
+
+        LoadInstruction l = new LoadInstruction("test3");
+        assertThrows(Exception.class, () -> l.execute(0,memory));
+    }
+
+
     @Test
     public void pop_simple() throws Exception{
         PushInstruction p1 = new PushInstruction(new Value(5));
@@ -89,6 +125,7 @@ public class InstructionsUnitTest {
         var res = i.execute(0, memory);
         assertEquals(1, res);
     }
+
 
 
 }
