@@ -19,7 +19,7 @@ public class Stack {
     /**
      * Exception thrown when attempting to pop a scope from the stack when no scopes exist.
      */
-    public static class NoScopeException extends Exception {
+    public static class NoScopeException extends RuntimeException{
         public NoScopeException(String msg) {
             super(msg);
         }
@@ -28,7 +28,7 @@ public class Stack {
     /**
      * Exception thrown when attempting to pop or access an element from the stack when it is empty.
      */
-    public static class StackIsEmptyException extends Exception {
+    public static class StackIsEmptyException extends RuntimeException {
         public StackIsEmptyException(String msg) {
             super(msg);
         }
@@ -62,7 +62,7 @@ public class Stack {
      * Exception thrown when attempting to create or set a variable with an invalid (null/empty) name.
      * This is unchecked so existing callers don't need to change their signatures.
      */
-    public static class InvalidNameException extends IllegalArgumentException {
+    public static class InvalidNameException extends RuntimeException{
         public InvalidNameException(String msg) {
             super(msg);
         }
