@@ -33,6 +33,7 @@ public class NewInstruction extends Instruction{
         }
         else if (kind==EntryKind.CONSTANT){
             m.declCst(identifier,v,type);
+            // todo : add entry kind method
         }else {
             throw new ASTBuildException("new line ("+(address+1)+") : Entry kind must be var or const");
         }
