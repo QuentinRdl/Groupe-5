@@ -48,9 +48,26 @@ vexp returns [ASTNode node]
      ;
 
 methode returns [ASTNode node]
-    : typemeth ident '(' entetes ')' '{'
-        vars instrs
-      '}' {$node = new MethodeNode($typemeth.node, $ident.node, $entetes.node, $vars.node, $instrs.node);}
+    @init {
+        boolean entetesFlag = false;
+        boolean varsFlag = false;
+        boolean instrsFlag = false;
+    }
+    : typemeth ident '('
+        (entetes { entetesFlag = true; })?
+      ')' '{'
+        (vars { varsFlag = true; })?
+        (instrs { instrsFlag = true; })?
+      '}'
+      {
+          $node = new MethodeNode(
+              $typemeth.node,
+              $ident.node,
+              (entetesFlag)?$entetes.node:null,
+              (varsFlag)?$vars.node:null,
+              (instrsFlag)?$instrs.node:null
+          );
+      }
     ;
 
 
