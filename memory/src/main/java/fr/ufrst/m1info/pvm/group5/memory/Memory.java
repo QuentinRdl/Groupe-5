@@ -368,5 +368,17 @@ public class Memory {
         } catch (Stack.NoScopeException e) {
         }
     }
+    public void pushScope() {
+        stack.pushScope();
+    }
+
+    public void popScope() {
+        try {
+            stack.popScope();
+        } catch (Stack.NoScopeException ignored) {
+        }
+    }
+
+
 
 }
