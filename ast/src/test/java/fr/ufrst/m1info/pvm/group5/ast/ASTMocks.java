@@ -136,6 +136,15 @@ public class ASTMocks {
             );
             storage.push(pair);
             return null;
+        }).when(result).declCst(any(String.class), any(Value.class), any());
+
+        doAnswer(invocationOnMock -> {
+            Pair<String,Value> pair  = new Pair<>(
+                    invocationOnMock.getArgument(0),
+                    invocationOnMock.getArgument(1)
+            );
+            storage.push(pair);
+            return null;
         }).when(result).push(any(String.class), any(Value.class), any(), any());
 
         doAnswer(invocationOnMock -> {
