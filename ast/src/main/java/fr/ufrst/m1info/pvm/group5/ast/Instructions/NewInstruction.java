@@ -1,5 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.ast.Instructions;
 
+import fr.ufrst.m1info.pvm.group5.ast.ASTBuildException;
+import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidMemoryException;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType;
 import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.EntryKind;
@@ -20,12 +22,19 @@ public class NewInstruction extends Instruction{
 
     @Override
     public int execute(int address, Memory m) {
-        Value v = ((Value) m.pop());
+        Value v;
+        try{
+            v = ((Value) m.pop());
+        }catch (Exception e){
+            throw new ASTInvalidMemoryException(e.getMessage());
+        }
         if (kind==EntryKind.VARIABLE){
             m.declVar(identifier,v,type);
         }
         else if (kind==EntryKind.CONSTANT){
             m.declCst(identifier,v,type);
+        }else {
+            throw new ASTBuildException("new line ("+(address+1)+") : Entry kind must be var or const");
         }
         return address+1;
     }

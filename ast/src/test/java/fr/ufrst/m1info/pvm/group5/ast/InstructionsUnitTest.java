@@ -105,6 +105,15 @@ public class InstructionsUnitTest {
     }
 
     @Test
+    public void new_var_empty_stack() throws Exception {
+        doAnswer(invocationOnMock -> {
+            throw new fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException("pop with a empty stack");
+        }).when(memory).pop();
+        Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.VARIABLE,0);
+        assertThrows(ASTInvalidMemoryException.class,() -> newInstr.execute(1,memory));
+    }
+
+    @Test
     public void new_cst_int() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(5));
         Instruction newInstr = new NewInstruction("x", DataType.INT, EntryKind.CONSTANT,0);
@@ -120,6 +129,23 @@ public class InstructionsUnitTest {
         pushInstr.execute(1,memory);
         assertEquals(3,newInstr.execute(2,memory));
         assertFalse(((Value) memory.val("x")).valueBool);
+    }
+
+    @Test
+    public void new_cst_empty_stack() throws Exception {
+        doAnswer(invocationOnMock -> {
+            throw new fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException("pop with a empty stack");
+        }).when(memory).pop();
+        Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.CONSTANT,0);
+        assertThrows(ASTInvalidMemoryException.class,() -> newInstr.execute(1,memory));
+    }
+
+    @Test
+    public void new_unknown_entry_kind() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(false));
+        Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.OTHER,0);
+        pushInstr.execute(1,memory);
+        assertThrows(ASTBuildException.class,() -> newInstr.execute(1,memory));
     }
 
     //push
