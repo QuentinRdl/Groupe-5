@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.ast.Instructions;
 
+import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidMemoryException;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.EntryKind;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
@@ -15,7 +16,12 @@ public class IfInstruction extends Instruction{
 
     @Override
     public int execute(int address, Memory m) {
-        boolean b = ((Value) (m.pop().getValue())).valueBool;
+        boolean b;
+        try {
+            b = ((Value) (m.pop().getValue())).valueBool;
+        }catch (Exception e){
+            throw new ASTInvalidMemoryException(e.getMessage());
+        }
         if (b){
             return addressIf;
         }

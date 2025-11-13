@@ -1,5 +1,5 @@
 package fr.ufrst.m1info.pvm.group5.ast;
-import fr.ufrst.m1info.pvm.group5.ast.Instructions.Instruction;
+import fr.ufrst.m1info.pvm.group5.ast.Instructions.*;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 import fr.ufrst.m1info.pvm.group5.ast.ASTMocks.Pair;
