@@ -57,6 +57,14 @@ public class ASTMocks {
 
         doAnswer( invocation -> {
                     String ident = invocation.getArgument(0);
+                    Value value = invocation.getArgument(1);
+                    storage.put(ident, value);
+                    return null;
+                }
+        ).when(result).declCst(any(String.class), any(Value.class), any());
+
+        doAnswer( invocation -> {
+                    String ident = invocation.getArgument(0);
                     storage.put(ident, new Value());
                     return null;
                 }
@@ -128,6 +136,15 @@ public class ASTMocks {
             );
             storage.push(pair);
             return null;
+        }).when(result).declCst(any(String.class), any(Value.class), any());
+
+        doAnswer(invocationOnMock -> {
+            Pair<String,Value> pair  = new Pair<>(
+                    invocationOnMock.getArgument(0),
+                    invocationOnMock.getArgument(1)
+            );
+            storage.push(pair);
+            return null;
         }).when(result).push(any(String.class), any(Value.class), any(), any());
 
         doAnswer(invocationOnMock -> {
@@ -151,7 +168,7 @@ public class ASTMocks {
         try {
             doAnswer(invocationOnMock -> {
                 try {
-                    return storage.pop();
+                    return storage.pop().second;
                 } catch (Exception e) {
                     return null;
                 }
@@ -165,7 +182,7 @@ public class ASTMocks {
                 Pair<String,Value> pair = storage.pop();
                 if(pair.first.equals(invocationOnMock.getArgument(0))){
                     v = pair.second;
-                    storage.push(new Pair<>(invocationOnMock.getArgument(0), invocationOnMock.getArgument(1)));
+                    storage.push(new Pair<>(invocationOnMock.getArgument(0), v));
                 }
                 stack.push(pair);
             }
