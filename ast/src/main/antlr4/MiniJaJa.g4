@@ -89,9 +89,11 @@ entete returns [ASTNode node]
     ;
 
 
-entetes returns [ASTNode node]
-    : entete {$node = new ParamListNode($entete.node, null);}
-    ( ',' entetes {$node = new ParamListNode($entete.node, $entetes.node);} )?
+entetes returns [ParamListNode node]
+    : e1=entete {$node = new ParamListNode((ParamNode)$e1.node, null);}
+      ( ',' e2=entetes {$node = new ParamListNode((ParamNode)$e1.node, $e2.node);} )?
+    ;
+
     ;
 
 
