@@ -193,7 +193,25 @@ public class InstructionsUnitTest {
         assertEquals("Hello World\n", writerRef.get(0));
     }
 
-    //TODO: return test
+    @Test
+    public void return_valid_address() throws Exception{
+        PushInstruction p = new PushInstruction(new Value(5));
+        p.execute(0, memory);
+
+        ReturnInstruction r = new ReturnInstruction();
+        int next = r.execute(1, memory);
+        assertEquals(5, next);
+        assertTrue(storage.isEmpty());
+    }
+
+    @Test
+    public void return_string_throws_exception(){
+        PushInstruction p = new PushInstruction(new Value("Hello"));
+        p.execute(0, memory);
+
+        ReturnInstruction r = new ReturnInstruction();
+        assertThrows(IllegalStateException.class, () -> r.execute(1, memory));
+    }
 
 
 }

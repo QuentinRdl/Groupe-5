@@ -148,6 +148,15 @@ public class ASTMocks {
             return null;
         }).when(result).affectValue(any(String.class), any(Value.class));
 
+        /*
+        doAnswer(invocationOnMock -> {
+            if(storage.empty()){
+                throw new fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException("The stack is empty, cannot pop");
+            }
+            return storage.pop().second();
+        }).when(result).pop();
+        */
+
         try {
             doAnswer(invocationOnMock -> {
                 try {
