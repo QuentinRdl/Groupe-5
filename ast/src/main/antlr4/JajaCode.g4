@@ -25,6 +25,7 @@ instr
     | 'goto' '(' n=NOMBRE ')' {instrList.add(new GotoInstruction(Integer.parseInt($n.text)));}
     | 'nop' {instrList.add(new NopInstruction());}
     | 'load' '(' string ')' {instrList.add(new LoadInstruction($string.str));}
+    | 'store' '(' string ')' {instrList.add(new StoreInstruction($string.str));}
     ;
 
 valeur returns [Value v]
