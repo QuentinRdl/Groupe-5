@@ -28,24 +28,23 @@ public class InstructionsUnitTest {
 
     //init
     @Test
-    public void init(){
+    public void init() throws Exception {
         Instruction initInstr = new InitInstruction();
         assertEquals(2,initInstr.execute(1,memory));
     }
 
     //if
-    @Disabled
     @Test
-    public void if_true(){
+    public void if_true() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(true));
         Instruction ifInstr = new IfInstruction(5);
         pushInstr.execute(1,memory);
         assertEquals(5,ifInstr.execute(2,memory));
     }
 
-    @Disabled
+
     @Test
-    public void if_false(){
+    public void if_false() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(false));
         Instruction ifInstr = new IfInstruction(5);
         pushInstr.execute(1,memory);
@@ -60,15 +59,14 @@ public class InstructionsUnitTest {
 
     //jcstop
     @Test
-    public void jcstop(){
+    public void jcstop() throws Exception {
         Instruction jcstopInstr = new JcstopInstruction();
         assertEquals(-1,jcstopInstr.execute(1,memory));
     }
 
     //new
-    @Disabled
     @Test
-    public void new_var_int(){
+    public void new_var_int() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(5));
         Instruction newInstr = new NewInstruction("x", DataType.INT, EntryKind.VARIABLE,0);
         pushInstr.execute(1,memory);
@@ -76,9 +74,8 @@ public class InstructionsUnitTest {
         assertEquals(5,((Value) memory.val("x")).valueInt);
     }
 
-    @Disabled
     @Test
-    public void new_var_bool(){
+    public void new_var_bool() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(false));
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.VARIABLE,0);
         pushInstr.execute(1,memory);
@@ -86,9 +83,8 @@ public class InstructionsUnitTest {
         assertFalse(((Value) memory.val("x")).valueBool);
     }
 
-    @Disabled
     @Test
-    public void new_cst_int(){
+    public void new_cst_int() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(5));
         Instruction newInstr = new NewInstruction("x", DataType.INT, EntryKind.CONSTANT,0);
         pushInstr.execute(1,memory);
@@ -96,9 +92,8 @@ public class InstructionsUnitTest {
         assertEquals(5,((Value) memory.val("x")).valueInt);
     }
 
-    @Disabled
     @Test
-    public void new_cst_bool(){
+    public void new_cst_bool() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(false));
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.CONSTANT,0);
         pushInstr.execute(1,memory);
@@ -160,7 +155,6 @@ public class InstructionsUnitTest {
         LoadInstruction l = new LoadInstruction("test3");
         assertThrows(Exception.class, () -> l.execute(0,memory));
     }
-
 
     @Test
     public void pop_simple() throws Exception{

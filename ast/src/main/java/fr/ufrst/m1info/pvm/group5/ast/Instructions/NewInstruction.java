@@ -20,7 +20,7 @@ public class NewInstruction extends Instruction{
 
     @Override
     public int execute(int address, Memory m) {
-        Value v = (Value) m.pop().getValue();
+        Value v = ((Value) m.pop());
         if (kind==EntryKind.VARIABLE){
             m.declVar(identifier,v,type);
         }
