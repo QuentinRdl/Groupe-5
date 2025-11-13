@@ -2,6 +2,7 @@ package fr.ufrst.m1info.pvm.group5.ast.Nodes;
 
 import fr.ufrst.m1info.pvm.group5.ast.*;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
+import fr.ufrst.m1info.pvm.group5.memory.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,16 +31,10 @@ public class ExpListNode extends ASTNode {
     }
 
     @Override
-    public void interpret(Memory m) throws ASTInvalidOperationException, ASTInvalidMemoryException {
-        if (head instanceof EvaluableNode evalNode) {
-            evalNode.eval(m);
-        } else {
-            head.interpret(m);
-        }
-
-        if (tail != null) {
-            tail.interpret(m);
-        }
+    public void interpret(Memory m) throws ASTInvalidOperationException {
+        throw new ASTInvalidOperationException(
+                "ExpListNode cannot be interpreted directly — only used within AppelINode or similar."
+        );
     }
 
     @Override
@@ -59,5 +54,23 @@ public class ExpListNode extends ASTNode {
             children.add(tail);
         }
         return children;
+    }
+    public List<Value> evalList(Memory m)
+            throws ASTInvalidOperationException, ASTInvalidMemoryException, ASTInvalidDynamicTypeException {
+        List<Value> values = new ArrayList<>();
+
+        if (head instanceof EvaluableNode) {
+            values.add(((EvaluableNode) head).eval(m));
+        } else {
+            throw new ASTInvalidOperationException("Head of ExpListNode is not evaluable.");
+        }
+
+        if (tail instanceof ExpListNode) {
+            values.addAll(((ExpListNode) tail).evalList(m));
+        } else if (tail instanceof EvaluableNode) {
+            values.add(((EvaluableNode) tail).eval(m));
+        }
+
+        return values;
     }
 }
