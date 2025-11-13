@@ -72,12 +72,32 @@ public class InstructionsUnitTest {
         assertEquals(1, res);
     }
 
+    //store
     @Test
-    public void load_notExist(){
-        storage.add(new ASTMocks.Pair<>("test1",new Value(1)));
+    public void store_simple(){
+        storage.add(new ASTMocks.Pair<>("test",new Value(1)));
+        storage.add(new ASTMocks.Pair<>(".",new Value(5)));
 
-        LoadInstruction l = new LoadInstruction("test3");
-        assertThrows(Exception.class, () -> l.execute(0,memory));
+        StoreInstruction s = new StoreInstruction("test");
+        s.execute(0,memory);
+
+        ASTMocks.Pair<String, Value> top = storage.pop();
+        assertEquals(5, top.second().valueInt);
+        assertEquals("test", top.first());
+    }
+
+    //add
+    @Test
+    public void add_simple(){
+        storage.add(new ASTMocks.Pair<>("opl",new Value(4)));
+        storage.add(new ASTMocks.Pair<>("opr",new Value(5)));
+
+        AddInstruction a = new AddInstruction();
+        a.execute(0,memory);
+
+        ASTMocks.Pair<String, Value> top = storage.pop();
+        assertEquals(9, top.second().valueInt);
+        assertEquals(".", top.first());
     }
 
 
