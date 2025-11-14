@@ -321,5 +321,78 @@ public class Memory {
         }
     }
 
-    // Method related methods (context, etc...) will have to be added later
+    /**
+     * Declares a method in memory
+     * @param identifier method name
+     * @param returnType <type of return of the method (DataType.INT, DataType.BOOL, DataType.VOID)>
+     * @param params object representing the method parameters
+     */
+    public void declMethod(String identifier, DataType returnType, Object params) {// tab des Ast
+        if(identifier == null || identifier.isEmpty()) {
+            throw new IllegalArgumentException("Cannot declare a method with null or empty identifier");
+        }
+
+        if(symbolTable.contains(identifier)) {
+            throw new IllegalStateException("Method '" + identifier + "' already exists in the symbol table");
+        }
+        SymbolTableEntry entry = new SymbolTableEntry(identifier, EntryKind.METHOD, returnType);
+        entry.setReference(params);
+        symbolTable.addEntry(entry);
+        stack.setMethod(identifier, params, returnType);
+        stack.pushScope();
+    }
+
+    /**
+     * Retrieve an existing method
+     * @param identifier method name
+     * @return the method entry in the SymbolTable
+     */
+    public SymbolTableEntry getMethod(String identifier) {
+        SymbolTableEntry entry = symbolTable.lookup(identifier);
+        if(entry.getKind() != EntryKind.METHOD) {
+            throw new IllegalArgumentException(identifier + " is not a method");
+        }
+        return entry;
+    }
+    /**
+     * Remove a method from memory
+     * @param identifier method name
+     */
+    public void withdrawMethod(String identifier) {
+        if (identifier == null || identifier.isEmpty()) {
+            throw new IllegalArgumentException("Cannot withdraw a method with null or empty identifier");
+        }
+
+        SymbolTableEntry entry = symbolTable.lookup(identifier);
+        if (entry == null) {
+            throw new IllegalArgumentException("Cannot withdraw '" + identifier + "' because it does not exist");
+        }
+
+        if (entry.getKind() != EntryKind.METHOD) {
+            throw new IllegalArgumentException("Cannot withdraw '" + identifier + "' because it is not a method");
+        }
+        symbolTable.removeEntry(identifier);
+        Stack_Object obj = stack.getObject(identifier);
+        if (obj != null) {
+            stack.removeObject(obj);
+        }
+        try {
+            stack.popScope();
+        } catch (Stack.NoScopeException e) {
+        }
+    }
+
+    public void pushScope() {
+        stack.pushScope();
+    }
+
+    public void popScope() {
+        try {
+            stack.popScope();
+        } catch (Stack.NoScopeException ignored) {
+        }
+    }
+
+
+
 }
