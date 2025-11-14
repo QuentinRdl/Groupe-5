@@ -167,4 +167,44 @@ public class CompilationIntegrationTest extends ApplicationTest {
         assertTrue(consoleText.contains("[ERROR]"));
         assertTrue(consoleText.contains("line 6:5 missing '}' at '<EOF>'"));
     }
+
+
+    /*
+    // TODO : Complete and finish the logic
+    @Test
+    public void compilatorOutputsCorrect() throws Exception {
+        String content = String.join("\n",
+                "class C {",
+                "    int x;",
+                "    main {",
+                "        x = 3 + 4;",
+                "        x++;",
+                "    }",
+                "}"
+        );
+
+        String consoleText = createFileLoadCompileAndGetConsoleByButton("test.mjj", content);
+        assertTrue(consoleText.contains("[INFO] Compilation successful!"));
+
+        // Then we must check that the output we got is the one we expect :
+
+        // Expected output :
+        init
+        new(x,INT,var,0)
+        push(3)
+        push(4)
+        add
+        store(x)
+        push(1)
+        inc(x)
+        push(0)
+        swap
+        pop
+        pop
+        jcstop
+    }
+
+    // TODO : Add a test that does the same but with actual button push
+    */
+
 }
