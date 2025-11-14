@@ -8,10 +8,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,6 +47,7 @@ public class InstructionsUnitTest {
         assertEquals(0, storage.pop().second().valueInt);
     }
 
+    //pop
     @Test
     public void pop_simple() throws Exception{
         PushInstruction p1 = new PushInstruction(new Value(5));
@@ -60,13 +58,13 @@ public class InstructionsUnitTest {
         assertTrue(storage.isEmpty());
     }
 
-    @Disabled
     @Test
     public void pop_empty() {
         PopInstruction p = new PopInstruction();
         assertThrows(StackIsEmptyException.class, () -> p.execute(0, memory));
     }
 
+    //swap
     @Test
     public void swap_simple_instruction() throws Exception {
         PushInstruction p1 = new PushInstruction(new Value(2));
@@ -84,14 +82,13 @@ public class InstructionsUnitTest {
         assertTrue(storage.isEmpty());
     }
 
-    @Disabled
     @Test
     public void swap_instruction_not_enough_elements(){
         PushInstruction p1 = new PushInstruction(new Value(5));
         p1.execute(0, memory);
 
         SwapInstruction swap = new SwapInstruction();
-        assertThrows(Memory.MemoryIllegalArgException.class, () -> swap.execute(1, memory));
+        assertThrows(MemoryIllegalArgException.class, () -> swap.execute(1, memory));
     }
 
     @Test
@@ -211,6 +208,12 @@ public class InstructionsUnitTest {
 
         ReturnInstruction r = new ReturnInstruction();
         assertThrows(IllegalStateException.class, () -> r.execute(1, memory));
+    }
+
+    @Test
+    public void return_stack_empty(){
+        ReturnInstruction r = new ReturnInstruction();
+        assertThrows(StackIsEmptyException.class, () -> r.execute(0, memory));
     }
 
 
