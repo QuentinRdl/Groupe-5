@@ -1284,4 +1284,33 @@ public class MainControllerTest extends ApplicationTest {
         long count = controller.getEditorTabPane().getTabs().stream().filter(tab -> tab == controller.getCompiledTab()).count();
         assertEquals(1, count);
     }
+
+    @Test
+    public void testShowInternalErrorWhenBothMiniJajaAndJajaCode() throws Exception {
+        MainController realController = this.controller;
+        class FakeController extends MainController {
+            @Override
+            public boolean isMinijajaFile() { return true; }
+            @Override
+            public boolean isJajaCode() { return true; }
+        }
+
+        FakeController fake = new FakeController();
+
+        // Copy FXML / initialized fields from the real controller to the fake one
+        // So the fake one has an output/console etc.
+        java.lang.reflect.Field[] fields = MainController.class.getDeclaredFields();
+        for (java.lang.reflect.Field f : fields) {
+            f.setAccessible(true);
+            Object val = f.get(realController);
+            f.set(fake, val);
+        }
+
+        interact(() -> fake.onRunClicked());
+
+        WaitForAsyncUtils.waitForFxEvents();
+        Thread.sleep(50);
+
+        assertTrue(fake.output.getText().contains("[INTERNAL ERROR] current file is marked as jjc and mjj"));
+    }
 }
