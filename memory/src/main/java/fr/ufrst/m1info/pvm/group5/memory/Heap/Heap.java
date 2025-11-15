@@ -16,7 +16,51 @@ public class Heap {
     int availableSize;
     HeapElement currentElement;
     byte[] storage;
-    Map<Integer, HeapElement> addresses;
+    Map<Integer, HeapElement> externalAddresses;
+
+    // Getters for the content of the heap
+    private HeapElement getFirstElement(){
+        HeapElement result = currentElement;
+        while(result.internalAddress != 0) result =  result.next;
+        return result;
+    }
+
+    public int getTotalSize(){
+        return totalSize;
+    }
+
+    public int getAvailableSize(){
+        return availableSize;
+    }
+
+    public byte[] getStorageSnapshot(){
+        return storage.clone();
+    }
+
+    public record ElementRecord(int address, boolean isAllocated, int size, boolean isPointed){
+        public String toString(){
+            return (isPointed? "<" : "[") + "@" + address + ": " + size + " " + (isAllocated ? "Allocated" : "Free") + (isPointed? ">" : "]");
+        }
+
+        public boolean equals(Object o){
+            return o == this || (o instanceof ElementRecord && equals((ElementRecord)o));
+        }
+
+        public boolean equals(ElementRecord e){
+            return address == e.address && size == e.size && isAllocated == e.isAllocated && isPointed == e.isPointed;
+        }
+    }
+
+    public List<ElementRecord> getBlocksSnapshot(){
+        List<ElementRecord> elements = new ArrayList<>();
+        HeapElement first = getFirstElement();
+        HeapElement curr =  first;
+        do{
+            elements.add(new ElementRecord(curr.internalAddress, !curr.isFree(), curr.size, curr == currentElement));
+            curr = curr.next;
+        }while (curr != first);
+        return elements;
+    }
 
     /**
      * Creates a heap of the given size
@@ -26,9 +70,9 @@ public class Heap {
         this.totalSize = totalSize;
         this.availableSize = totalSize;
         this.storage = new byte[totalSize];
-        addresses = new HashMap<>();
+        externalAddresses = new HashMap<>();
         currentElement = new HeapElement(0, newExtAddress(), totalSize);
-        addresses.put(0, currentElement);
+        externalAddresses.put(0, currentElement);
     }
 
     /**
@@ -55,12 +99,14 @@ public class Heap {
      * @return address of the created memory space
      * @throws InsufficientMemoryException throws an exception if the given size is superior to the available one
      */
-    public int allocate(int size, DataType type) throws InsufficientMemoryException{
+    public int allocate(int size, DataType type) throws InsufficientMemoryException, IllegalArgumentException{
+        if(size <= 0)
+            throw new IllegalArgumentException("Cannot allocate a non-positive size. Given : " + size);
         if(size > availableSize)
             throw new InsufficientMemoryException(availableSize, size);
         // Finding a suitable space for the allocation
         HeapElement first = currentElement;
-        while(currentElement.size() < size){
+        while(currentElement.size() < size && ! currentElement.isFree()){
             currentElement = currentElement.getNext();
             if(currentElement == first){ // External fragmentation (oh no :c)
                 defragment();
@@ -68,17 +114,17 @@ public class Heap {
             }
         }
         // Realising the allocation
-        availableSize += size;
+        availableSize -= size;
         HeapElement allocation = currentElement.split(size);
         allocation.externalAddress = newExtAddress();
-        addresses.put(allocation.externalAddress, allocation);
+        externalAddresses.put(allocation.externalAddress, allocation);
         allocation.allocate(type);
 
         return allocation.externalAddress;
     }
 
     private HeapElement checkAddress(int externalAddress) throws InvalidMemoryAddressException{
-        HeapElement target = addresses.get(externalAddress);
+        HeapElement target = externalAddresses.get(externalAddress);
         if(target == null)
             throw new UnmappedMemoryAddressException(externalAddress);
         return target;
@@ -91,9 +137,9 @@ public class Heap {
      */
     public void free(int address) throws InvalidMemoryAddressException{
         HeapElement target = checkAddress(address);
-        availableSize -= target.size();
+        availableSize += target.size();
         target.free();
-        addresses.remove(address);
+        externalAddresses.remove(address);
         currentElement = target; //ensures "currentElements" points to a valid element
     }                            //(could be one of the merged blocks)
 
@@ -104,7 +150,7 @@ public class Heap {
     private void free(HeapElement target){
         availableSize -= target.size();
         target.free();
-        addresses.remove(target.externalAddress);
+        externalAddresses.remove(target.externalAddress);
         currentElement = target;
     }
 
@@ -187,15 +233,13 @@ public class Heap {
      */
     private void defragment(){
         // Variables initialisation
-        List<Integer> allBlocks = new ArrayList<>(addresses.keySet());
-        allBlocks.sort(Integer::compareTo);
+        List<HeapElement> allBlocks = new ArrayList<>(externalAddresses.values());
+        allBlocks.sort((self, other) -> self.internalAddress - other.internalAddress);
         int lastAvailableAddress = 0; // Last address where it is safe to write
         HeapElement freeElements = null; // Chain containing every free elements found
-        HeapElement current = null; // Current element being treated
         HeapElement prev = null; // Last allocated element found, and treated
         // Iterating through every element
-        for(int i : allBlocks){
-            current = addresses.get(i);
+        for(HeapElement current : allBlocks){
             if(current.isFree()){ // Current element is not allocated
                 if(freeElements == null) // If it's the first, we store it
                     freeElements = current;
@@ -222,9 +266,10 @@ public class Heap {
         }
         // If the defragment method was called, at least one allocated and unallocated element were seen
         // Therefor, the following calls are safe
-        current.next = freeElements; // Chaining the last allocated element to the first non-allocated one
+        prev.next = freeElements; // Chaining the last allocated element to the first non-allocated one
         freeElements.tryMerge(); // Merging all unallocated elements
-        addresses.get(0).next = freeElements;  // Ensuring the loop property of the structure
+        allBlocks.getFirst().prev = freeElements;  // Ensuring the loop property of the structure
+        currentElement = freeElements;
     }
 
     /**
