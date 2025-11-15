@@ -13,6 +13,9 @@ import java.util.function.Function;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException;
+import fr.ufrst.m1info.pvm.group5.memory.Memory.MemoryIllegalArgException;
+
 
 /**
  * Static class to quickly create classes mocking Memory
@@ -54,6 +57,14 @@ public class ASTMocks {
                     return null;
                 }
         ).when(result).declVar(any(String.class), any(Value.class), any());
+
+        doAnswer( invocation -> {
+                    String ident = invocation.getArgument(0);
+                    Value value = invocation.getArgument(1);
+                    storage.put(ident, value);
+                    return null;
+                }
+        ).when(result).declCst(any(String.class), any(Value.class), any());
 
         doAnswer( invocation -> {
                     String ident = invocation.getArgument(0);
@@ -128,6 +139,15 @@ public class ASTMocks {
             );
             storage.push(pair);
             return null;
+        }).when(result).declCst(any(String.class), any(Value.class), any());
+
+        doAnswer(invocationOnMock -> {
+            Pair<String,Value> pair  = new Pair<>(
+                    invocationOnMock.getArgument(0),
+                    invocationOnMock.getArgument(1)
+            );
+            storage.push(pair);
+            return null;
         }).when(result).push(any(String.class), any(Value.class), any(), any());
 
         doAnswer(invocationOnMock -> {
@@ -148,6 +168,16 @@ public class ASTMocks {
             return null;
         }).when(result).affectValue(any(String.class), any(Value.class));
 
+
+        doAnswer(invocationOnMock -> {
+            if(storage.empty()){
+                throw new StackIsEmptyException("The stack is empty, cannot pop");
+            }
+            return storage.pop().second();
+        }).when(result).pop();
+
+
+        /*
         try {
             doAnswer(invocationOnMock -> {
                 try {
@@ -157,6 +187,8 @@ public class ASTMocks {
                 }
             }).when(result).pop();
         }catch (Exception _){}
+         */
+
 
         doAnswer(invocationOnMock -> {
             Value v = null;
@@ -175,6 +207,9 @@ public class ASTMocks {
         }).when(result).val(any(String.class));
 
         doAnswer(invocationOnMock -> {
+            if(storage.size() < 2){
+                throw new MemoryIllegalArgException("Not enough elements to swap");
+            }
             var v1 = storage.pop();
             var v2 = storage.pop();
             storage.push(v1);
