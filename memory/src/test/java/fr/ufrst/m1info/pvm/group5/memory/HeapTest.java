@@ -2,6 +2,7 @@ package fr.ufrst.m1info.pvm.group5.memory;
 
 import fr.ufrst.m1info.pvm.group5.memory.Heap.Heap;
 import fr.ufrst.m1info.pvm.group5.memory.Heap.InsufficientMemoryException;
+import fr.ufrst.m1info.pvm.group5.memory.Heap.InvalidMemoryAddressException;
 import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -74,5 +75,57 @@ public class HeapTest {
         assertEquals(result,heap.getBlocksSnapshot());
     }
 
+    // Free
+    @Test
+    @DisplayName("Free - Single")
+    public void freeTest() {
+        Heap heap = new Heap(512);
+        int address = heap.allocate(12,DataType.INT);
+        heap.free(address);
+        assertEquals(512, heap.getTotalSize());
+        assertEquals(512, heap.getAvailableSize());
+        assertEquals(new Heap.ElementRecord(0, false, 512, true), heap.getBlocksSnapshot().getFirst());
+    }
+
+    @Test
+    @DisplayName("Free - InvalidAddress")
+    public void freeInvalidAddressTest() {
+        Heap heap = new Heap(512);
+        int address = heap.allocate(12,DataType.INT);
+        assertThrows(InvalidMemoryAddressException.class, () -> heap.free(address+1));
+    }
+
+
+    @Test
+    @DisplayName("Free - In the middle")
+    public void freeInTheMiddleTest() {
+        Heap heap = new Heap(512);
+        int b1 = heap.allocate(50,DataType.INT);
+        int b2 = heap.allocate(50,DataType.INT);
+        heap.free(b1);
+        assertEquals(3, heap.getBlocksSnapshot().size());
+        heap.free(b2);
+        assertEquals(1, heap.getBlocksSnapshot().size());
+    }
+
+    @Test
+    @DisplayName("Free - Multiple")
+    public void freeMultipleTest() throws Exception {
+        Heap heap = new Heap(512);
+        List<Integer> addresses =  new ArrayList<>();
+        for(int i = 0; i < 10; i++) {
+            addresses.add(heap.allocate(50, DataType.INT));
+        }
+        assertEquals(12, heap.getAvailableSize());
+        for(int i = 1; i <= 10; i++){
+            heap.free(addresses.get(i-1));
+            assertEquals(12 + 50 * i, heap.getAvailableSize());
+            if(i<10) // Each block only does 1 merge except the last
+                assertEquals(12-i, heap.getBlocksSnapshot().size());
+        }
+        assertEquals(1, heap.getBlocksSnapshot().size());
+    }
+
+    // References
 
 }
