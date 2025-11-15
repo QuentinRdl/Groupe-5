@@ -1337,8 +1337,7 @@ public class MainControllerTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
 
         String out = controller.output.getText();
-        assertFalse(out.contains("[ERROR] No code to interpret !"));
-        assertTrue(out.contains("[INFO]") || out.length() > 0);
+        assertTrue(out.contains("INFO] Interpretation success !"));
     }
 
     @Test
