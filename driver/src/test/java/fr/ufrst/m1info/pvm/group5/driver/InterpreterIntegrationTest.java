@@ -20,6 +20,8 @@ import java.nio.file.Path;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import org.testfx.framework.junit5.ApplicationTest;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(ApplicationExtension.class)
@@ -116,17 +118,82 @@ public class InterpreterIntegrationTest extends ApplicationTest {
         String content = "";
 
         String consoleText = createFileLoadRunAndGetConsole("empty.mjj", content);
-        assertTrue(consoleText.contains("Interpret") || consoleText.contains("[INFO]") || consoleText.length() >= 0);
+        assertTrue(consoleText.contains("Interpret") || consoleText.contains("[INFO]"));
     }
 
 
     @Test
-    public void interpreterEmptyFileByButton() throws Exception{
+    public void interpreterEmptyFileByButton() throws Exception {
         String content = "";
 
         String consoleText = createFileLoadRunAndGetConsoleByButton("empty_btn.mjj", content);
-        assertTrue(consoleText.contains("Interpret") || consoleText.contains("[INFO]") || consoleText.length() >= 0);
+        assertTrue(consoleText.contains("Interpret") || consoleText.contains("[INFO]"));
     }
+
+
+    @Test
+    public void interpreterWithNoExtension() throws Exception {
+        String content = String.join("\n",
+                "class C {",
+                "    int x;",
+                "    main {",
+                "        x = 3 + 4;",
+                "        x++;",
+                "    }"
+        );
+
+        String consoleText = createFileLoadRunAndGetConsoleByButton("test", content);
+        assertTrue(consoleText.contains("[ERROR] Interpretation is only available for MiniJaja files and JajaCode files (.mjj & .jjc)"));
+    }
+
+
+    @Test
+    public void interpreterWithIncorrectExtension() throws Exception {
+        String content = String.join("\n",
+                "class C {",
+                "    int x;",
+                "    main {",
+                "        x = 3 + 4;",
+                "        x++;",
+                "    }"
+        );
+
+        String consoleText = createFileLoadRunAndGetConsoleByButton("test.java", content);
+        assertTrue(consoleText.contains("[ERROR] Interpretation is only available for MiniJaja files and JajaCode files (.mjj & .jjc)"));
+    }
+
+
+    @Test
+    public void interpreterWithMjjExtension() throws Exception {
+        String content = String.join("\n",
+                "class C {",
+                "    int x;",
+                "    main {",
+                "        x = 3 + 4;",
+                "        x++;",
+                "    }"
+        );
+
+        String consoleText = createFileLoadRunAndGetConsoleByButton("test.mjj", content);
+        assertFalse(consoleText.contains("[ERROR] Interpretation is only available for MiniJaja files and JajaCode files (.mjj & .jjc)"));
+    }
+
+
+    @Test
+    public void interpreterWithJccExtension() throws Exception {
+        String content = String.join("\n",
+                "class C {",
+                "    int x;",
+                "    main {",
+                "        x = 3 + 4;",
+                "        x++;",
+                "    }"
+        );
+
+        String consoleText = createFileLoadRunAndGetConsoleByButton("test.jjc", content);
+        assertFalse(consoleText.contains("[ERROR] Interpretation is only available for MiniJaja files and JajaCode files (.mjj & .jjc)"));
+    }
+
 
 
     /**
