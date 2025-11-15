@@ -94,9 +94,17 @@ public class HeapElementTest {
     @DisplayName("Split - Multiple")
     public void SplitMultiple(){
         HeapElement e = new HeapElement(0, 50, 100);
-        e.split(40);
-        e.split(20);
+        var f = e.split(40);
+        var g = e.split(20);
         assertEquals(40, e.size());
+
+        // Checking if the chaining was done correctly
+        assertEquals(f, e.getNext());
+        assertEquals(g, f.getNext());
+        assertEquals(e, g.getNext());
+        assertEquals(g, e.getPrev());
+        assertEquals(f, g.getPrev());
+        assertEquals(e, f.getPrev());
     }
 
     @Test

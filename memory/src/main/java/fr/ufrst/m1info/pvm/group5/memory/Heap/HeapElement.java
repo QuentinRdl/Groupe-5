@@ -206,11 +206,13 @@ public class HeapElement {
         result.externalAddress = this.externalAddress;
         result.isFree = true;
         result.size = size;
+        System.out.println();
         this.size -= size;
         if(after) {
             result.internalAddress = this.internalAddress + this.size;
             result.prev = this;
             result.next = this.next;
+            this.next.prev = result;
             this.next = result;
             if(this.prev == this)
                 this.prev = result;
@@ -220,6 +222,7 @@ public class HeapElement {
             this.internalAddress = this.internalAddress + size;
             result.next = this;
             result.prev = this.prev;
+            this.prev.next = result;
             this.prev = result;
             if(this.next == this)
                 this.next = result;
