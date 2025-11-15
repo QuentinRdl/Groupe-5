@@ -147,9 +147,11 @@ public class HeapElement {
         if(other.internalAddress < this.internalAddress) {
             this.internalAddress = other.internalAddress;
             this.prev = other.prev;
+            other.prev.next = this;
         }
         else{
             this.next = other.next;
+            other.next.prev = this;
         }
         return true;
     }
@@ -206,7 +208,6 @@ public class HeapElement {
         result.externalAddress = this.externalAddress;
         result.isFree = true;
         result.size = size;
-        System.out.println();
         this.size -= size;
         if(after) {
             result.internalAddress = this.internalAddress + this.size;
