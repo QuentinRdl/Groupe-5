@@ -32,6 +32,7 @@ instr
     | 'mul' {instrList.add(new MulInstruction());}{}
     | 'sub' {instrList.add(new MulInstruction());}{}
     | 'div' {instrList.add(new MulInstruction());}{}
+    | 'or' {instrList.add(new OrInstruction());}{}
     | 'write' {instrList.add(new WriteInstruction());}
     | 'writeln' {instrList.add(new WritelnInstruction());}
     | 'init' {instrList.add(new InitInstruction());}
