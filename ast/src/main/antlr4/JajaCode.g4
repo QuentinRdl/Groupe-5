@@ -33,6 +33,7 @@ instr
     | 'sub' {instrList.add(new SubInstruction());}{}
     | 'div' {instrList.add(new DivInstruction());}{}
     | 'or' {instrList.add(new OrInstruction());}{}
+    | 'and' {instrList.add(new AndInstruction());}{}
     | 'write' {instrList.add(new WriteInstruction());}
     | 'writeln' {instrList.add(new WritelnInstruction());}
     | 'init' {instrList.add(new InitInstruction());}
