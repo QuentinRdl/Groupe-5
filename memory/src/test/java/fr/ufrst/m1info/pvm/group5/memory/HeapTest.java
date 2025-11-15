@@ -3,6 +3,7 @@ package fr.ufrst.m1info.pvm.group5.memory;
 import fr.ufrst.m1info.pvm.group5.memory.Heap.Heap;
 import fr.ufrst.m1info.pvm.group5.memory.Heap.InsufficientMemoryException;
 import fr.ufrst.m1info.pvm.group5.memory.Heap.InvalidMemoryAddressException;
+import fr.ufrst.m1info.pvm.group5.memory.Heap.UnmappedMemoryAddressException;
 import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -110,7 +111,7 @@ public class HeapTest {
 
     @Test
     @DisplayName("Free - Multiple")
-    public void freeMultipleTest() throws Exception {
+    public void freeMultipleTest(){
         Heap heap = new Heap(512);
         List<Integer> addresses =  new ArrayList<>();
         for(int i = 0; i < 10; i++) {
@@ -127,5 +128,57 @@ public class HeapTest {
     }
 
     // References
+    @Test
+    @DisplayName("Reference - Add then remove")
+    public void ReferenceAddAndRemoveTest(){
+        Heap heap = new Heap(512);
+        int address = heap.allocate(12,DataType.INT);
+        heap.addReference(address);
+        heap.removeReference(address);
+        assertEquals(512, heap.getAvailableSize());
+        assertEquals(1, heap.getBlocksSnapshot().size());
+    }
+
+    @Test
+    @DisplayName("Reference - Add to invalid address")
+    public void ReferenceInvalidAddressTest(){
+        Heap heap = new Heap(512);
+        int address = heap.allocate(12,DataType.INT);
+        assertThrows(InvalidMemoryAddressException.class, () -> heap.addReference(address+1));
+    }
+
+    @Test
+    @DisplayName("Reference - Remove to invalid address")
+    public void ReferenceInvalidAddressRemoveTest(){
+        Heap heap = new Heap(512);
+        int address = heap.allocate(12,DataType.INT);
+        assertThrows(InvalidMemoryAddressException.class, () -> heap.removeReference(address+1));
+    }
+
+    @Test
+    @DisplayName("Reference - Two add one remove")
+    public void ReferenceTwoRemoveOneTest(){
+        Heap heap = new Heap(512);
+        int address = heap.allocate(12,DataType.INT);
+        heap.addReference(address);
+        heap.addReference(address);
+        heap.removeReference(address);
+        assertEquals(500, heap.getAvailableSize());
+        List<Heap.ElementRecord> result = List.of(
+                new Heap.ElementRecord(0, true, 12, false),
+                new Heap.ElementRecord(12, false, 500, true)
+        );
+        assertEquals(result, heap.getBlocksSnapshot());
+    }
+
+    @Test
+    @DisplayName("Reference - One add two remove")
+    public void ReferenceOneRemoveTwoTest(){
+        Heap heap = new Heap(512);
+        int address = heap.allocate(12,DataType.INT);
+        heap.addReference(address);
+        heap.removeReference(address);
+        assertThrows(InvalidMemoryAddressException.class, ()->heap.removeReference(address));
+    }
 
 }

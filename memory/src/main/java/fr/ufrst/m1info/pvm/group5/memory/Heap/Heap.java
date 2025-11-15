@@ -148,7 +148,7 @@ public class Heap {
      * @param target memory space to remove
      */
     private void free(HeapElement target){
-        availableSize -= target.size();
+        availableSize += target.size();
         target.free();
         externalAddresses.remove(target.externalAddress);
         currentElement = target;
@@ -161,6 +161,8 @@ public class Heap {
      */
     public void addReference(int address) throws InvalidMemoryAddressException{
         HeapElement target = checkAddress(address);
+        if(target.isFree())
+            throw new InvalidMemoryAddressException("Invalid free, no block allocated at : " + address, address);
         target.references++;
     }
 
@@ -171,6 +173,8 @@ public class Heap {
      */
     public void removeReference(int address) throws InvalidMemoryAddressException{
         HeapElement target = checkAddress(address);
+        if(target.isFree())
+            throw new InvalidMemoryAddressException("Invalid free, no block allocated at : " + address, address);
         target.references--;
         if(target.references == 0)
             free(target);
