@@ -27,6 +27,7 @@ instr
     | 'load' '(' string ')' {instrList.add(new LoadInstruction($string.str));}
     | 'store' '(' string ')' {instrList.add(new StoreInstruction($string.str));}
     | 'add' {instrList.add(new AddInstruction());}{}
+    | 'mul' {instrList.add(new MulInstruction());}{}
     ;
 
 valeur returns [Value v]
