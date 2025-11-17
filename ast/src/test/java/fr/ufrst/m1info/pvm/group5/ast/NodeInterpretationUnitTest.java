@@ -27,7 +27,7 @@ public class NodeInterpretationUnitTest {
     Memory memory;
 
     @BeforeEach
-    void setup() {
+    public void setup() {
         memoryStorage = new HashMap<>();
         memory = ASTMocks.createMemoryWithStorage(memoryStorage);
     }

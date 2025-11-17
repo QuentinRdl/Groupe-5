@@ -289,7 +289,7 @@ public class CompilerTest {
 
     @Test
     @DisplayName("Compile Number")
-    public void number() {
+    void number() {
         String res=comp.compileCode("class C { main{10;}}");
         Assertions.assertNull(res);
     }

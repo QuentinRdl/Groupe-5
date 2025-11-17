@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ASTDumpTest {
 
     @Disabled
-
+    @Test
     void dumpToConsole() throws IOException {
         AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/0.mjj");
         System.out.println(AST.dump());
