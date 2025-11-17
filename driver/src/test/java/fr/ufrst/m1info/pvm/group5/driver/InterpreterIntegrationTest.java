@@ -222,7 +222,6 @@ class InterpreterIntegrationTest extends ApplicationTest {
         interact(() -> {
             controller.onRunClicked();
         });
-        Thread.sleep(50);
         WaitForAsyncUtils.waitForFxEvents();
 
         return controller.output.getText();
@@ -252,7 +251,6 @@ class InterpreterIntegrationTest extends ApplicationTest {
 
         clickOn("#btnRun");
 
-        Thread.sleep(50);
         WaitForAsyncUtils.waitForFxEvents();
 
         return controller.output.getText();

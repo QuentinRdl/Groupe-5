@@ -101,7 +101,6 @@ class CompilationIntegrationTest extends ApplicationTest {
         interact(() -> {
             controller.onCompileClicked();
         });
-        Thread.sleep(50);
         WaitForAsyncUtils.waitForFxEvents();
 
         return controller.output.getText();
@@ -131,7 +130,6 @@ class CompilationIntegrationTest extends ApplicationTest {
 
         clickOn("#btnCompile");
 
-        Thread.sleep(50);
         WaitForAsyncUtils.waitForFxEvents();
 
         return controller.output.getText();
