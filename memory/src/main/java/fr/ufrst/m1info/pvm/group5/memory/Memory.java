@@ -1,9 +1,9 @@
 package fr.ufrst.m1info.pvm.group5.memory;
 
-import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType;
-import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.EntryKind;
-import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.SymbolTable;
-import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.SymbolTableEntry;
+import fr.ufrst.m1info.pvm.group5.memory.symbol_table.DataType;
+import fr.ufrst.m1info.pvm.group5.memory.symbol_table.EntryKind;
+import fr.ufrst.m1info.pvm.group5.memory.symbol_table.SymbolTable;
+import fr.ufrst.m1info.pvm.group5.memory.symbol_table.SymbolTableEntry;
 
 /**
  * API class for the Memory interface
@@ -392,6 +392,11 @@ public class Memory {
         } catch (Stack.NoScopeException ignored) {
         }
     }
+    public boolean contains(String identifier) {
+        if (identifier == null || identifier.isEmpty()) return false;
+        return symbolTable.contains(identifier);
+    }
+
 
 
 

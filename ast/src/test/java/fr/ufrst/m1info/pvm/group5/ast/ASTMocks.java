@@ -1,7 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.ast;
 
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
-import fr.ufrst.m1info.pvm.group5.ast.Nodes.ASTNode;
+import fr.ufrst.m1info.pvm.group5.ast.nodes.ASTNode;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 
 import java.util.List;
@@ -163,8 +163,8 @@ public class ASTMocks {
                     stack.push(pair);
                 }
             }
-            for(Pair<String,Value> pair : stack)
-                storage.push(pair);
+            while(!stack.isEmpty())
+                storage.push(stack.pop());
             return null;
         }).when(result).affectValue(any(String.class), any(Value.class));
 
@@ -197,12 +197,11 @@ public class ASTMocks {
                 Pair<String,Value> pair = storage.pop();
                 if(pair.first.equals(invocationOnMock.getArgument(0))){
                     v = pair.second;
-                    storage.push(new Pair<>(invocationOnMock.getArgument(0), v));
                 }
                 stack.push(pair);
             }
-            for(Pair<String,Value> pair : stack)
-                storage.push(pair);
+            while(!stack.isEmpty())
+                storage.push(stack.pop());
             return v;
         }).when(result).val(any(String.class));
 
