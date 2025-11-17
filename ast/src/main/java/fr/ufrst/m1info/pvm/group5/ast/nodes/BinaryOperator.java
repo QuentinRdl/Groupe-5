@@ -43,11 +43,11 @@ public abstract class BinaryOperator extends ASTNode implements EvaluableNode {
     }
 
     public List<String> compile(int address) {
-        List<String> JJCodes = new ArrayList<>();
-        JJCodes.addAll(left.compile(address));
-        JJCodes.addAll(right.compile(address + JJCodes.size()));
-        JJCodes.add(getCompileName());
-        return JJCodes;
+        List<String> jjcodes = new ArrayList<>();
+        jjcodes.addAll(left.compile(address));
+        jjcodes.addAll(right.compile(address + jjcodes.size()));
+        jjcodes.add(getCompileName());
+        return jjcodes;
     }
 
     /**
