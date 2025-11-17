@@ -121,6 +121,32 @@ public class Heap {
     }
 
     /**
+     * Gets a dump of the content of the heap
+     * @return List of string describing each entry of the heap and their content
+     */
+    public List<String> getHeapDump(){
+        List<String> result = new ArrayList<>();
+        HeapElement first = getFirstElement();
+        HeapElement curr =  first;
+        do{
+            if(!curr.isFree()) {
+                String entry = "@" + curr.externalAddress + " : " + switch (curr.getStorageType()) {
+                    case INT -> "int";
+                    case BOOL -> "bool";
+                    default -> "unknown";
+                } + " [";
+                List<String> values = new ArrayList<>();
+                for (int i = 0; i < curr.size(); i++)
+                    values.add(storage[curr.internalAddress + i] + "");
+                result.add(entry + String.join(", ", values) + "]");
+            }
+            curr = curr.next;
+        }while (first != curr);
+        return result;
+    }
+
+
+    /**
      * Creates a heap of the given size
      * @param totalSize total size of the heap
      */
@@ -269,6 +295,20 @@ public class Heap {
     }
 
     /**
+     * Translates a byte of the array to a value of a given type
+     * @param b byte of the memory
+     * @param type target type of the translation
+     * @return value matching the given type
+     */
+    private Value translate(byte b, DataType type){
+        return switch (type){
+            case INT -> new Value(b);
+            case BOOL -> new Value(b == 1);
+            default -> new Value();
+        };
+    }
+
+    /**
      * Get a value of an element given by the starting address of an object and an offset
      * @param address address of a block of the heap
      * @param offset offset of the element
@@ -282,11 +322,7 @@ public class Heap {
         if(target.isFree())
             throw new InvalidMemoryAddressException("Invalid address, no block allocated at : " + address, address);
         byte val = storage[target.internalAddress + offset];
-        return switch (target.getStorageType()){
-            case DataType.INT -> new Value(val);
-            case DataType.BOOL -> new Value(val == 1);
-            default -> new Value();
-        };
+        return translate(val, target.getStorageType());
     }
 
     /**

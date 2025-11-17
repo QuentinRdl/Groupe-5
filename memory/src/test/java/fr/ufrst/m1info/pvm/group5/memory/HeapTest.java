@@ -412,4 +412,22 @@ public class HeapTest {
         heap.free(address);
         assertThrows(InvalidMemoryAddressException.class, () -> heap.sizeOf(address));
     }
+
+    // Dump
+    @Test
+    @DisplayName("dump")
+    void dumpTest(){
+        Heap heap = new Heap(512);
+        heap.allocate(150,DataType.INT);
+        heap.allocate(150,DataType.BOOL);
+        heap.allocate(150,DataType.INT);
+
+        // Setting values
+        heap.setValue(1, 0, new Value(1));
+        heap.setValue(1, 149, new Value(2));
+        heap.setValue(3, 0, new Value(3));
+        heap.setValue(3, 149, new Value(4));
+        
+        assertEquals(3, heap.getHeapDump().size());
+    }
 }
