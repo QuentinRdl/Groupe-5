@@ -47,7 +47,7 @@ public class InterpreterJajaCode implements Interpreter{
     public String interpretFile(String path)  {
         String errMessage= null;
         try{
-            List<Instruction> jjc = Jajacode.fromString(code);
+            List<Instruction> jjc = Jajacode.fromFile(path);
             interpretJajaCode(jjc);
         } catch (Exception e) {
             errMessage=e.getClass()+" : "+e.getMessage();
