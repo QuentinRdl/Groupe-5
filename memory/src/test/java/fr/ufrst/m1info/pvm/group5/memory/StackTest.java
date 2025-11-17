@@ -382,7 +382,7 @@ class StackTest {
         StackObject b = new StackObject("y", 2, 0, EntryKind.VARIABLE, DataType.INT);
 
         // Use reflection to access the private deque and add elements in insertion order
-        Field f = Stack.class.getDeclaredField("stack_content");
+        Field f = Stack.class.getDeclaredField("stackContent");
         f.setAccessible(true);
         @SuppressWarnings("unchecked")
         Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -412,7 +412,7 @@ class StackTest {
         when(a.getScope()).thenReturn(0);
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -443,7 +443,7 @@ class StackTest {
         when(c.getScope()).thenReturn(0);
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -459,7 +459,7 @@ class StackTest {
 
         // Verify order is now [b, a, c]
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -485,7 +485,7 @@ class StackTest {
         when(b.getScope()).thenReturn(0);
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -514,7 +514,7 @@ class StackTest {
         when(b.getValue()).thenReturn(2);
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -536,7 +536,7 @@ class StackTest {
         assertEquals(1, top.getValue());
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -559,7 +559,7 @@ class StackTest {
         when(only.getScope()).thenReturn(0);
         when(only.getValue()).thenReturn(10);
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -661,7 +661,7 @@ class StackTest {
         when(c.getName()).thenReturn("c");
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -684,7 +684,7 @@ class StackTest {
         when(a.getName()).thenReturn("a");
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -708,7 +708,7 @@ class StackTest {
         when(second.getName()).thenReturn("dup");
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -735,7 +735,7 @@ class StackTest {
         when(c.getName()).thenReturn("c");
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -767,7 +767,7 @@ class StackTest {
         when(second.getName()).thenReturn("dup");
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -797,7 +797,7 @@ class StackTest {
         when(notPresent.getName()).thenReturn("x");
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -829,7 +829,7 @@ class StackTest {
         when(c.getName()).thenReturn("c");
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -860,7 +860,7 @@ class StackTest {
         when(a.getName()).thenReturn("a");
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
@@ -890,7 +890,7 @@ class StackTest {
         when(secondDup.getName()).thenReturn("dup");
 
         try {
-            Field f = Stack.class.getDeclaredField("stack_content");
+            Field f = Stack.class.getDeclaredField("stackContent");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             Deque<StackObject> dq = (Deque<StackObject>) f.get(s);
