@@ -26,7 +26,7 @@ public class NewInstruction extends Instruction{
         try{
             v = ((Value) m.pop());
         }catch (Exception e){
-            throw new ASTInvalidMemoryException(e.getMessage());
+            v = new Value();
         }
         if (kind==EntryKind.VARIABLE){
             m.declVar(identifier,v,type);

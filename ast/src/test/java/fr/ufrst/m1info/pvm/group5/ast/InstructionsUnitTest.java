@@ -111,7 +111,8 @@ class InstructionsUnitTest {
             throw new fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException("pop with a empty stack");
         }).when(memory).pop();
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.VARIABLE,0);
-        assertThrows(ASTInvalidMemoryException.class,() -> newInstr.execute(1,memory));
+        assertEquals(3,newInstr.execute(2,memory));
+        assertNotEquals(null,memory.val("x"));
     }
 
     @Test
@@ -138,7 +139,8 @@ class InstructionsUnitTest {
             throw new fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException("pop with a empty stack");
         }).when(memory).pop();
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.CONSTANT,0);
-        assertThrows(ASTInvalidMemoryException.class,() -> newInstr.execute(1,memory));
+        assertEquals(3,newInstr.execute(2,memory));
+        assertNotEquals(null,memory.val("x"));
     }
 
     @Test
