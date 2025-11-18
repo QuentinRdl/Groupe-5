@@ -94,7 +94,7 @@ public class Memory {
      */
     public Object pop() throws Stack.StackIsEmptyException {
         StackObject top = stack.pop();
-        if (top != null) {
+        if (top != null && !top.getName().equals(".")) {
             symbolTable.removeEntry(top.getName()); // TODO : Check in unit tests
         }
         return top.getValue();
