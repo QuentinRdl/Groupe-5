@@ -94,7 +94,8 @@ public class ParamListNode extends ASTNode  implements WithdrawalNode {
         List<String> code = new ArrayList<>();
         if (next instanceof WithdrawalNode wNext)
             code.addAll(wNext.withdrawCompile(address));
-        code.add("pop(" + param.ident.identifier + ")");
+        code.add("swap");
+        code.add("pop");
         return code;
     }
 }

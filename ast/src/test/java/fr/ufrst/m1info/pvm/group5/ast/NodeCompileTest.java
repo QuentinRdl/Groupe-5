@@ -525,7 +525,7 @@ public class NodeCompileTest {
         IdentNode ident = new IdentNode("x");
         ParamNode param = new ParamNode(type, ident);
 
-        assertEquals(List.of("pop(x)"), param.withdrawCompile(0));
+        assertEquals(List.of("swap", "pop"), param.withdrawCompile(0));
     }
     @Test
     @DisplayName("ParamListNode - compile() generates correct code")
@@ -549,7 +549,7 @@ public class NodeCompileTest {
 
         List<String> result = list.withdrawCompile(0);
 
-        assertEquals(List.of("pop(flag)", "pop(x)"), result);
+        assertEquals(List.of("swap", "pop", "swap", "pop"), result);
     }
     @Test
     @DisplayName("ParamListNode - compile() with non-zero starting address")
