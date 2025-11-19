@@ -535,16 +535,14 @@ public class Stack {
         if (identifier == null || identifier.isEmpty()) {
             throw new IllegalArgumentException("Cannot define method with null or empty identifier");
         }
-
         Stack_Object obj = new Stack_Object(
                 identifier,
                 params,
                 this.getCurrentScope(),
                 EntryKind.METHOD,
-                returnType
+                DataType.UNKNOWN
         );
         stack_content.push(obj);
     }
-
 
 }
