@@ -3,6 +3,8 @@ package fr.ufrst.m1info.pvm.group5.ast;
 import fr.ufrst.m1info.pvm.group5.ast.Nodes.*;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType;
+import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.EntryKind;
+import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.SymbolTableEntry;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 import fr.ufrst.m1info.pvm.group5.memory.ValueType;
 import org.junit.jupiter.api.*;
@@ -1494,6 +1496,67 @@ public class CheckDynamicTypeTest {
         assertEquals("int", result);
         verify(instrs).checkType(mem);
     }
+    @Test
+    @DisplayName("AppelENode.checkType - method returns int (valid)")
+    public void testAppelENode_CheckType_Int() throws Exception {
+        IdentNode ident = new IdentNode("myFunc");
+        SymbolTableEntry methodEntry = mock(SymbolTableEntry.class);
+        when(methodEntry.getKind()).thenReturn(EntryKind.METHOD);
+        when(methodEntry.getDataType()).thenReturn(DataType.INT);
+        when(memoryMock.getMethod("myFunc")).thenReturn(methodEntry);
+
+        AppelENode node = new AppelENode(ident, null);
+        assertEquals("int", node.checkType(memoryMock));
+    }
+
+    @Test
+    @DisplayName("AppelENode.checkType - method returns bool (valid)")
+    public void testAppelENode_CheckType_Bool() throws Exception {
+        IdentNode ident = new IdentNode("myFunc");
+        SymbolTableEntry methodEntry = mock(SymbolTableEntry.class);
+        when(methodEntry.getKind()).thenReturn(EntryKind.METHOD);
+        when(methodEntry.getDataType()).thenReturn(DataType.BOOL);
+        when(memoryMock.getMethod("myFunc")).thenReturn(methodEntry);
+
+        AppelENode node = new AppelENode(ident, null);
+        assertEquals("bool", node.checkType(memoryMock));
+    }
+
+    @Test
+    @DisplayName("AppelENode.checkType - method returns void (error)")
+    public void testAppelENode_CheckType_Void() {
+        IdentNode ident = new IdentNode("myProc");
+        SymbolTableEntry methodEntry = mock(SymbolTableEntry.class);
+        when(methodEntry.getKind()).thenReturn(EntryKind.METHOD);
+        when(methodEntry.getDataType()).thenReturn(DataType.VOID);
+        when(memoryMock.getMethod("myProc")).thenReturn(methodEntry);
+
+        AppelENode node = new AppelENode(ident, null);
+        assertThrows(ASTInvalidDynamicTypeException.class, () -> node.checkType(memoryMock));
+    }
+
+    @Test
+    @DisplayName("AppelENode.checkType - identifier is not a method (error)")
+    public void testAppelENode_CheckType_NotAMethod() {
+        IdentNode ident = new IdentNode("myVar");
+        SymbolTableEntry varEntry = mock(SymbolTableEntry.class);
+        when(varEntry.getKind()).thenReturn(EntryKind.VARIABLE); // C'est une variable
+        when(memoryMock.getMethod("myVar")).thenReturn(varEntry);
+
+        AppelENode node = new AppelENode(ident, null);
+        assertThrows(ASTInvalidDynamicTypeException.class, () -> node.checkType(memoryMock));
+    }
+
+    @Test
+    @DisplayName("AppelENode.checkType - method not found (error)")
+    public void testAppelENode_CheckType_NotFound() {
+        IdentNode ident = new IdentNode("ghostFunc");
+        when(memoryMock.getMethod("ghostFunc")).thenThrow(new Memory.MemoryIllegalArgException("Unknown method ghostFunc"));
+
+        AppelENode node = new AppelENode(ident, null);
+        assertThrows(Memory.MemoryIllegalArgException.class, () -> node.checkType(memoryMock));
+    }
+
 
 
 

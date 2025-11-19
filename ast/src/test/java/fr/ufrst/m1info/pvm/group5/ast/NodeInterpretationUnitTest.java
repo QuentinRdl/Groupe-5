@@ -1236,6 +1236,7 @@ public class NodeInterpretationUnitTest {
         assertEquals(ValueType.INT, val.Type);
         assertEquals(0, val.valueInt);
     }
+
     @Test
     @DisplayName("ParamNode - withdrawInterpret() removes variable")
     public void testParamNodeWithdrawInterpret() throws Exception {
@@ -1270,6 +1271,7 @@ public class NodeInterpretationUnitTest {
         assertEquals(ValueType.BOOL, valFlag.Type);
         assertFalse(valFlag.valueBool);
     }
+
     @Test
     @DisplayName("ParamListNode - withdrawInterpret() removes declarations in reverse order")
     public void testParamListNodeWithdrawInterpret() throws Exception {
@@ -1289,8 +1291,6 @@ public class NodeInterpretationUnitTest {
         order.verify(m).withdrawDecl("flag");
         order.verify(m).withdrawDecl("x");
     }
-
-
 
 
     @Test
@@ -1323,6 +1323,7 @@ public class NodeInterpretationUnitTest {
                 ValueType.toDataType(ValueType.INT),
                 method);
     }
+
     @Test
     public void testMethodeNodeInterpret_BoolType() {
         Memory mem = mock(Memory.class);
@@ -1339,6 +1340,7 @@ public class NodeInterpretationUnitTest {
 
         verify(mem).declMethod(eq("isReady"), eq(DataType.BOOL), eq(m));
     }
+
     @Test
     public void testMethodeNodeInterpret_VoidType() {
         Memory mem = mock(Memory.class);
@@ -1354,6 +1356,14 @@ public class NodeInterpretationUnitTest {
         m.interpret(mem);
 
         verify(mem).declMethod(eq("reset"), eq(DataType.VOID), eq(m));
+    }
+
+    @Test
+    @DisplayName("AppelENode.interpret() - throws ASTInvalidOperationException")
+    public void testAppelENode_Interpret_ThrowsException() {
+        IdentNode ident = new IdentNode("anyFunc");
+        AppelENode node = new AppelENode(ident, null);
+        assertThrows(ASTInvalidOperationException.class, () -> node.interpret(memory));
     }
 
 }
