@@ -121,7 +121,6 @@ public class AppelINode extends ASTNode {
                 return "bool";
             case VOID:
                 return "void";
-            case UNKNOWN:
             default:
                 throw new ASTInvalidDynamicTypeException("Method " + ident.identifier + " has unsupported return type: " + dt);
         }

@@ -176,7 +176,10 @@ terme returns [ASTNode node]
 
 
 fact returns [ASTNode node]
-    : ident1 {$node = $ident1.node;}
+    : id=ident
+          ( '(' (l=listexp)? ')' {$node = new AppelENode($id.node, $l.node);}
+          | {$node = $id.node;}
+          )
     | 'true' {$node = new BooleanNode(true);}
     | 'false' {$node = new BooleanNode(false);}
     | n=NOMBRE {$node = new NumberNode(Integer.parseInt($n.text));}
