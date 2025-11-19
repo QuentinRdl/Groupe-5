@@ -98,11 +98,11 @@ class InstructionsUnitTest {
 
     @Test
     void new_var_bool() throws Exception {
-        Instruction pushInstr = new PushInstruction(new Value(false));
+        Instruction pushInstr = new PushInstruction(new Value(true));
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.VARIABLE,0);
         pushInstr.execute(1,memory);
         assertEquals(3,newInstr.execute(2,memory));
-        assertFalse(((Value) memory.val("x")).valueBool);
+        assertTrue(((Value) memory.val("x")).valueBool);
     }
 
     @Test

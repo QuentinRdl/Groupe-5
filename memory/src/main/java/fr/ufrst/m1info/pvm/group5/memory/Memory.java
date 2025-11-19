@@ -5,6 +5,8 @@ import fr.ufrst.m1info.pvm.group5.memory.symbol_table.EntryKind;
 import fr.ufrst.m1info.pvm.group5.memory.symbol_table.SymbolTable;
 import fr.ufrst.m1info.pvm.group5.memory.symbol_table.SymbolTableEntry;
 
+import java.util.EmptyStackException;
+
 /**
  * API class for the Memory interface
  * It is meant to serve as an extra interface between the memory and the other modules
@@ -105,6 +107,14 @@ public class Memory {
      */
     public void swap() {
         stack.swap();
+    }
+
+    /**
+     * Returns the top object from the stack
+     * @return Object the top object
+     */
+    public StackObject top() {
+        return stack.top();
     }
 
     /* Higher level operations */
