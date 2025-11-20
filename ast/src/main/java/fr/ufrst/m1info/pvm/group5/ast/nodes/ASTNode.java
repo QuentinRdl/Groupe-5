@@ -9,6 +9,19 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class ASTNode {
+    /**
+     * Line of the token in the file
+     */
+    private int line;
+
+    // Getters/setter for the line attribute
+    public void setLine(int line) {
+        this.line = line;
+    }
+
+    public int getLine() {
+        return line;
+    }
 
     /**
      * Compile the node and its descendants
