@@ -636,4 +636,28 @@ class MemoryIntegrationTest {
         assertThrows(java.lang.NullPointerException.class, () -> mem.affectValT("arr", 0, new Value(12)));
         assertThrows(java.lang.NullPointerException.class, () -> mem.valT("arr", 0));
     }
+
+    @Test
+    void aliasingBetweenArrayAndIntVariable() {
+        Memory mem = new Memory();
+
+        mem.declTab("a", 3, DataType.INT);
+        StackObject aObj = mem.stack.getObject("a");
+        assertNotNull(aObj);
+        assertEquals(DataType.INT, aObj.getDataType());
+
+        // Create an alias variable that stores the raw address
+        int address = (int) aObj.getValue();
+        mem.declVar("alias", address, DataType.INT);
+
+        // Write via original identifier
+        mem.affectValT("a", 0, new Value(42));
+        // Read via alias -> should see same value
+        assertEquals(42, mem.valT("alias", 0).valueInt);
+
+        // Write via alias
+        mem.affectValT("alias", 1, new Value(7));
+        // Read via original -> should see same value
+        assertEquals(7, mem.valT("a", 1).valueInt);
+    }
 }

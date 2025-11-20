@@ -431,6 +431,7 @@ public class Memory {
 
     public void declTab(String identifier, int size, DataType type) {
         int addr = heap.allocate(size, type);
+        heap.addReference(addr);
         symbolTable.addEntry(identifier, EntryKind.ARRAY, type);
         stack.setVar(identifier, addr, DataType.INT);
     }
