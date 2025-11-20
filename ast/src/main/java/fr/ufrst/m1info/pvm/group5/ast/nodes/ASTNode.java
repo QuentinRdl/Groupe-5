@@ -56,8 +56,11 @@ public abstract class ASTNode {
      */
     protected String dumpProperties(int depth){
         Map<String,String> props = getProperties();
-        if(props==null) return "";
         StringBuilder sb = new StringBuilder();
+        addTabDepth(sb,depth);
+        sb.append("\"line\" : ").append(getLine());
+        if(props!=null)sb.append(",\n");
+        if(props==null) return sb.toString();
         var iterator = props.entrySet().iterator();
         while(iterator.hasNext()){
             var e = iterator.next();
