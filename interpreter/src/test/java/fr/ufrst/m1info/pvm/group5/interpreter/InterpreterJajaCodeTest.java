@@ -212,7 +212,61 @@ public class InterpreterJajaCodeTest {
     @Test
     @DisplayName("Interpret Push Without Value")
     void InterpretPushWithoutValue() {
-        String input = "init\npush()\npop\njcstop\n";
+        String input = "init\npush\npop\njcstop\n";
+        String errMessage= ijc.interpretCode(input);
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Inc Without Value")
+    void InterpretIncWithoutValue() {
+        String input = "init\npush(1)\ninc\njcstop\n";
+        String errMessage= ijc.interpretCode(input);
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Load Without Value")
+    void InterpretLoadWithoutValue() {
+        String input = "init\nload\njcstop\n";
+        String errMessage= ijc.interpretCode(input);
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Store Without Value")
+    void InterpretStoreWithoutValue() {
+        String input = "init\nstore\njcstop\n";
+        String errMessage= ijc.interpretCode(input);
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret New Without Value")
+    void InterpretNewWithoutValue() {
+        String input = "init\npush\npop\njcstop\n";
+        String errMessage= ijc.interpretCode(input);
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret GoTo Without Value")
+    void InterpretGoTOWithoutValue() {
+        String input = "init\ngoto\njcstop\n";
+        String errMessage= ijc.interpretCode(input);
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret If Without Value")
+    void InterpretIfWithoutValue() {
+        String input = "init\npush(jcvrai)\nif\njcstop\n";
         String errMessage= ijc.interpretCode(input);
         Assertions.assertNotEquals(null,errMessage);
         Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
