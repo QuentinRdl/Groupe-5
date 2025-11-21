@@ -758,8 +758,15 @@ public class MainController {
         String compiledCode = compiler.compileCode(code);
 
         if(compiledCode != null){
+            String err = null;
             InterpreterJajaCode interpreterJajaCode = new InterpreterJajaCode(console.getWriter());
-            interpreterJajaCode.interpretCode(compiledCode);
+            err = interpreterJajaCode.interpretCode(compiledCode);
+
+            if(err == null){
+                console.getWriter().writeLine("[INFO] Compilation and interpretation successfully completed");
+            } else {
+                console.getWriter().writeLine("[ERROR] " + err);
+            }
         }
     }
 
