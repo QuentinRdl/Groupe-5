@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.driver;
 
+import fr.ufrst.m1info.pvm.group5.interpreter.InterpreterJajaCode;
 import fr.ufrst.m1info.pvm.group5.interpreter.InterpreterMiniJaja;
 import fr.ufrst.m1info.pvm.group5.compiler.Compiler;
 
@@ -320,6 +321,10 @@ public class MainController {
         return compiledCodeLines;
     }
 
+    public String getCompiledCode(){
+        return compiledCodeLines.stream().map(CodeLine::getCode).collect(Collectors.joining("\n"));
+    }
+
     /**
      * Saves the current code to the currently loaded file
      * If no file is loaded, it triggers the "Save As" dialog instead
@@ -550,7 +555,6 @@ public class MainController {
      * After interpretation, logs either a success message or an error message to the console
      */
     public void onRunClicked() {
-        //if(!isMinijajaFile() && !isJajaCode){
         boolean miniJaja = isMinijajaFile();
         boolean jajaCode = isJajaCode();
 
@@ -563,6 +567,15 @@ public class MainController {
             return;
         }
 
+        if(!isCompiledTab()){
+            interpretationMinijaja();
+        } else {
+            interpretationJajacode();
+        }
+
+    }
+
+    public void interpretationMinijaja(){
         String code = getModifiedCode();
 
         // If the code is just empty chars, do not run it
@@ -572,21 +585,33 @@ public class MainController {
         }
 
         String err = null;
-
-        if(miniJaja) {
-            InterpreterMiniJaja interpreterMiniJaja = new InterpreterMiniJaja(console.getWriter());
-            err = interpreterMiniJaja.interpretCode(code);
-        } else if (jajaCode) {
-            // TODO : Write jajaCode interpretation
-            console.getWriter().writeLine("[ERROR] JJC Interpretation not implemented yet");
-        }
+        InterpreterMiniJaja interpreterMiniJaja = new InterpreterMiniJaja(console.getWriter());
+        err = interpreterMiniJaja.interpretCode(code);
 
         if(err == null){
-            console.getWriter().writeLine("[INFO] Interpretation successfully completed");
+            console.getWriter().writeLine("[INFO] MiniJaja interpretation successfully completed");
         } else {
             console.getWriter().writeLine("[ERROR] " + err);
         }
+    }
 
+    public void interpretationJajacode(){
+        String compiledCode = getCompiledCode();
+
+        if(compiledCode.isEmpty() || isCodeEmptyChars(compiledCode)){
+            console.getWriter().writeLine("[ERROR] No code to interpret !");
+            return;
+        }
+
+        String err = null;
+        InterpreterJajaCode interpreterJajaCode = new InterpreterJajaCode(console.getWriter());
+        err = interpreterJajaCode.interpretCode(compiledCode);
+
+        if(err == null){
+            console.getWriter().writeLine("[INFO] JajaCode interpretation successfully completed");
+        } else {
+            console.getWriter().writeLine("[ERROR] " + err);
+        }
     }
 
     /**
@@ -709,12 +734,32 @@ public class MainController {
         }
 
         Compiler compiler = new Compiler(console.getWriter());
-        String res = compiler.compileCode(getModifiedCode());
+        String res = compiler.compileCode(code);
 
         if (res != null){
             showCompiledTab();
             loadCompiledCodeToListView(res);
             console.getWriter().writeLine("[INFO] Compilation successful!");
+        }
+    }
+
+    public void onCompileAndRunClicked(){
+        String code = getModifiedCode();
+        if(code.isEmpty() || isCodeEmptyChars(code)){
+            console.getWriter().writeLine("[ERROR] No code to compile and run !");
+            return;
+        }
+
+        if(!isMinijajaFile()){
+            console.getWriter().writeLine("[ERROR] Compilation and interpretation is only available for MiniJaja (.mjj) files");
+        }
+
+        Compiler compiler = new Compiler(console.getWriter());
+        String compiledCode = compiler.compileCode(code);
+
+        if(compiledCode != null){
+            InterpreterJajaCode interpreterJajaCode = new InterpreterJajaCode(console.getWriter());
+            interpreterJajaCode.interpretCode(compiledCode);
         }
     }
 

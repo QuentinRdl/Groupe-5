@@ -1378,4 +1378,6 @@ class MainControllerTest extends ApplicationTest {
         assertTrue(controller.getEditorTabPane().getTabs().contains(controller.getCompiledTab()));
         assertEquals(controller.getCompiledTab(), controller.getEditorTabPane().getSelectionModel().getSelectedItem());
     }
+
+
 }
