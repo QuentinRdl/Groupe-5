@@ -112,7 +112,7 @@ instrs returns [InstructionsNode node]
     ;
 
 instr returns [ASTNode node]
-    @init{boolean instrsflag1 = false; boolean instrsflag2 = false;}
+    @init{boolean instrsflag1 = false; boolean instrsflag2 = false; boolean listexpflag = false;}
     : 'while' '(' exp ')' '{'
     (instrs {instrsflag1 = true;}
     )?
@@ -138,7 +138,7 @@ instr returns [ASTNode node]
     ) ')'
     | 'writeln' '('
     ( ident {$node = new WriteLineNode($ident.node);}
-    | ident '(' listexp ')' {$node = new AppelINode($ident.node, $listexp.node);}
+    | ident '(' (listexp {listexpflag = true;})? ')' {$node = new AppelINode($ident.node, (listexpflag)?$listexp.node:null);}
     | e=string {$node = new WriteLineNode($e.str);}
     ) ')'
     ;
@@ -195,7 +195,9 @@ fact returns [ASTNode node]
     ;
 
 factor returns [ASTNode node]
+    @init{boolean listexpflag = false;}
     : ident1 {$node = $ident1.node;}
+    | id=ident '(' (l=listexp {listexpflag = true;})? ')' {$node = new AppelENode($id.node, (listexpflag)?$l.node:null);}
     | 'true' {$node = new BooleanNode(true);}
     | 'false' {$node = new BooleanNode(false);}
     | n=NOMBRE {$node = new NumberNode(Integer.parseInt($n.text));}

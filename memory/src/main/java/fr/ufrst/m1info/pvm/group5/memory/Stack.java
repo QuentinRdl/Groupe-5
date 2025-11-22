@@ -540,7 +540,7 @@ public class Stack {
                 params,
                 this.getCurrentScope(),
                 EntryKind.METHOD,
-                returnType
+                DataType.UNKNOWN
         );
         stackContent.push(obj);
     }

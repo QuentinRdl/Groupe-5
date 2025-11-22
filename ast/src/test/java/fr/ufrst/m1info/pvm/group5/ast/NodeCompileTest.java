@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.ast;
 
+import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import org.junit.jupiter.api.*;
 
 import fr.ufrst.m1info.pvm.group5.memory.ValueType;
@@ -524,7 +525,7 @@ class NodeCompileTest {
         IdentNode ident = new IdentNode("x");
         ParamNode param = new ParamNode(type, ident);
 
-        assertEquals(List.of("pop(x)"), param.withdrawCompile(0));
+        assertEquals(List.of("swap", "pop"), param.withdrawCompile(0));
     }
     @Test
     @DisplayName("ParamListNode - compile() generates correct code")
@@ -548,7 +549,7 @@ class NodeCompileTest {
 
         List<String> result = list.withdrawCompile(0);
 
-        assertEquals(List.of("pop(flag)", "pop(x)"), result);
+        assertEquals(List.of("swap", "pop", "swap", "pop"), result);
     }
     @Test
     @DisplayName("ParamListNode - compile() with non-zero starting address")
@@ -745,6 +746,63 @@ class NodeCompileTest {
                 code
         );
     }
+    @Test
+    @DisplayName("AppelENode.compile() - with arguments")
+    public void testAppelENodeCompileWithArgs() {
+        IdentNode ident = new IdentNode("myFunc");
+        ASTNode args = ASTMocks.createNode(
+                ExpListNode.class,
+                null,
+                i -> List.of("push(1)", "push(2)")
+        );
+
+        AppelENode node = new AppelENode(ident, args);
+
+        List<String> expected = List.of("push(1)", "push(2)", "invoke(myFunc)","swap", "pop");
+        List<String> actual = node.compile(0);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("AppelENode.compile() - without arguments")
+    public void testAppelENodeCompileWithoutArgs() {
+        IdentNode ident = new IdentNode("myFunc");
+        AppelENode node = new AppelENode(ident, null);
+
+        List<String> expected = List.of("invoke(myFunc)", "swap", "pop");
+        List<String> actual = node.compile(0);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("AppelENode.compile() - minimal case")
+    public void testAppelENodeCompileMinimal() {
+        IdentNode ident = new IdentNode("foo");
+        AppelENode node = new AppelENode(ident, null);
+
+        List<String> code = node.compile(0);
+        assertEquals(List.of("invoke(foo)", "swap", "pop"), code);
+    }
+
+
+    @Test
+    public void AppelENode_CompileWithArgs() {
+        IdentNode ident = new IdentNode("foo");
+        ASTNode args = new ASTNode() {
+            @Override public List<ASTNode> getChildren() { return List.of(); }
+            @Override public List<String> compile(int address) { return List.of("push(1)", "push(2)"); }
+            @Override public void interpret(Memory m) {}
+            @Override public String checkType(Memory m) { return "int"; }
+        };
+
+        AppelENode node = new AppelENode(ident, args);
+
+        List<String> code = node.compile(0);
+        assertEquals(List.of("push(1)", "push(2)", "invoke(foo)", "swap", "pop"), code);
+    }
+
 
 
 
