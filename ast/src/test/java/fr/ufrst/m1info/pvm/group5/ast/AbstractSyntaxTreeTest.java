@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,6 +15,17 @@ class AbstractSyntaxTreeTest {
     Map<String, Value> memoryStorage;
     @Mock
     Memory memory;
+    Thread interpretationThread;
+
+    void startInterpretation(AbstractSyntaxTree ast, InterpretationMode mode, Memory m){
+        interpretationThread = new Thread(() -> {
+            try{
+                ast.interpret(m, mode);
+            }
+            catch (Exception e){}
+        });
+        interpretationThread.start();
+    }
 
     @BeforeEach
     public void setup(){
@@ -144,6 +156,25 @@ class AbstractSyntaxTreeTest {
             fail(e.getMessage());
         }
         assertEquals(104, memoryStorage.get("x").valueInt);
+    }
+
+
+    /* Tests for step by step */
+    @Test
+    @DisplayName("Step by step - Simple")
+    void SBS_BasicOperations() throws Exception {
+        AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/BasicOperations.mjj");
+        int[] stepCount = {0};
+        AST.interprtationStoppedEvent.subscribe(d -> {
+            System.out.println(d);
+            stepCount[0]++;
+            interpretationThread.notifyAll();
+        });
+        startInterpretation(AST, InterpretationMode.STEP_BY_STEP, memory);
+        while(interpretationThread.isAlive()){
+            interpretationThread.join();
+        }
+        assertEquals(2, stepCount[0]);
     }
 
     // Confirmation test

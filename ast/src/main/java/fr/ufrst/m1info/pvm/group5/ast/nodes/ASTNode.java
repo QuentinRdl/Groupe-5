@@ -148,7 +148,7 @@ public abstract class ASTNode {
     /**
      * Utility function to call "wait" without having to use the "try/catch" everytime
      */
-    private void doWait(){
+    private synchronized void doWait(){
         try{
             wait();
         }

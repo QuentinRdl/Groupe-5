@@ -1,6 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.ast;
 
 import fr.ufrst.m1info.pvm.group5.ast.nodes.ASTNode;
+import fr.ufrst.m1info.pvm.group5.memory.Event;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.MiniJaJaLexer;
 import fr.ufrst.m1info.pvm.group5.MiniJaJaParser;
@@ -19,7 +20,11 @@ public class AbstractSyntaxTree {
      */
     public ClassNode root;
 
-    private AbstractSyntaxTree() {}
+    public Event<InterpretationStoppedData> interprtationStoppedEvent = new Event<>();
+
+    private AbstractSyntaxTree() {
+        ASTNode.InterpretationStoppedEvent.subscribe(d -> interprtationStoppedEvent.trigger(d));
+    }
 
     /**
      * Generate a new AST from a text input.
@@ -110,6 +115,14 @@ public class AbstractSyntaxTree {
         root.checkType(new Memory());
         root.interpret(m);
         return m;
+    }
+
+    /**
+     * Allows to change the interpretation mode of the AST, event during an interpretation
+     * @param mode new interpretation mode
+     */
+    public void changeInterpretationMode(InterpretationMode mode){
+        root.setInterpretationMode(mode);
     }
 
     /**
