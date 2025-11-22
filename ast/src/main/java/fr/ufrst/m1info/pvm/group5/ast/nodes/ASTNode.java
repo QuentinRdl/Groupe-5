@@ -17,6 +17,8 @@ public abstract class ASTNode {
 
     public static final Event<InterpretationStoppedData> InterpretationStoppedEvent = new Event<>();
 
+    public static final Object lock = new Object();
+
     /**
      * Defines the way the interpretation of the program should be done
      * @param interpretationMode interpretation mode of the program
@@ -157,6 +159,10 @@ public abstract class ASTNode {
         }
     }
 
+    public synchronized void resumeInterpretation(){
+        notifyAll();
+    }
+
     /**
      * Halts the program or not depending on the interpretation mode :
      *  - Direct : the program is not interrupted
@@ -165,7 +171,7 @@ public abstract class ASTNode {
      * Tiggers the [InterpretationStoppedEvent] if the program has stopped
      * @param m Memory the program is being executed on
      */
-    protected void halt(Memory m){
+    protected synchronized void halt(Memory m){
         switch (interpretationMode){
             case DIRECT:
                 return;
@@ -173,7 +179,7 @@ public abstract class ASTNode {
                 if(m.isBreakpoint(this.line))
                     return;
             case STEP_BY_STEP:
-                InterpretationStoppedEvent.trigger(new InterpretationStoppedData(line, false));
+                InterpretationStoppedEvent.triggerAsync(new InterpretationStoppedData(line, false, this));
                 doWait();
         }
     }

@@ -1,4 +1,5 @@
 package fr.ufrst.m1info.pvm.group5.ast;
+import fr.ufrst.m1info.pvm.group5.ast.nodes.ASTNode;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 import org.junit.jupiter.api.*;
@@ -166,15 +167,13 @@ class AbstractSyntaxTreeTest {
         AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/BasicOperations.mjj");
         int[] stepCount = {0};
         AST.interprtationStoppedEvent.subscribe(d -> {
-            System.out.println(d);
             stepCount[0]++;
-            interpretationThread.notifyAll();
+            d.node().resumeInterpretation();
         });
         startInterpretation(AST, InterpretationMode.STEP_BY_STEP, memory);
-        while(interpretationThread.isAlive()){
-            interpretationThread.join();
-        }
+        interpretationThread.join();
         assertEquals(2, stepCount[0]);
+        assertEquals(8, memoryStorage.get("x").valueInt);
     }
 
     // Confirmation test
