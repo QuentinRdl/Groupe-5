@@ -758,6 +758,8 @@ public class MainController {
         String compiledCode = compiler.compileCode(code);
 
         if(compiledCode != null){
+            showCompiledTab();
+            loadCompiledCodeToListView(compiledCode);
             String err = null;
             InterpreterJajaCode interpreterJajaCode = new InterpreterJajaCode(console.getWriter());
             err = interpreterJajaCode.interpretCode(compiledCode);
