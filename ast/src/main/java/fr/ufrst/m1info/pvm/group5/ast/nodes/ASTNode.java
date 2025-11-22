@@ -17,7 +17,6 @@ public abstract class ASTNode {
 
     public static final Event<InterpretationStoppedData> InterpretationStoppedEvent = new Event<>();
 
-    public static final Object lock = new Object();
 
     /**
      * Defines the way the interpretation of the program should be done
