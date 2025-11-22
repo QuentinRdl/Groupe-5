@@ -64,7 +64,9 @@ public class ParamNode extends ASTNode implements WithdrawalNode {
     @Override
     public List<String> withdrawCompile(int address) {
         List<String> code = new ArrayList<>();
-        code.add("pop(" + ident.identifier + ")");
+        code.add("swap");
+        code.add("pop");
         return code;
     }
+
 }
