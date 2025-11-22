@@ -351,7 +351,7 @@ class InterpreterIntegrationTest extends ApplicationTest {
     }
 
     /**
-     * Just like createFileCompileLoadRunAndGetConsole but triggers the actual Run button (#btnRun)
+     * Just like createFileLoadCompileRunAndGetConsole but triggers the actual Compile button (#btnCompile) and Run button (#btnRun)
      *
      * @param filename name of the file to create in the test temp directory
      * @param content full file content

@@ -321,6 +321,12 @@ public class MainController {
         return compiledCodeLines;
     }
 
+    /**
+     * Returns the compiled code as a single string,
+     * joining all CodeLine entries with newline characters
+     *
+     * @return the compiled JajaCode as text
+     */
     public String getCompiledCode(){
         return compiledCodeLines.stream().map(CodeLine::getCode).collect(Collectors.joining("\n"));
     }
@@ -550,9 +556,9 @@ public class MainController {
 
 
     /**
-     * Executes the current code when the "Run" button is clicked
-     * Retrieves the code from the editor and passes it to the InterpreterMiniJaja for interpretation
-     * After interpretation, logs either a success message or an error message to the console
+     * Handles the "Run" button click
+     * Determines the file type and launches the appropriate interpretation (MiniJaja or JajaCode)
+     * Displays an error if interpretation is not allowed
      */
     public void onRunClicked() {
         boolean miniJaja = isMinijajaFile();
@@ -575,6 +581,11 @@ public class MainController {
 
     }
 
+    /**
+     * Interprets the current MiniJaja code
+     * Retrieves edited code, checks validity, runs the MiniJaja interpreter,
+     * and prints either a success or an error message
+     */
     public void interpretationMinijaja(){
         String code = getModifiedCode();
 
@@ -595,6 +606,11 @@ public class MainController {
         }
     }
 
+    /**
+     * Interprets the current JajaCode code
+     * Retrieves compiled code, checks validity, runs the JajaCode interpreter,
+     * and prints either a success or an error message
+     */
     public void interpretationJajacode(){
         String compiledCode = getCompiledCode();
 
@@ -743,6 +759,11 @@ public class MainController {
         }
     }
 
+    /**
+     * Compiles and immediately runs the current MiniJaja code
+     * Validates the code, compiles it, loads the compiled result into the compiled tab,
+     * then interprets it and logs either success or error message
+     */
     public void onCompileAndRunClicked(){
         String code = getModifiedCode();
         if(code.isEmpty() || isCodeEmptyChars(code)){
