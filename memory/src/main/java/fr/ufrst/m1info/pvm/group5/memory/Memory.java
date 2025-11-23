@@ -6,9 +6,7 @@ import fr.ufrst.m1info.pvm.group5.memory.symbol_table.EntryKind;
 import fr.ufrst.m1info.pvm.group5.memory.symbol_table.SymbolTable;
 import fr.ufrst.m1info.pvm.group5.memory.symbol_table.SymbolTableEntry;
 
-import java.util.ArrayList;
 import java.util.EmptyStackException;
-import java.util.List;
 
 /**
  * API class for the Memory interface
@@ -19,8 +17,6 @@ public class Memory {
     Stack stack = new Stack();
     SymbolTable symbolTable = new SymbolTable();
     private Heap heap = new Heap();
-
-    private List<Integer> breakpoints = new ArrayList<>();
 
     private String identifierVarClass;
     /**
@@ -498,18 +494,5 @@ public class Memory {
 
         int address = (int) addressObj.getValue();
         return heap.sizeOf(address);
-    }
-
-    /* Breakpoints related operations */
-    public void setBreakpoints(List<Integer> breakpoints) {
-        this.breakpoints = breakpoints;
-    }
-
-    public List<Integer> getBreakpoints() {
-        return breakpoints;
-    }
-
-    public boolean isBreakpoint(int address) {
-        return breakpoints.contains(address);
     }
 }
