@@ -495,4 +495,28 @@ public class Memory {
         int address = (int) addressObj.getValue();
         return heap.sizeOf(address);
     }
+
+    /**
+     * Prints the content of the Memory (heap + stack)
+     * @return String -> the Memory
+     */
+    @Override
+    public String toString() {
+        String res = heap.toString();
+        res += stack.toString();
+        return res;
+    }
+
+    /**
+     * Alternate func for toString, returns the Memory (heap + stack)
+     * @return tab of str with at index 0 the heap, index 1 the stack
+     */
+    public String[] toStringTab() {
+        String[] res = {null, null};
+
+        res[0] = heap.toString();
+        res[1] = stack.toString();
+
+        return res;
+    }
 }

@@ -66,8 +66,6 @@ public class InterpreterJajaCode implements Interpreter{
         int size=instructions.size();
         while (adress>0){
             adress = instructions.get(adress-1).execute(adress,mem);
-
-
             if (adress>size || adress==0){
                 throw new IndexOutOfBoundsException("Line "+adress+" not found");
             }
