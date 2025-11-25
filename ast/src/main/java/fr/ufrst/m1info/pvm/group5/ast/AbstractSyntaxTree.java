@@ -20,10 +20,10 @@ public class AbstractSyntaxTree {
      */
     public ClassNode root;
 
-    public Event<InterpretationStoppedData> interprtationStoppedEvent = new Event<>();
+    public Event<InterpretationStoppedData> interpretationStoppedEvent = new Event<>();
 
     private AbstractSyntaxTree() {
-        ASTNode.InterpretationStoppedEvent.subscribe(d -> interprtationStoppedEvent.trigger(d));
+        ASTNode.InterpretationStoppedEvent.subscribe(d -> interpretationStoppedEvent.trigger(d));
     }
 
     /**

@@ -164,7 +164,7 @@ class AbstractSyntaxTreeTest {
     void SBS_BasicOperations() throws Exception {
         AbstractSyntaxTree AST = AbstractSyntaxTree.fromFile("src/test/resources/BasicOperations.mjj");
         int[] stepCount = {0};
-        AST.interprtationStoppedEvent.subscribe(d -> {
+        AST.interpretationStoppedEvent.subscribe(d -> {
             stepCount[0]++;
             d.node().resumeInterpretation();
         });
@@ -183,7 +183,7 @@ class AbstractSyntaxTreeTest {
         int[] breakPointValue = {0,0};
         List<Integer> stoppedby = new ArrayList<>();
 
-        AST.interprtationStoppedEvent.subscribe(d -> {
+        AST.interpretationStoppedEvent.subscribe(d -> {
             stoppedby.add(d.line());
             if(d.line() == 15){
                 breakPointValue[0] = memoryStorage.get("x").valueInt;

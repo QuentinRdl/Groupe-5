@@ -56,6 +56,8 @@ public class InterpreterMiniJaja implements Interpreter{
         Memory mem = new Memory(output);
         String errMessage= null;
 
+        mem.setBreakpoints(breakpoints);
+
         // Building the AST
         try {
              this.ast = AbstractSyntaxTree.fromString(code);
@@ -64,7 +66,7 @@ public class InterpreterMiniJaja implements Interpreter{
         }
 
         // Subscribing to the event of the ast
-        ast.interprtationStoppedEvent.subscribe(d -> {
+        ast.interpretationStoppedEvent.subscribe(d -> {
             this.currentNode = d.node();
             interpretationHaltedEvent.triggerAsync(new InterpretationHaltedData(true, ""));
         });
