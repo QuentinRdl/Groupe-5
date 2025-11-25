@@ -7,13 +7,16 @@ import fr.ufrst.m1info.pvm.group5.memory.Writer;
 
 public class InterpreterMiniJaja implements Interpreter{
     Writer output;
+    private Memory mem;
 
     protected InterpreterMiniJaja(){
         output = new Writer();
+        mem = new Memory(output);
     }
 
     public InterpreterMiniJaja(Writer output) {
         this.output = output;
+        mem = new Memory(this.output);
     }
 
     /**
@@ -24,7 +27,6 @@ public class InterpreterMiniJaja implements Interpreter{
      */
     @Override
     public String interpretCode(String code) {
-        Memory mem = new Memory(output);
         String errMessage= null;
         try{
             AbstractSyntaxTree ast = AbstractSyntaxTree.fromString(code);
@@ -43,7 +45,6 @@ public class InterpreterMiniJaja implements Interpreter{
      */
     @Override
     public String interpretFile(String path)  {
-        Memory mem = new Memory(output);
         String errMessage= null;
         try{
             AbstractSyntaxTree ast = AbstractSyntaxTree.fromFile(path);
@@ -52,5 +53,9 @@ public class InterpreterMiniJaja implements Interpreter{
             errMessage=e.getClass()+" : "+e.getMessage();
         }
         return errMessage;
+    }
+
+    public Memory getMemory(){
+        return this.mem;
     }
 }

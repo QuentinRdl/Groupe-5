@@ -64,6 +64,11 @@ public class MainController {
     private Tab compiledTab;
 
     @FXML
+    private Tab memoryTab;
+
+    private MemoryVisualisation memoryVisualisation;
+
+    @FXML
     private Button btnSave;
     @FXML
     private Button btnSaveAs;
@@ -129,6 +134,11 @@ public class MainController {
                 btnRunCompile.setDisable(false);
             }
         });
+
+        memoryVisualisation = new MemoryVisualisation();
+        if(memoryTab != null){
+            memoryTab.setContent(memoryVisualisation);
+        }
 
         hideCompileTab();
         deactiveButtons();

@@ -56,6 +56,9 @@
           <Tab fx:id="compiledTab" text="Compiled Code" closable="true">
             <ListView fx:id="compiledCodeListView"/>
           </Tab>
+          <Tab fx:id="memoryTab" text="Memory Visualisation" closable="false">
+
+          </Tab>
         </TabPane>
 
         <TextArea fx:id="output" editable="false" prefHeight="150"/>
