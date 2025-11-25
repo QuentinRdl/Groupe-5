@@ -11,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.VirtualFlow;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.control.MenuItem;
@@ -610,6 +612,7 @@ public class MainController {
         err = interpreterMiniJaja.interpretCode(code);
 
         if(err == null){
+            Platform.runLater(() -> memoryVisualisation.updateMemory(interpreterMiniJaja.getMemory().toStringTab()));
             console.getWriter().writeLine("[INFO] MiniJaja interpretation successfully completed");
         } else {
             console.getWriter().writeLine("[ERROR] " + err);
