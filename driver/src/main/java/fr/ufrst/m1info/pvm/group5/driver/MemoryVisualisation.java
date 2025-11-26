@@ -2,6 +2,7 @@ package fr.ufrst.m1info.pvm.group5.driver;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
@@ -11,15 +12,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-import java.util.List;
-
 public class MemoryVisualisation extends HBox {
 
     private VBox stackContainer;
     private VBox heapContainer;
-
-    private TextArea stackView;
-    private TextArea heapView;
     private Label stackLabel;
     private Label heapLabel;
 
@@ -37,7 +33,7 @@ public class MemoryVisualisation extends HBox {
 
         stackContainer = new VBox(10);
         stackContainer.setPadding(new Insets(10));
-        stackContainer.setStyle("-fx-background-color: #f5f2f2; -fx-border-color: #1a1a1a; -fx-border-radius: 6; -fx-background-radius: 6;");
+        stackContainer.setStyle("-fx-background-color: #f5f2f2; -fx-border-color: #1a1a1a; -fx-background-radius: 6;");
 
         ScrollPane stackScrollPane = new ScrollPane(stackContainer);
         stackScrollPane.setFitToWidth(true);
@@ -45,13 +41,8 @@ public class MemoryVisualisation extends HBox {
         stackScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         stackScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        stackView = new TextArea("(empty)");
-        stackView.setEditable(false);
-        stackView.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 12px;");
-        stackView.setWrapText(false);
-        VBox.setVgrow(stackView, Priority.ALWAYS);
-
         stackSection.getChildren().addAll(stackLabel, stackScrollPane);
+        stackSection.setAlignment(Pos.TOP_CENTER);
 
         // Heap
         VBox heapSection = new VBox(10);
@@ -62,16 +53,26 @@ public class MemoryVisualisation extends HBox {
 
         heapContainer = new VBox(10);
         heapContainer.setPadding(new Insets(10));
+        heapContainer.setStyle("-fx-background-color: #f5f2f2; -fx-border-color: #1a1a1a; -fx-background-radius: 6;");
 
-        heapView = new TextArea("(empty)");
-        heapView.setEditable(false);
-        heapView.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 12px;");
-        heapView.setWrapText(true);
-        VBox.setVgrow(heapView, Priority.ALWAYS);
+        ScrollPane heapScrollPane = new ScrollPane(heapContainer);
+        heapScrollPane.setFitToWidth(true);
+        heapScrollPane.setFitToHeight(true);
+        heapScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        heapScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        heapSection.getChildren().addAll(heapLabel, heapContainer);
+        heapSection.getChildren().addAll(heapLabel, heapScrollPane);
+        heapSection.setAlignment(Pos.TOP_CENTER);
+
+        VBox.setVgrow(stackScrollPane, Priority.ALWAYS);
+        VBox.setVgrow(heapScrollPane, Priority.ALWAYS);
 
         getChildren().addAll(stackSection, heapSection);
+        HBox.setHgrow(stackSection, Priority.ALWAYS);
+        HBox.setHgrow(heapSection, Priority.ALWAYS);
+
+        stackSection.setMaxWidth(Double.MAX_VALUE);
+        heapSection.setMaxWidth(Double.MAX_VALUE);
     }
 
     /**
@@ -102,18 +103,14 @@ public class MemoryVisualisation extends HBox {
 
             if(heap != null && !heap.isEmpty()){
                 heapLabel.setText("Heap");
-                heapView.setText(heap);
             } else {
                 heapLabel.setText("Heap (empty)");
-                heapView.setText("(empty)");
             }
 
             if(stack != null && !stack.isEmpty()){
                 stackLabel.setText("Stack");
-                stackView.setText(stack);
             } else {
                 stackLabel.setText("Stack ! (empty)");
-                stackView.setText("(empty)");
             }
 
         });
@@ -188,10 +185,9 @@ public class MemoryVisualisation extends HBox {
             } else {
                 int address = extractInt(line, "ext@", "int@");
                 int size = extractInt(line, "size=", (line.contains("Allocated") ? "Allocated" : "Free"));
-                boolean allocated = line.contains("Allocated");
                 int refs = extractInt(line, "refs=", "");
 
-                heapContainer.getChildren().add(new HeapBlockView(address, size, allocated, refs, ""));
+                heapContainer.getChildren().add(new HeapBlockView(address, size, refs, ""));
             }
         }
     }
@@ -230,5 +226,22 @@ public class MemoryVisualisation extends HBox {
             }
         }
         return true;
+    }
+
+    public void clear(){
+        Platform.runLater(() -> {
+            clearStack();
+            clearHeap();
+        });
+    }
+
+    private void clearHeap(){
+        heapContainer.getChildren().clear();
+        heapLabel.setText("Heap (empty)");
+    }
+
+    private void clearStack(){
+        stackContainer.getChildren().clear();
+        stackLabel.setText("Stack (empty)");
     }
 }

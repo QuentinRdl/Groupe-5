@@ -240,6 +240,7 @@ public class MainController {
 
             compiledCodeLines.clear();
             hideCompileTab();
+            clearMemoryVisualisation();
 
             console.getWriter().writeLine("[INFO] File loaded : " + selectedFile.getName());
             return true;
@@ -715,6 +716,7 @@ public class MainController {
 
         compiledCodeLines.clear();
         hideCompileTab();
+        clearMemoryVisualisation();
     }
 
     /**
@@ -905,6 +907,12 @@ public class MainController {
                 editorTabPane.getTabs().add(compiledTab);
             }
             editorTabPane.getSelectionModel().select(compiledTab);
+        }
+    }
+
+    private void clearMemoryVisualisation(){
+        if(memoryVisualisation != null){
+            memoryVisualisation.clear();
         }
     }
 }
