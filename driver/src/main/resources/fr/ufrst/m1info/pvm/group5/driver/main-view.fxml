@@ -21,8 +21,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ufrst.m1info.pvm.group5.driver.MainController">
 
   <top>
@@ -41,33 +40,9 @@
       <Region fx:id="spacer2" prefWidth="50"/>
 
       <Label text="Debug : "/>
-      <Button text="Run" fx:id="btnDebugRun" onAction="#onClickRunDebug">
-        <graphic>
-          <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
-            <image>
-              <Image url="@icons/play-solid-full.png"/>
-            </image>
-          </ImageView>
-        </graphic>
-      </Button>
-      <Button text="Next" fx:id="btnDebugNext" onAction="#onClickNextDebug">
-        <graphic>
-          <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
-            <image>
-              <Image url="@icons/arrow-right-solid-full.png"/>
-            </image>
-          </ImageView>
-        </graphic>
-      </Button>
-      <Button text="Stop" fx:id="btnDebugStop" onAction="#onClickStopDebug">
-        <graphic>
-          <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
-            <image>
-              <Image url="@icons/stop-solid-full.png"/>
-            </image>
-          </ImageView>
-        </graphic>
-      </Button>
+      <Button text="Run" fx:id="btnDebugRun" onAction="#onClickRunDebug"/>
+      <Button text="Next" fx:id="btnDebugNext" onAction="#onClickNextDebug"/>
+      <Button text="Stop" fx:id="btnDebugStop" onAction="#onClickStopDebug"/>
 
     </ToolBar>
   </top>
