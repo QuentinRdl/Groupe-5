@@ -168,6 +168,7 @@ public class MainController {
         deactiveButtons();
         setupOutputContextMenu();
         setupKeyboardShortcuts();
+
     }
 
 
