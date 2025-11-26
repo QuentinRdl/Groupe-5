@@ -60,13 +60,16 @@ public class MemoryVisualisation extends HBox {
         heapLabel.setFont(Font.font("System", 14));
         heapLabel.setStyle("-fx-font-weight: bold;");
 
+        heapContainer = new VBox(10);
+        heapContainer.setPadding(new Insets(10));
+
         heapView = new TextArea("(empty)");
         heapView.setEditable(false);
         heapView.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 12px;");
         heapView.setWrapText(true);
         VBox.setVgrow(heapView, Priority.ALWAYS);
 
-        heapSection.getChildren().addAll(heapLabel, heapView);
+        heapSection.getChildren().addAll(heapLabel, heapContainer);
 
         getChildren().addAll(stackSection, heapSection);
     }
@@ -88,7 +91,14 @@ public class MemoryVisualisation extends HBox {
                     "  [2] arr_1 \tkind=VARIABLE \tdataType=INT \tvalue=Integer(1)\n" +
                     "  [1] alias_1\tkind=VARIABLE \tdataType=INT\tvalue=Integer(10)\n" +
                     "}";
+
+            String heapExample = "Heap(total=16, available=11)\n" +
+                    "  ext@1 int@0 size=5 Allocated(INT) refs=1\n" +
+                    "    bytes: [0, 0, 0, 0, 0]\n" +
+                    "* ext@0 int@5 size=11 Free refs=0\n" +
+                    "    bytes: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]";
             updateStack(stackExample);
+            updateHeap(heapExample);
 
             if(heap != null && !heap.isEmpty()){
                 heapLabel.setText("Heap");
@@ -153,6 +163,39 @@ public class MemoryVisualisation extends HBox {
         }
     }
 
+    private void updateHeap(String heap){
+        heapContainer.getChildren().clear();
+
+        if(heap == null || heap.trim().isEmpty()){
+            heapContainer.getChildren().add(new Label("Heap is empty"));
+            return;
+        }
+
+        String[] lines = heap.split("\n");
+        for(int i = 0; i < lines.length; i++){
+            System.out.println(lines[i]);
+        }
+
+        // Ignore the first line (Heap(total=..., available=...))
+        for(int i = 1; i < lines.length; i++){
+            String line = lines[i].trim();
+            if(line.isEmpty()) continue;
+
+            if(line.contains("bytes:")){
+                String bytes = line.replace("bytes:", "").trim();
+                HeapBlockView lastBlock = (HeapBlockView) heapContainer.getChildren().getLast();
+                lastBlock.setBytesLabel(bytes);
+            } else {
+                int address = extractInt(line, "ext@", "int@");
+                int size = extractInt(line, "size=", (line.contains("Allocated") ? "Allocated" : "Free"));
+                boolean allocated = line.contains("Allocated");
+                int refs = extractInt(line, "refs=", "");
+
+                heapContainer.getChildren().add(new HeapBlockView(address, size, allocated, refs, ""));
+            }
+        }
+    }
+
     //TODO: make comments
     private String extract(String text, String start, String end){
         if(text == null || start == null || end == null) return "";
@@ -166,6 +209,14 @@ public class MemoryVisualisation extends HBox {
         if(endIndex == -1) return text.substring(startIndex).trim();
 
         return text.substring(startIndex,endIndex).trim();
+    }
+
+    private int extractInt(String text, String start, String end){
+        try{
+            return Integer.parseInt(extract(text, start, end));
+        }catch (Exception e){
+            return 0;
+        }
     }
 
     private boolean isStackContentEmpty(String[] lines, int contentLineIndex){
