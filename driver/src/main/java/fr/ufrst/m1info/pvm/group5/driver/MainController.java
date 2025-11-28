@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.VirtualFlow;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.control.MenuItem;
@@ -28,6 +29,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.kordamp.ikonli.fontawesome5.FontAwesomeRegular;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 
 /**
@@ -83,6 +89,12 @@ public class MainController {
     private Button btnCompile;
     @FXML
     private Button btnRunCompile;
+    @FXML
+    private Button btnDebugRun;
+    @FXML
+    private Button btnDebugStop;
+    @FXML
+    private Button btnDebugNext;
 
 
     /**
@@ -152,10 +164,33 @@ public class MainController {
         }
         hideMemoryTab(memoryTabJajacode);
 
+        FontIcon playIcon = new FontIcon(FontAwesomeSolid.PLAY);
+        playIcon.setIconColor(Color.DARKBLUE);
+        playIcon.setIconSize(12);
+
+        FontIcon stopIcon = new FontIcon(FontAwesomeSolid.STOP);
+        stopIcon.setIconColor(Color.DARKRED);
+        stopIcon.setIconSize(12);
+
+        FontIcon nextIcon = new FontIcon(FontAwesomeSolid.ARROW_RIGHT);
+        nextIcon.setIconColor(Color.DARKGREEN);
+        nextIcon.setIconSize(12);
+
+        btnDebugRun.setGraphic(playIcon);
+        btnDebugRun.setContentDisplay(javafx.scene.control.ContentDisplay.LEFT);
+
+        btnDebugStop.setGraphic(stopIcon);
+        btnDebugStop.setContentDisplay(javafx.scene.control.ContentDisplay.LEFT);
+
+        btnDebugNext.setGraphic(nextIcon);
+        btnDebugNext.setContentDisplay(javafx.scene.control.ContentDisplay.LEFT);
+
+
         hideCompileTab();
         deactiveButtons();
         setupOutputContextMenu();
         setupKeyboardShortcuts();
+
     }
 
 
@@ -965,5 +1000,26 @@ public class MainController {
         if(memoryVisualisation != null){
             memoryVisualisation.clear();
         }
+    }
+
+    /**
+     * Starts debugging the current code when the "Run" debug button is clicked
+     */
+    public void onClickRunDebug(){
+        //TODO
+    }
+
+    /**
+     * Stops the current debugging session when the "Stop" debug button is clicked
+     */
+    public void onClickStopDebug(){
+        //TODO
+    }
+
+    /**
+     * Executes the next instruction in the debugging session when the "Next" debug button is clicked
+     */
+    public void onClickNextDebug(){
+        //TODO
     }
 }
