@@ -40,6 +40,9 @@ public class NewInstruction extends Instruction{
         }catch (Exception e){
             v=new Value();
         }
+        if (type!=DataType.INT && type!=DataType.BOOL){
+            throw new ASTInvalidDynamicTypeException("new line ("+(address+1)+") : Invalid type.");
+        }
         if (kind==EntryKind.VARIABLE){
             if (v.type!=ValueType.EMPTY && ValueType.toDataType(v.type)!=type){
                 throw new ASTInvalidDynamicTypeException("new line ("+(address+1)+") : "+type+" variable cannot be declared with "+ValueType.toDataType(v.type)+" value.");
@@ -55,7 +58,7 @@ public class NewInstruction extends Instruction{
             if (v.type!=ValueType.INT){
                 throw new ASTInvalidDynamicTypeException("new line ("+(address+1)+") : Value must be of type int.");
             }
-            m.declCst(identifier,v,type);
+            m.push(identifier,v,type,EntryKind.METHOD);
         }
         else {
             throw new ASTBuildException("new line ("+(address+1)+") : Entry kind must be var or const");

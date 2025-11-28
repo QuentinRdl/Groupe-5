@@ -81,7 +81,7 @@ public class Memory {
         if(kind == null || type == null || value == null || identifier == null) {
             throw new MemoryIllegalArgException("One of the following arguments are not compatible with this function call : identifier = " + identifier + " value = " + value + " type = " + type + " kind = " + kind);
         }
-        if(kind != EntryKind.VARIABLE && kind != EntryKind.CONSTANT) {
+        if(kind != EntryKind.VARIABLE && kind != EntryKind.CONSTANT && kind != EntryKind.METHOD) {
             // TODO : Implement for different EntryKind
             throw new MemoryIllegalArgException("Pushing with " + kind + " as en EntryKind is invalid !");
         }
@@ -95,6 +95,12 @@ public class Memory {
 
         if(kind == EntryKind.CONSTANT) {
             stack.setConst(identifier, value, type);
+            SymbolTableEntry entry = new SymbolTableEntry(identifier, kind, type);
+            symbolTable.addEntry(entry);
+        }
+
+        if(kind == EntryKind.METHOD) {
+            stack.setMeth(identifier, value, type);
             SymbolTableEntry entry = new SymbolTableEntry(identifier, kind, type);
             symbolTable.addEntry(entry);
         }

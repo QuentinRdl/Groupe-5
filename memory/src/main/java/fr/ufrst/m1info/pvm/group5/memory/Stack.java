@@ -138,6 +138,21 @@ public class Stack {
         stackContent.push(constant);
     }
 
+    /**
+     * Pushes a new method in the stack
+     * @param name name of the method
+     * @param value value of the method
+     */
+    public void setMeth(String name, Object value, DataType type) {
+        if (name == null || name.isEmpty()) {
+            throw new InvalidNameException("Method name cannot be null or empty");
+        }
+
+
+        StackObject method = new StackObject(name, value, 0, EntryKind.METHOD, type);
+        stackContent.push(method);
+    }
+
 
     /**
      * Returns the top object from the stack
