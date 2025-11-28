@@ -86,6 +86,8 @@ public class MemoryVisualisation extends HBox {
             String heap = memory[0];
             String stack = memory[1];
 
+            //TODO: replace with actual values (step-by-step implementation)
+
             String stackExample = "Stack{scopeDepth=0, size=1, contents=\n" +
                     "  [0] arr_0 \tkind=VARIABLE \tdataType=INT \tvalue=Integer(1)\n" +
                     "  [1] alias_0\tkind=VARIABLE \tdataType=INT\tvalue=Integer(10)\n" +
@@ -125,9 +127,6 @@ public class MemoryVisualisation extends HBox {
         }
 
         String[] lines = stack.split("\n");
-        for(int i = 0; i < lines.length; i++){
-            System.out.println(lines[i]);
-        }
 
         int contentsIndex = -1;
         for(int i = 0; i < lines.length; i++){
@@ -169,9 +168,6 @@ public class MemoryVisualisation extends HBox {
         }
 
         String[] lines = heap.split("\n");
-        for(int i = 0; i < lines.length; i++){
-            System.out.println(lines[i]);
-        }
 
         // Ignore the first line (Heap(total=..., available=...))
         for(int i = 1; i < lines.length; i++){
@@ -185,14 +181,14 @@ public class MemoryVisualisation extends HBox {
             } else {
                 int address = extractInt(line, "ext@", "int@");
                 int size = extractInt(line, "size=", (line.contains("Allocated") ? "Allocated" : "Free"));
+                boolean allocated = line.contains("Allocated");
                 int refs = extractInt(line, "refs=", "");
 
-                heapContainer.getChildren().add(new HeapBlockView(address, size, refs, ""));
+                heapContainer.getChildren().add(new HeapBlockView(address, size, allocated, refs, ""));
             }
         }
     }
 
-    //TODO: make comments
     private String extract(String text, String start, String end){
         if(text == null || start == null || end == null) return "";
         

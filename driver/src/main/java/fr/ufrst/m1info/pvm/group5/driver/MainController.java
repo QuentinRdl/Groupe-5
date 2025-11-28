@@ -11,8 +11,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.VirtualFlow;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.control.MenuItem;
@@ -66,9 +64,14 @@ public class MainController {
     private Tab compiledTab;
 
     @FXML
-    private Tab memoryTab;
+    private Tab memoryTabMinijaja;
 
-    private MemoryVisualisation memoryVisualisation;
+    @FXML
+    private Tab memoryTabJajacode;
+
+    private MemoryVisualisation memoryVisualisationMiniJaja;
+
+    private MemoryVisualisation memoryVisualisationJajaCode;
 
     @FXML
     private Button btnSave;
@@ -128,19 +131,26 @@ public class MainController {
         });
 
         editorTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            //TODO: disable buttons when viewing memory tabs
             if(isCompiledTab()){
                 btnCompile.setDisable(true);
                 btnRunCompile.setDisable(true);
             } else {
-                btnCompile.setDisable(false);
-                btnRunCompile.setDisable(false);
+                activeButtons();
             }
         });
 
-        memoryVisualisation = new MemoryVisualisation();
-        if(memoryTab != null){
-            memoryTab.setContent(memoryVisualisation);
+        memoryVisualisationMiniJaja = new MemoryVisualisation();
+        if(memoryTabMinijaja != null){
+            memoryTabMinijaja.setContent(memoryVisualisationMiniJaja);
         }
+        hideMemoryTab(memoryTabMinijaja);
+
+        memoryVisualisationJajaCode = new MemoryVisualisation();
+        if(memoryTabJajacode != null){
+            memoryTabJajacode.setContent(memoryVisualisationJajaCode);
+        }
+        hideMemoryTab(memoryTabJajacode);
 
         hideCompileTab();
         deactiveButtons();
@@ -240,7 +250,10 @@ public class MainController {
 
             compiledCodeLines.clear();
             hideCompileTab();
-            clearMemoryVisualisation();
+            clearMemoryVisualisation(memoryVisualisationMiniJaja);
+            hideMemoryTab(memoryTabMinijaja);
+            clearMemoryVisualisation(memoryVisualisationJajaCode);
+            hideMemoryTab(memoryTabJajacode);
 
             console.getWriter().writeLine("[INFO] File loaded : " + selectedFile.getName());
             return true;
@@ -613,7 +626,8 @@ public class MainController {
         err = interpreterMiniJaja.interpretCode(code);
 
         if(err == null){
-            Platform.runLater(() -> memoryVisualisation.updateMemory(interpreterMiniJaja.getMemory().toStringTab()));
+            showMemoryTab(memoryTabMinijaja);
+            Platform.runLater(() -> memoryVisualisationMiniJaja.updateMemory(interpreterMiniJaja.getMemory().toStringTab()));
             console.getWriter().writeLine("[INFO] MiniJaja interpretation successfully completed");
         } else {
             console.getWriter().writeLine("[ERROR] " + err);
@@ -638,6 +652,8 @@ public class MainController {
         err = interpreterJajaCode.interpretCode(compiledCode);
 
         if(err == null){
+            showMemoryTab(memoryTabJajacode);
+            Platform.runLater(() -> memoryVisualisationJajaCode.updateMemory(interpreterJajaCode.getMemory().toStringTab()));
             console.getWriter().writeLine("[INFO] JajaCode interpretation successfully completed");
         } else {
             console.getWriter().writeLine("[ERROR] " + err);
@@ -716,7 +732,11 @@ public class MainController {
 
         compiledCodeLines.clear();
         hideCompileTab();
-        clearMemoryVisualisation();
+
+        clearMemoryVisualisation(memoryVisualisationMiniJaja);
+        hideMemoryTab(memoryTabMinijaja);
+        clearMemoryVisualisation(memoryVisualisationJajaCode);
+        hideMemoryTab(memoryTabJajacode);
     }
 
     /**
@@ -888,6 +908,8 @@ public class MainController {
         }
     }
 
+    //TODO: replace the functions with showTab and hideTab (more generic functions)
+
     /**
      * Hides the compiled code tab from the editor tab pane
      */
@@ -910,7 +932,26 @@ public class MainController {
         }
     }
 
-    private void clearMemoryVisualisation(){
+    //
+    public void showMemoryTab(Tab memoryTab){
+        if(editorTabPane != null && memoryTab != null){
+            if(!editorTabPane.getTabs().contains(memoryTab)){
+                editorTabPane.getTabs().add(memoryTab);
+            }
+        }
+    }
+
+    public void hideMemoryTab(Tab memoryTab){
+        if(editorTabPane != null && memoryTab != null){
+            editorTabPane.getTabs().remove(memoryTab);
+        }
+    }
+
+    private boolean isMemoryTab(){
+        return editorTabPane != null && (editorTabPane.getSelectionModel().getSelectedItem() == memoryTabMinijaja || editorTabPane.getSelectionModel().getSelectedItem() == memoryTabJajacode);
+    }
+
+    private void clearMemoryVisualisation(MemoryVisualisation memoryVisualisation){
         if(memoryVisualisation != null){
             memoryVisualisation.clear();
         }
