@@ -27,6 +27,13 @@ public class NewInstruction extends Instruction{
     public int execute(int address, Memory m) {
         Value v;
         try{
+            for (int i=0; i<scope; i++){
+                m.swap();
+            }
+        }catch (Exception e){
+            throw new ASTInvalidMemoryException("new line ("+(address+1)+") : "+e.getMessage());
+        }
+        try{
             StackObject top= m.top();
             String name= ".";
             if (top!=null){
