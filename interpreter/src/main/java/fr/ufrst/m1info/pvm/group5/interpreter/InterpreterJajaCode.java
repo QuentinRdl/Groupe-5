@@ -18,12 +18,16 @@ public class InterpreterJajaCode extends Interpreter{
     Instruction currentInstruction;
     InterpretationMode mode;
 
+    private Memory mem;
+
     protected InterpreterJajaCode(){
         output = new Writer();
+        mem = new Memory(output);
     }
 
     public InterpreterJajaCode(Writer output) {
         this.output = output;
+        mem = new Memory(this.output);
     }
 
     @Override
@@ -130,7 +134,6 @@ public class InterpreterJajaCode extends Interpreter{
      * @param instructions the list of JajaCode instruction
      */
     public void interpretJajaCode(List<Instruction> instructions){
-        Memory mem = new Memory(output);
         int adress=1;
         int size=instructions.size();
         while (adress>0){
@@ -171,5 +174,10 @@ public class InterpreterJajaCode extends Interpreter{
 
         // Starting the thread
         interpretationThread.start();
+    }
+
+
+    public Memory getMemory(){
+        return this.mem;
     }
 }

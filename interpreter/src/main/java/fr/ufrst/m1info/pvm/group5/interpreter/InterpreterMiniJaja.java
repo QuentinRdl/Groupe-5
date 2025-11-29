@@ -18,13 +18,16 @@ public class InterpreterMiniJaja extends Interpreter{
     Thread interpretationThread;
     ASTNode currentNode;
     List<Integer> breakpoints;
+    private Memory mem;
 
     protected InterpreterMiniJaja(){
         output = new Writer();
+        mem = new Memory(output);
     }
 
     public InterpreterMiniJaja(Writer output) {
         this.output = output;
+        mem = new Memory(this.output);
     }
 
     @Override
@@ -40,7 +43,6 @@ public class InterpreterMiniJaja extends Interpreter{
      */
     @Override
     public String interpretCode(String code) {
-        Memory mem = new Memory(output);
         String errMessage= null;
         try{
             AbstractSyntaxTree ast = AbstractSyntaxTree.fromString(code);
@@ -104,7 +106,6 @@ public class InterpreterMiniJaja extends Interpreter{
      */
     @Override
     public String interpretFile(String path)  {
-        Memory mem = new Memory(output);
         String errMessage= null;
         try{
             AbstractSyntaxTree ast = AbstractSyntaxTree.fromFile(path);
@@ -113,6 +114,10 @@ public class InterpreterMiniJaja extends Interpreter{
             errMessage=e.getClass()+" : "+e.getMessage();
         }
         return errMessage;
+    }
+
+    public Memory getMemory(){
+        return this.mem;
     }
 
     @Override
