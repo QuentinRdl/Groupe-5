@@ -2,6 +2,7 @@ package fr.ufrst.m1info.pvm.group5.ast;
 
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.ast.nodes.ASTNode;
+import fr.ufrst.m1info.pvm.group5.memory.StackObject;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 
 import java.util.List;
@@ -15,6 +16,8 @@ import static org.mockito.Mockito.*;
 
 import fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException;
 import fr.ufrst.m1info.pvm.group5.memory.Memory.MemoryIllegalArgException;
+import fr.ufrst.m1info.pvm.group5.memory.symbol_table.DataType;
+import fr.ufrst.m1info.pvm.group5.memory.symbol_table.EntryKind;
 
 
 /**
@@ -65,6 +68,13 @@ class ASTMocks {
                     return null;
                 }
         ).when(result).declCst(any(String.class), any(Value.class), any());
+
+        doAnswer( invocation -> {
+                    String ident = invocation.getArgument(0);
+                    storage.put(ident, new Value(invocation.getArgument(1)));
+                    return null;
+                }
+        ).when(result).declTab(any(String.class), anyInt(), any(DataType.class));
 
         doAnswer( invocation -> {
                     String ident = invocation.getArgument(0);
@@ -149,6 +159,16 @@ class ASTMocks {
             return null;
         }).when(result).declCst(any(String.class), any(Value.class), any());
 
+        doAnswer( invocationOnMock -> {
+                    Pair<String,Value> pair  = new Pair<>(
+                            invocationOnMock.getArgument(0),
+                            new Value((Integer) invocationOnMock.getArgument(1))
+                    );
+                    storage.push(pair);
+                    return null;
+                }
+        ).when(result).declTab(any(String.class), any(Integer.class), any(DataType.class));
+
         doAnswer(invocationOnMock -> {
             Pair<String,Value> pair  = new Pair<>(
                     invocationOnMock.getArgument(0),
@@ -183,6 +203,13 @@ class ASTMocks {
             }
             return storage.pop().second();
         }).when(result).pop();
+
+        doAnswer(invocationOnMock -> {
+            if(storage.empty()){
+                throw new StackIsEmptyException("The stack is empty, cannot use top");
+            }
+            return new StackObject(storage.lastElement().first(),storage.lastElement().second(),0, EntryKind.ARRAY);
+        }).when(result).top();
 
 
         /*
