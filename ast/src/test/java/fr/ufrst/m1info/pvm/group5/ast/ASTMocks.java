@@ -71,7 +71,6 @@ class ASTMocks {
 
         doAnswer( invocation -> {
                     String ident = invocation.getArgument(0);
-                    System.out.println(ident);
                     storage.put(ident, new Value(invocation.getArgument(1)));
                     return null;
                 }
@@ -151,6 +150,16 @@ class ASTMocks {
             storage.push(pair);
             return null;
         }).when(result).declCst(any(String.class), any(Value.class), any());
+
+        doAnswer( invocationOnMock -> {
+                    Pair<String,Value> pair  = new Pair<>(
+                            invocationOnMock.getArgument(0),
+                            new Value((Integer) invocationOnMock.getArgument(1))
+                    );
+                    storage.push(pair);
+                    return null;
+                }
+        ).when(result).declTab(any(String.class), any(Integer.class), any(DataType.class));
 
         doAnswer(invocationOnMock -> {
             Pair<String,Value> pair  = new Pair<>(
