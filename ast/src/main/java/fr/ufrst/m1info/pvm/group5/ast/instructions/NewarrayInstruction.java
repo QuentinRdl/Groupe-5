@@ -30,10 +30,14 @@ public class NewarrayInstruction extends Instruction {
         if (ValueType.toDataType(v.type)!=DataType.INT){
             throw new ASTInvalidDynamicTypeException("newarray line ("+(address+1)+") : Value must be of type int");
         }
-        if (v.valueInt<1){
+        if (type!=DataType.INT && type!=DataType.BOOL){
+            throw new ASTInvalidDynamicTypeException("newarray line ("+(address+1)+") : Array must be of type int or bool");
+        }
+        int size=v.valueInt;
+        if (size<1){
             throw new ASTInvalidOperationException("newarray line ("+(address+1)+") : Value must be positive");
         }
-        m.declTab(identifier,v.valueInt,type);
+        m.declTab(identifier,size,type);
         return address+1;
     }
 }

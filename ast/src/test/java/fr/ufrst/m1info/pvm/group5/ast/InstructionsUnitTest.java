@@ -214,6 +214,40 @@ class InstructionsUnitTest {
         assertThrows(ASTInvalidMemoryException.class,() -> newInstr.execute(1,memory));
     }
 
+    @Test
+    void newarray_int() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(3));
+        Instruction newaInstr = new NewarrayInstruction("x", DataType.INT);
+        pushInstr.execute(1,memory);
+        assertEquals(3,newaInstr.execute(2,memory));
+        assertNotEquals(null,memory.val("x"));
+    }
+
+    @Test
+    void newarray_bool() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(3));
+        Instruction newaInstr = new NewarrayInstruction("x", DataType.BOOL);
+        pushInstr.execute(1,memory);
+        assertEquals(3,newaInstr.execute(2,memory));
+        assertNotEquals(null,memory.val("x"));
+    }
+
+    @Test
+    void newarray_string() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(3));
+        Instruction newaInstr = new NewarrayInstruction("x", DataType.STRING);
+        pushInstr.execute(1,memory);
+        assertThrows(ASTInvalidDynamicTypeException.class,() -> newaInstr.execute(1,memory));
+    }
+
+    @Test
+    void newarray_size_bool() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(true));
+        Instruction newaInstr = new NewarrayInstruction("x", DataType.BOOL);
+        pushInstr.execute(1,memory);
+        assertThrows(ASTInvalidDynamicTypeException.class,() -> newaInstr.execute(1,memory));
+    }
+
     //push
     @Test
     void push_simple_int(){
