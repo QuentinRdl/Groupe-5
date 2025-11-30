@@ -32,7 +32,7 @@ public class IncNode extends ASTNode{
             ASTNode indexExp = tabNode.getChildren().get(1);
             jjcodes.addAll(indexExp.compile(address));
             jjcodes.add("push(1)");
-            jjcodes.add("painc(" + arrayIdent.identifier + ")");
+            jjcodes.add("ainc(" + arrayIdent.identifier + ")");
         } else {
             jjcodes.add("push(1)");
             jjcodes.add("inc(" + ((IdentNode)ident).identifier + ")");

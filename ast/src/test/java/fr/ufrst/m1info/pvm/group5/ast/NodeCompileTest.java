@@ -360,7 +360,7 @@ class NodeCompileTest {
 
         IncNode tested = new IncNode(tabNode);
 
-        assertEquals(List.of("push(2)", "push(1)", "painc(tab)"), tested.compile(0));
+        assertEquals(List.of("push(2)", "push(1)", "ainc(tab)"), tested.compile(0));
     }
 
     @Test
@@ -372,7 +372,7 @@ class NodeCompileTest {
 
         IncNode tested = new IncNode(tabNode);
 
-        assertEquals(List.of("load(i)", "push(1)", "painc(arr)"), tested.compile(0));
+        assertEquals(List.of("load(i)", "push(1)", "ainc(arr)"), tested.compile(0));
     }
 
     @Test
@@ -384,7 +384,7 @@ class NodeCompileTest {
 
         IncNode tested = new IncNode(tabNode);
 
-        assertEquals(List.of("load(i)", "push(5)", "add", "push(1)", "painc(matrix)"), tested.compile(0));
+        assertEquals(List.of("load(i)", "push(5)", "add", "push(1)", "ainc(matrix)"), tested.compile(0));
     }
 
     @Test
@@ -396,7 +396,7 @@ class NodeCompileTest {
 
         IncNode tested = new IncNode(tabNode);
 
-        assertEquals(List.of("load(x)", "push(2)", "mul", "push(1)", "painc(data)"), tested.compile(0));
+        assertEquals(List.of("load(x)", "push(2)", "mul", "push(1)", "ainc(data)"), tested.compile(0));
     }
     @Test
     @DisplayName("SumNode - compile() with simple variable")
