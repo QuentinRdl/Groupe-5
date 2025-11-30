@@ -18,7 +18,7 @@ import static fr.ufrst.m1info.pvm.group5.driver.MainControllerTest.createTestFil
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(ApplicationExtension.class)
-public class CompilationIntegrationTest extends ApplicationTest {
+class CompilationIntegrationTest extends ApplicationTest {
 
     private MainController controller;
 
@@ -101,7 +101,38 @@ public class CompilationIntegrationTest extends ApplicationTest {
         interact(() -> {
             controller.onCompileClicked();
         });
-        Thread.sleep(50);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        return controller.output.getText();
+    }
+
+    /**
+     * This method creates a file, loads it into the GUI,
+     * compiles and interprets it, and retrieves the console from the GUI.
+     *
+     * @param filename name of the file to create in the test temp directory
+     * @param content full file content
+     * @return the text currently present in the controller's output TextArea
+     * @throws Exception if fails
+     */
+    private String createFileLoadCompileAndRunAndGetConsole(String filename, String content) throws Exception {
+        String[] lines;
+        if (content == null || content.isEmpty()){
+            lines = new String[0];
+        } else {
+            lines = content.split("\\R", -1);
+        }
+
+        File testFile = createTestFile(filename, lines);
+
+        interact(() -> {
+            controller.loadFile(testFile);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        interact(() -> {
+            controller.onCompileAndRunClicked();
+        });
         WaitForAsyncUtils.waitForFxEvents();
 
         return controller.output.getText();
@@ -131,7 +162,34 @@ public class CompilationIntegrationTest extends ApplicationTest {
 
         clickOn("#btnCompile");
 
-        Thread.sleep(50);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        return controller.output.getText();
+    }
+
+    /**
+     * Just like createFileLoadCompileAndRunAndGetConsole but triggers the actual Compile button (#btnRunCompile)
+     *
+     * @param filename name of the file to create in the test temp directory
+     * @param content full file content
+     * @return the text currently present in the controller's output TextArea (console)
+     * @throws Exception Exception
+     */
+    private String createFileLoadCompileAndRunAndGetConsoleByButton(String filename, String content) throws Exception {
+        String[] lines;
+        if (content == null || content.isEmpty()){
+            lines = new String[0];
+        } else {
+            lines = content.split("\\R", -1);
+        }
+
+        File testFile = createTestFile(filename, lines);
+
+        interact(() -> controller.loadFile(testFile));
+        WaitForAsyncUtils.waitForFxEvents();
+
+        clickOn("#btnRunCompile");
+
         WaitForAsyncUtils.waitForFxEvents();
 
         return controller.output.getText();
@@ -139,21 +197,21 @@ public class CompilationIntegrationTest extends ApplicationTest {
 
 
     @Test
-    public void compilatorWorks() throws Exception {
+    void compilatorWorks() throws Exception {
         String consoleText = createFileLoadCompileAndGetConsole("test.mjj", contentValid);
         assertTrue(consoleText.contains("[INFO] Compilation successful!"));
     }
 
 
     @Test
-    public void compilatorButtonWorks() throws Exception {
+    void compilatorButtonWorks() throws Exception {
         String consoleText = createFileLoadCompileAndGetConsoleByButton("test.mjj", contentValid);
         assertTrue(consoleText.contains("[INFO] Compilation successful!"));
     }
 
 
     @Test
-    public void compilerDoesNotWork() throws Exception {
+    void compilerDoesNotWork() throws Exception {
         String consoleText = createFileLoadCompileAndGetConsole("test.mjj", contentIncorrect);
         assertTrue(consoleText.contains("[ERROR]"));
         assertTrue(consoleText.contains("line 6:5 missing '}' at '<EOF>'"));
@@ -161,7 +219,7 @@ public class CompilationIntegrationTest extends ApplicationTest {
 
 
     @Test
-    public void compilerDoesNotWorkActualBtn() throws Exception {
+    void compilerDoesNotWorkActualBtn() throws Exception {
         String consoleText = createFileLoadCompileAndGetConsoleByButton("test.mjj", contentIncorrect);
         assertTrue(consoleText.contains("[ERROR]"));
         assertTrue(consoleText.contains("line 6:5 missing '}' at '<EOF>'"));
@@ -169,7 +227,7 @@ public class CompilationIntegrationTest extends ApplicationTest {
 
 
     @Test
-    public void compilatorOutputsCorrect() throws Exception {
+    void compilatorOutputsCorrect() throws Exception {
 
         String consoleText = createFileLoadCompileAndGetConsole("test.mjj", contentValid);
         assertTrue(consoleText.contains("[INFO] Compilation successful!"));
@@ -186,7 +244,7 @@ public class CompilationIntegrationTest extends ApplicationTest {
 
 
     @Test
-    public void compilatorButtonOutputsCorrect() throws Exception {
+    void compilatorButtonOutputsCorrect() throws Exception {
         String consoleText = createFileLoadCompileAndGetConsoleByButton("test.mjj", contentValid);
         assertTrue(consoleText.contains("[INFO] Compilation successful!"));
 
@@ -198,5 +256,88 @@ public class CompilationIntegrationTest extends ApplicationTest {
         for (int i = 0; i < expectedCompilOutput.length; i++) {
             org.junit.jupiter.api.Assertions.assertEquals(expectedCompilOutput[i], compiledLines.get(i).getCode());
         }
+    }
+
+    @Test
+    void compileAndRunWorks() throws Exception {
+        String content = String.join("\n",
+                "class C {",
+                "   int x;",
+                "   main {",
+                "       x = 3 + 4;",
+                "       x++;",
+                "       writeln(x);",
+                "   }",
+                "}");
+        String consoleText = createFileLoadCompileAndRunAndGetConsole("test.mjj", content);
+        assertTrue(consoleText.contains("8"));
+        assertTrue(consoleText.contains("[INFO] Compilation and interpretation successfully completed"));
+    }
+
+    @Test
+    void compileAndRunWorksByButton() throws Exception {
+        String content = String.join("\n",
+                "class C {",
+                "   int x;",
+                "   main {",
+                "       x = 3 + 4;",
+                "       x++;",
+                "       writeln(x);",
+                "   }",
+                "}");
+        String consoleText = createFileLoadCompileAndRunAndGetConsoleByButton("test.mjj", content);
+        assertTrue(consoleText.contains("8"));
+        assertTrue(consoleText.contains("[INFO] Compilation and interpretation successfully completed"));
+    }
+
+    @Test
+    void compileAndRunDoesNotWork() throws Exception {
+        String content = String.join("\n",
+                "class C {",
+                "   main {",
+                "       x = 3 + 4;",
+                "       x++;",
+                "   }",
+                "}");
+        String consoleText = createFileLoadCompileAndRunAndGetConsole("test.mjj", content);
+        assertTrue(consoleText.contains("[ERROR]"));
+        assertTrue(consoleText.contains("Symbol not found: x"));
+    }
+
+    @Test
+    void compileAndRunDoesNotWorkByButton() throws Exception {
+        String content = String.join("\n",
+                "class C {",
+                "   main {",
+                "       x = 3 + 4;",
+                "       x++;",
+                "   }",
+                "}");
+        String consoleText = createFileLoadCompileAndRunAndGetConsoleByButton("test.mjj", content);
+        assertTrue(consoleText.contains("[ERROR]"));
+        assertTrue(consoleText.contains("Symbol not found: x"));
+    }
+
+    @Test
+    void compileAndRunEmptyFile() throws Exception {
+        String consoleText = createFileLoadCompileAndRunAndGetConsole("empty.mjj", "");
+        assertTrue(consoleText.contains("[ERROR] No code to compile and run !"));
+    }
+
+    @Test
+    void compileAndRunEmptyFileByButton() throws Exception {
+        String consoleText = createFileLoadCompileAndRunAndGetConsoleByButton("empty.mjj", " \n\t ");
+        assertTrue(consoleText.contains("[ERROR] No code to compile and run !"));
+    }
+
+    @Test
+    void compileAndRunJajaCodeFile() throws Exception {
+        String content = String.join("\n",
+                "init",
+                "push(0)",
+                "pop",
+                "jcstop");
+        String consoleText = createFileLoadCompileAndRunAndGetConsole("test.jcc", content);
+        assertTrue(consoleText.contains("[ERROR] Compilation and interpretation is only available for MiniJaja (.mjj) files"));
     }
 }

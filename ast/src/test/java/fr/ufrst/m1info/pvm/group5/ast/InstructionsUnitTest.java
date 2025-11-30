@@ -1,12 +1,12 @@
 package fr.ufrst.m1info.pvm.group5.ast;
 
-import fr.ufrst.m1info.pvm.group5.ast.Instructions.*;
+import fr.ufrst.m1info.pvm.group5.ast.instructions.*;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
-import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.DataType;
-import fr.ufrst.m1info.pvm.group5.memory.SymbolTable.EntryKind;
+import fr.ufrst.m1info.pvm.group5.memory.ValueType;
+import fr.ufrst.m1info.pvm.group5.memory.symbol_table.DataType;
+import fr.ufrst.m1info.pvm.group5.memory.symbol_table.EntryKind;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.doAnswer;
 import fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException;
 import fr.ufrst.m1info.pvm.group5.memory.Memory.MemoryIllegalArgException;
 
-public class InstructionsUnitTest {
+class InstructionsUnitTest {
     @Mock
     Memory memory;
     Stack<ASTMocks.Pair<String, Value>> storage;
@@ -32,14 +32,14 @@ public class InstructionsUnitTest {
 
     //init
     @Test
-    public void init() throws Exception {
+    void init() throws Exception {
         Instruction initInstr = new InitInstruction();
         assertEquals(2,initInstr.execute(1,memory));
     }
 
     //if
     @Test
-    public void if_true() throws Exception {
+    void if_true() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(true));
         Instruction ifInstr = new IfInstruction(5);
         pushInstr.execute(1,memory);
@@ -48,7 +48,7 @@ public class InstructionsUnitTest {
 
 
     @Test
-    public void if_false() throws Exception {
+    void if_false() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(false));
         Instruction ifInstr = new IfInstruction(5);
         pushInstr.execute(1,memory);
@@ -56,7 +56,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void if_empty_stack(){
+    void if_empty_stack(){
         doAnswer(invocationOnMock -> {
             throw new fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException("pop with a empty stack");
         }).when(memory).pop();
@@ -65,7 +65,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void if_int() throws Exception {
+    void if_int() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(1));
         Instruction ifInstr = new IfInstruction(5);
         pushInstr.execute(1,memory);
@@ -73,7 +73,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void if_string() throws Exception {
+    void if_string() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value("Not a boolean"));
         Instruction ifInstr = new IfInstruction(5);
         pushInstr.execute(1,memory);
@@ -82,14 +82,14 @@ public class InstructionsUnitTest {
 
     //jcstop
     @Test
-    public void jcstop() throws Exception {
+    void jcstop() throws Exception {
         Instruction jcstopInstr = new JcstopInstruction();
         assertEquals(-1,jcstopInstr.execute(1,memory));
     }
 
     //new
     @Test
-    public void new_var_int() throws Exception {
+    void new_var_int() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(5));
         Instruction newInstr = new NewInstruction("x", DataType.INT, EntryKind.VARIABLE,0);
         pushInstr.execute(1,memory);
@@ -98,25 +98,26 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void new_var_bool() throws Exception {
-        Instruction pushInstr = new PushInstruction(new Value(false));
+    void new_var_bool() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(true));
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.VARIABLE,0);
         pushInstr.execute(1,memory);
         assertEquals(3,newInstr.execute(2,memory));
-        assertFalse(((Value) memory.val("x")).valueBool);
+        assertTrue(((Value) memory.val("x")).valueBool);
     }
 
     @Test
-    public void new_var_empty_stack() throws Exception {
+    void new_var_empty_stack() throws Exception {
         doAnswer(invocationOnMock -> {
             throw new fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException("pop with a empty stack");
         }).when(memory).pop();
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.VARIABLE,0);
-        assertThrows(ASTInvalidMemoryException.class,() -> newInstr.execute(1,memory));
+        assertEquals(3,newInstr.execute(2,memory));
+        assertNotEquals(null,memory.val("x"));
     }
 
     @Test
-    public void new_cst_int() throws Exception {
+    void new_cst_int() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(5));
         Instruction newInstr = new NewInstruction("x", DataType.INT, EntryKind.CONSTANT,0);
         pushInstr.execute(1,memory);
@@ -125,7 +126,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void new_cst_bool() throws Exception {
+    void new_cst_bool() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(false));
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.CONSTANT,0);
         pushInstr.execute(1,memory);
@@ -134,25 +135,185 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void new_cst_empty_stack() throws Exception {
+    void new_cst_empty_stack() throws Exception {
         doAnswer(invocationOnMock -> {
             throw new fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException("pop with a empty stack");
         }).when(memory).pop();
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.CONSTANT,0);
-        assertThrows(ASTInvalidMemoryException.class,() -> newInstr.execute(1,memory));
+        assertEquals(3,newInstr.execute(2,memory));
+        assertNotEquals(null,memory.val("x"));
     }
 
     @Test
-    public void new_unknown_entry_kind() throws Exception {
+    void new_unknown_entry_kind() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(false));
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.OTHER,0);
         pushInstr.execute(1,memory);
         assertThrows(ASTBuildException.class,() -> newInstr.execute(1,memory));
     }
 
+    @Test
+    void new_string() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(false));
+        Instruction newInstr = new NewInstruction("x", DataType.STRING, EntryKind.VARIABLE,0);
+        pushInstr.execute(1,memory);
+        assertThrows(ASTInvalidDynamicTypeException.class,() -> newInstr.execute(1,memory));
+    }
+
+    @Test
+    void new_method_empty_stack() throws Exception {
+        doAnswer(invocationOnMock -> {
+            throw new fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException("pop with a empty stack");
+        }).when(memory).pop();
+        Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.METHOD,0);
+        assertThrows(ASTInvalidDynamicTypeException.class,() -> newInstr.execute(1,memory));
+    }
+
+    @Test
+    void new_method_value_bool() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(false));
+        Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.METHOD,0);
+        pushInstr.execute(1,memory);
+        assertThrows(ASTInvalidDynamicTypeException.class,() -> newInstr.execute(1,memory));
+    }
+
+    @Test
+    void new_method_bool() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(3));
+        Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.METHOD,0);
+        pushInstr.execute(1,memory);
+        assertEquals(3,newInstr.execute(2,memory));
+        assertEquals(3,((Value) memory.val("x")).valueInt);
+    }
+
+    @Test
+    void new_method_int() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(3));
+        Instruction newInstr = new NewInstruction("x", DataType.INT, EntryKind.METHOD,0);
+        pushInstr.execute(1,memory);
+        assertEquals(3,newInstr.execute(2,memory));
+        assertEquals(3,((Value) memory.val("x")).valueInt);
+    }
+
+    @Test
+    void new_var_int_swap() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(3));
+        Instruction pushInstr2 = new PushInstruction(new Value(5));
+        Instruction newInstr = new NewInstruction("x", DataType.INT, EntryKind.METHOD,1);
+        pushInstr.execute(1,memory);
+        pushInstr2.execute(1,memory);
+        assertEquals(3,newInstr.execute(2,memory));
+        assertEquals(3,((Value) memory.val("x")).valueInt);
+    }
+
+    @Test
+    void newarray_int() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(3));
+        Instruction newaInstr = new NewarrayInstruction("x", DataType.INT);
+        pushInstr.execute(1,memory);
+        assertEquals(3,newaInstr.execute(2,memory));
+        assertNotEquals(null,memory.val("x"));
+    }
+
+    @Test
+    void newarray_bool() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(3));
+        Instruction newaInstr = new NewarrayInstruction("x", DataType.BOOL);
+        pushInstr.execute(1,memory);
+        assertEquals(3,newaInstr.execute(2,memory));
+        assertNotEquals(null,memory.val("x"));
+    }
+
+    @Test
+    void newarray_string() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(3));
+        Instruction newaInstr = new NewarrayInstruction("x", DataType.STRING);
+        pushInstr.execute(1,memory);
+        assertThrows(ASTInvalidDynamicTypeException.class,() -> newaInstr.execute(1,memory));
+    }
+
+    @Test
+    void newarray_size_bool() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(true));
+        Instruction newaInstr = new NewarrayInstruction("x", DataType.BOOL);
+        pushInstr.execute(1,memory);
+        assertThrows(ASTInvalidDynamicTypeException.class,() -> newaInstr.execute(1,memory));
+    }
+
+    @Test
+    void newarray_size_negative() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(-1));
+        Instruction newaInstr = new NewarrayInstruction("x", DataType.INT);
+        pushInstr.execute(1,memory);
+        assertThrows(ASTInvalidOperationException.class,() -> newaInstr.execute(1,memory));
+    }
+
+    @Test
+    void newarray_empty_stack() throws Exception {
+        doAnswer(invocationOnMock -> {
+            throw new fr.ufrst.m1info.pvm.group5.memory.Stack.StackIsEmptyException("pop with a empty stack");
+        }).when(memory).pop();
+        Instruction newaInstr = new NewarrayInstruction("x", DataType.INT);
+        assertThrows(StackIsEmptyException.class,() -> newaInstr.execute(1,memory));
+    }
+
+    @Test
+    void newarray_no_lambda_value() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(3));
+        Instruction newInstr = new NewInstruction("y", DataType.INT,EntryKind.CONSTANT,0);
+        Instruction newaInstr = new NewarrayInstruction("x", DataType.INT);
+        pushInstr.execute(1,memory);
+        newInstr.execute(1,memory);
+        assertThrows(ASTInvalidMemoryException.class,() -> newaInstr.execute(1,memory));
+    }
+
+    @Test
+    void invoke_method() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(18));
+        Instruction newInstr = new NewInstruction("x", DataType.INT, EntryKind.METHOD,0);
+        Instruction invokeInstr = new InvokeInstruction("x");
+        pushInstr.execute(1,memory);
+        newInstr.execute(2,memory);
+        assertEquals(18,invokeInstr.execute(3,memory));
+
+    }
+
+    @Test
+    void invoke_var() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(18));
+        Instruction newInstr = new NewInstruction("x", DataType.INT, EntryKind.VARIABLE,0);
+        Instruction invokeInstr = new InvokeInstruction("x");
+        pushInstr.execute(1,memory);
+        newInstr.execute(2,memory);
+        doAnswer(invocationOnMock -> {
+            String identifier =invocationOnMock.getArgument(0);
+            throw new IllegalArgumentException(identifier + " is not a method");
+        }).when(memory).getMethod(any(String.class));
+        assertThrows(ASTInvalidMemoryException.class,() -> invokeInstr.execute(1,memory));
+
+    }
+
+    @Test
+    void invoke_method_negative_address() throws Exception {
+        Instruction pushInstr = new PushInstruction(new Value(-18));
+        Instruction newInstr = new NewInstruction("x", DataType.INT, EntryKind.METHOD,0);
+        Instruction invokeInstr = new InvokeInstruction("x");
+        pushInstr.execute(1,memory);
+        newInstr.execute(2,memory);
+        assertThrows(IndexOutOfBoundsException.class,() -> invokeInstr.execute(1,memory));
+
+    }
+
+    @Test
+    void invoke_undefined_method() throws Exception {
+        Instruction invokeInstr = new InvokeInstruction("x");
+        assertThrows(ASTInvalidMemoryException.class,() -> invokeInstr.execute(1,memory));
+
+    }
+
     //push
     @Test
-    public void push_simple_int(){
+    void push_simple_int(){
         PushInstruction p = new PushInstruction(new Value(5));
 
         var res = p.execute(0,memory);
@@ -162,7 +323,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void push_simple_bool(){
+    void push_simple_bool(){
         PushInstruction p = new PushInstruction(new Value(true));
 
         var res = p.execute(0,memory);
@@ -172,7 +333,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void push_simple_string(){
+    void push_simple_string(){
         PushInstruction p = new PushInstruction(new Value("test"));
 
         var res = p.execute(0,memory);
@@ -182,7 +343,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void push_many(){
+    void push_many(){
         PushInstruction p = new PushInstruction(new Value(5));
         PushInstruction z = new PushInstruction(new Value(0));
 
@@ -196,7 +357,7 @@ public class InstructionsUnitTest {
 
     //load
     @Test
-    public void load_simple_int(){
+    void load_simple_int(){
         storage.add(new ASTMocks.Pair<>("test",new Value(5)));
         LoadInstruction l = new LoadInstruction("test");
 
@@ -209,7 +370,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void load_simple_bool(){
+    void load_simple_bool(){
         storage.add(new ASTMocks.Pair<>("test",new Value(true)));
         LoadInstruction l = new LoadInstruction("test");
 
@@ -222,7 +383,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void load_simple_string(){
+    void load_simple_string(){
         storage.add(new ASTMocks.Pair<>("test",new Value("t")));
         LoadInstruction l = new LoadInstruction("test");
 
@@ -230,7 +391,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void load_many(){
+    void load_many(){
         storage.add(new ASTMocks.Pair<>("test1",new Value(1)));
         storage.add(new ASTMocks.Pair<>("test2",new Value(2)));
         storage.add(new ASTMocks.Pair<>("test3",new Value(3)));
@@ -246,9 +407,12 @@ public class InstructionsUnitTest {
 
     //store
     @Test
-    public void store_simple_int(){
+    void store_simple_int(){
         storage.add(new ASTMocks.Pair<>("test",new Value(1)));
         storage.add(new ASTMocks.Pair<>(".",new Value(5)));
+        doAnswer(invocationOnMock -> {
+            return ValueType.INT;
+        }).when(memory).valueTypeOf("test");
 
         StoreInstruction s = new StoreInstruction("test");
         var res = s.execute(0,memory);
@@ -260,9 +424,12 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void store_simple_bool(){
+    void store_simple_bool(){
         storage.add(new ASTMocks.Pair<>("test",new Value(true)));
         storage.add(new ASTMocks.Pair<>(".",new Value(false)));
+        doAnswer(invocationOnMock -> {
+            return ValueType.BOOL;
+        }).when(memory).valueTypeOf("test");
 
         StoreInstruction s = new StoreInstruction("test");
         var res = s.execute(0,memory);
@@ -274,9 +441,12 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void store_simple_string(){
+    void store_simple_string(){
         storage.add(new ASTMocks.Pair<>("test",new Value("t1")));
         storage.add(new ASTMocks.Pair<>(".",new Value("t2")));
+        doAnswer(invocationOnMock -> {
+            return ValueType.STRING;
+        }).when(memory).valueTypeOf("test");
 
         StoreInstruction s = new StoreInstruction("test");
 
@@ -285,7 +455,7 @@ public class InstructionsUnitTest {
 
     //add
     @Test
-    public void add_simple_int(){
+    void add_simple_int(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(4)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(5)));
 
@@ -299,7 +469,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void add_simple_bool(){
+    void add_simple_bool(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
@@ -308,7 +478,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void add_simple_string(){
+    void add_simple_string(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
@@ -318,7 +488,7 @@ public class InstructionsUnitTest {
 
     //mul
     @Test
-    public void mul_simple_int(){
+    void mul_simple_int(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(3)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(5)));
 
@@ -332,7 +502,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void mul_simple_bool(){
+    void mul_simple_bool(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
@@ -341,7 +511,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void mul_simple_string(){
+    void mul_simple_string(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
@@ -352,7 +522,7 @@ public class InstructionsUnitTest {
 
     //sub
     @Test
-    public void sub_simple_int(){
+    void sub_simple_int(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(10)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(5)));
 
@@ -366,7 +536,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void sub_simple_bool(){
+    void sub_simple_bool(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
@@ -375,7 +545,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void sub_simple_string(){
+    void sub_simple_string(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
@@ -385,7 +555,7 @@ public class InstructionsUnitTest {
 
     //div
     @Test
-    public void div_simple_int(){
+    void div_simple_int(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(10)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(5)));
 
@@ -399,7 +569,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void div_simple_bool(){
+    void div_simple_bool(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
@@ -408,7 +578,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void div_simple_string(){
+    void div_simple_string(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
@@ -417,7 +587,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void div_divisionByZero(){
+    void div_divisionByZero(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(10)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(0)));
 
@@ -428,7 +598,7 @@ public class InstructionsUnitTest {
 
     //or
     @Test
-    public void or_simple_bool(){
+    void or_simple_bool(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(true)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
@@ -442,7 +612,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void or_simple_int(){
+    void or_simple_int(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
@@ -451,7 +621,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void or_simple_string(){
+    void or_simple_string(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(true)));
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
@@ -461,7 +631,7 @@ public class InstructionsUnitTest {
 
     //and
     @Test
-    public void and_simple_bool(){
+    void and_simple_bool(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(true)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(false)));
 
@@ -475,7 +645,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void and_simple_int(){
+    void and_simple_int(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
@@ -484,7 +654,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void and_simple_string(){
+    void and_simple_string(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(true)));
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
@@ -494,7 +664,7 @@ public class InstructionsUnitTest {
 
     //neg
     @Test
-    public void neg_simple_int(){
+    void neg_simple_int(){
         storage.add(new ASTMocks.Pair<>("op",new Value(2)));
 
         NegInstruction n = new NegInstruction();
@@ -507,7 +677,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void neg_simple_bool(){
+    void neg_simple_bool(){
         storage.add(new ASTMocks.Pair<>("op",new Value(true)));
 
         NegInstruction n = new NegInstruction();
@@ -515,7 +685,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void neg_simple_string(){
+    void neg_simple_string(){
         storage.add(new ASTMocks.Pair<>("op",new Value("t")));
 
         NegInstruction n = new NegInstruction();
@@ -524,7 +694,7 @@ public class InstructionsUnitTest {
 
     //not
     @Test
-    public void not_simple_bool(){
+    void not_simple_bool(){
         storage.add(new ASTMocks.Pair<>("op",new Value(true)));
 
         NotInstruction n = new NotInstruction();
@@ -537,7 +707,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void not_simple_int(){
+    void not_simple_int(){
         storage.add(new ASTMocks.Pair<>("op",new Value(1)));
 
         NotInstruction n = new NotInstruction();
@@ -545,7 +715,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void not_simple_string(){
+    void not_simple_string(){
         storage.add(new ASTMocks.Pair<>("op",new Value("t")));
 
         NotInstruction n = new NotInstruction();
@@ -554,7 +724,7 @@ public class InstructionsUnitTest {
 
     //cmp
     @Test
-    public void cmp_simple_bool(){
+    void cmp_simple_bool(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(true)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
@@ -568,7 +738,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void cmp_simple_int(){
+    void cmp_simple_int(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(1)));
 
@@ -582,7 +752,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void cmp_simple_string_bool(){
+    void cmp_simple_string_bool(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(true)));
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
@@ -591,7 +761,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void cmp_simple_string_int(){
+    void cmp_simple_string_int(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
@@ -600,7 +770,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void cmp_simple_bool_int(){
+    void cmp_simple_bool_int(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
@@ -610,7 +780,7 @@ public class InstructionsUnitTest {
 
     //sup
     @Test
-    public void sup_simple_int(){
+    void sup_simple_int(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(5)));
 
@@ -624,7 +794,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void sup_simple_bool(){
+    void sup_simple_bool(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
@@ -633,7 +803,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void sup_simple_string(){
+    void sup_simple_string(){
         storage.add(new ASTMocks.Pair<>("opl",new Value(1)));
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
@@ -643,7 +813,7 @@ public class InstructionsUnitTest {
 
     //inc
     @Test
-    public void inc_simple_int(){
+    void inc_simple_int(){
         storage.push(new ASTMocks.Pair<>("test",new Value(10)));
         storage.push(new ASTMocks.Pair<>(".",new Value(5)));
 
@@ -657,7 +827,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void inc_simple_bool(){
+    void inc_simple_bool(){
         storage.push(new ASTMocks.Pair<>("test",new Value(10)));
         storage.push(new ASTMocks.Pair<>(".",new Value(true)));
 
@@ -667,7 +837,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void inc_simple_string(){
+    void inc_simple_string(){
         storage.push(new ASTMocks.Pair<>("test",new Value(10)));
         storage.push(new ASTMocks.Pair<>(".",new Value("t")));
 
@@ -679,7 +849,7 @@ public class InstructionsUnitTest {
 
     //pop
     @Test
-    public void pop_simple() throws Exception{
+    void pop_simple() throws Exception{
         PushInstruction p1 = new PushInstruction(new Value(5));
         p1.execute(0, memory);
         PopInstruction p2 = new PopInstruction();
@@ -689,14 +859,14 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void pop_empty() {
+    void pop_empty() {
         PopInstruction p = new PopInstruction();
         assertThrows(StackIsEmptyException.class, () -> p.execute(0, memory));
     }
 
     //swap
     @Test
-    public void swap_simple_instruction() throws Exception {
+    void swap_simple_instruction() throws Exception {
         PushInstruction p1 = new PushInstruction(new Value(2));
         PushInstruction p2 = new PushInstruction(new Value(5));
 
@@ -713,7 +883,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void swap_instruction_not_enough_elements(){
+    void swap_instruction_not_enough_elements(){
         PushInstruction p1 = new PushInstruction(new Value(5));
         p1.execute(0, memory);
 
@@ -723,7 +893,7 @@ public class InstructionsUnitTest {
 
     //goto
     @Test
-    public void goto_instruction() throws Exception {
+    void goto_instruction() throws Exception {
         GotoInstruction i = new GotoInstruction(5);
         int next = i.execute(0, memory);
         assertEquals(5, next);
@@ -731,7 +901,7 @@ public class InstructionsUnitTest {
 
     //nop
     @Test
-    public void nop_instruction() throws Exception {
+    void nop_instruction() throws Exception {
         NopInstruction i = new NopInstruction();
         int next = i.execute(0, memory);
         assertEquals(1, next);
@@ -739,7 +909,7 @@ public class InstructionsUnitTest {
 
     //write
     @Test
-    public void write_integer() throws Exception {
+    void write_integer() throws Exception {
         List<String> writerRef = new ArrayList<>();
         ASTMocks.addWriterToMock(memory, writerRef);
         PushInstruction p = new PushInstruction(new Value(5));
@@ -754,7 +924,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void write_string() throws Exception {
+    void write_string() throws Exception {
         List<String> writerRef = new ArrayList<>();
         ASTMocks.addWriterToMock(memory, writerRef);
         PushInstruction p = new PushInstruction(new Value("Hello World"));
@@ -768,7 +938,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void write_boolean() throws Exception{
+    void write_boolean() throws Exception{
         List<String> writerRef = new ArrayList<>();
         ASTMocks.addWriterToMock(memory, writerRef);
         PushInstruction p = new PushInstruction(new Value(true));
@@ -783,7 +953,7 @@ public class InstructionsUnitTest {
 
     //writeln
     @Test
-    public void writeln_integer() throws Exception {
+    void writeln_integer() throws Exception {
         List<String> writerRef = new ArrayList<>();
         ASTMocks.addWriterToMock(memory, writerRef);
         PushInstruction p = new PushInstruction(new Value(5));
@@ -797,7 +967,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void writeln_boolean() throws Exception {
+    void writeln_boolean() throws Exception {
         List<String> writerRef = new ArrayList<>();
         ASTMocks.addWriterToMock(memory, writerRef);
         PushInstruction p = new PushInstruction(new Value(false));
@@ -811,7 +981,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void writeln_string() throws Exception {
+    void writeln_string() throws Exception {
         List<String> writerRef = new ArrayList<>();
         ASTMocks.addWriterToMock(memory, writerRef);
         PushInstruction p = new PushInstruction(new Value("Hello World"));
@@ -826,7 +996,7 @@ public class InstructionsUnitTest {
 
     //return
     @Test
-    public void return_valid_address() throws Exception{
+    void return_valid_address() throws Exception{
         PushInstruction p = new PushInstruction(new Value(5));
         p.execute(0, memory);
 
@@ -837,7 +1007,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void return_string_throws_exception(){
+    void return_string_throws_exception(){
         PushInstruction p = new PushInstruction(new Value("Hello"));
         p.execute(0, memory);
 
@@ -846,7 +1016,7 @@ public class InstructionsUnitTest {
     }
 
     @Test
-    public void return_stack_empty(){
+    void return_stack_empty(){
         ReturnInstruction r = new ReturnInstruction();
         assertThrows(StackIsEmptyException.class, () -> r.execute(0, memory));
     }
