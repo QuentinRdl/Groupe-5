@@ -371,6 +371,13 @@ public class MainController {
     }
 
     /**
+     * Returns the tab displaying the source code
+     *
+     * @return the Tab that shows the source code
+     */
+    public Tab getSourceTab() { return sourceTab; }
+
+    /**
      * Returns the ListView component used to display compiled code lines
      *
      * @return the ListView containing compiled CodeLine objects
