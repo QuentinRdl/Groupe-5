@@ -44,9 +44,6 @@ import org.kordamp.ikonli.materialdesign.MaterialDesign;
  */
 public class MainController {
     @FXML
-    private Label fileLabel;
-
-    @FXML
     private ListView<CodeLine> codeListView;
     private ObservableList<CodeLine> codeLines;
 
@@ -283,7 +280,6 @@ public class MainController {
                 }
             }
 
-            fileLabel.setText(selectedFile.getName());
             currentFile = selectedFile;
 
             sourceTab.setText(currentFile.getName());
@@ -303,15 +299,6 @@ public class MainController {
             console.getWriter().writeLine("[ERROR] " + e.getMessage());
             return false;
         }
-    }
-
-    /**
-     * Returns the label that displays the name of the currently loaded file
-     *
-     * @return the Label showing the selected file name
-     */
-    public Label getFileLabel(){
-        return fileLabel;
     }
 
     /**
@@ -450,7 +437,7 @@ public class MainController {
         if (file != null){
           saveToFile(file);
           currentFile = file;
-          fileLabel.setText(currentFile.getName());
+          sourceTab.setText(currentFile.getName());
         }
     }
 
@@ -773,7 +760,6 @@ public class MainController {
         codeLines.add(new CodeLine(1, ""));
         codeListView.getSelectionModel().select(0);
         currentFile = null;
-        fileLabel.setText("New file");
         sourceTab.setText("Untitled");
 
         compiledCodeLines.clear();
