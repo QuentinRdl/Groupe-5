@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.VirtualFlow;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.control.MenuItem;
@@ -19,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.concurrent.Task;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,6 +30,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.kordamp.ikonli.fontawesome5.FontAwesomeRegular;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 
 /**
@@ -64,6 +71,16 @@ public class MainController {
     private Tab compiledTab;
 
     @FXML
+    private Tab memoryTabMinijaja;
+
+    @FXML
+    private Tab memoryTabJajacode;
+
+    private MemoryVisualisation memoryVisualisationMiniJaja;
+
+    private MemoryVisualisation memoryVisualisationJajaCode;
+
+    @FXML
     private Button btnSave;
     @FXML
     private Button btnSaveAs;
@@ -73,6 +90,12 @@ public class MainController {
     private Button btnCompile;
     @FXML
     private Button btnRunCompile;
+    @FXML
+    private Button btnDebugRun;
+    @FXML
+    private Button btnDebugStop;
+    @FXML
+    private Button btnDebugNext;
 
 
     /**
@@ -121,14 +144,48 @@ public class MainController {
         });
 
         editorTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            //TODO: disable buttons when viewing memory tabs
             if(isCompiledTab()){
                 btnCompile.setDisable(true);
                 btnRunCompile.setDisable(true);
             } else {
-                btnCompile.setDisable(false);
-                btnRunCompile.setDisable(false);
+                activeButtons();
             }
         });
+
+        memoryVisualisationMiniJaja = new MemoryVisualisation();
+        if(memoryTabMinijaja != null){
+            memoryTabMinijaja.setContent(memoryVisualisationMiniJaja);
+        }
+        hideMemoryTab(memoryTabMinijaja);
+
+        memoryVisualisationJajaCode = new MemoryVisualisation();
+        if(memoryTabJajacode != null){
+            memoryTabJajacode.setContent(memoryVisualisationJajaCode);
+        }
+        hideMemoryTab(memoryTabJajacode);
+
+        FontIcon playIcon = new FontIcon(FontAwesomeSolid.PLAY);
+        playIcon.setIconColor(Color.DARKBLUE);
+        playIcon.setIconSize(12);
+
+        FontIcon stopIcon = new FontIcon(FontAwesomeSolid.STOP);
+        stopIcon.setIconColor(Color.DARKRED);
+        stopIcon.setIconSize(12);
+
+        FontIcon nextIcon = new FontIcon(FontAwesomeSolid.ARROW_RIGHT);
+        nextIcon.setIconColor(Color.DARKGREEN);
+        nextIcon.setIconSize(12);
+
+        btnDebugRun.setGraphic(playIcon);
+        btnDebugRun.setContentDisplay(javafx.scene.control.ContentDisplay.LEFT);
+
+        btnDebugStop.setGraphic(stopIcon);
+        btnDebugStop.setContentDisplay(javafx.scene.control.ContentDisplay.LEFT);
+
+        btnDebugNext.setGraphic(nextIcon);
+        btnDebugNext.setContentDisplay(javafx.scene.control.ContentDisplay.LEFT);
+
 
         hideCompileTab();
         setupOutputContextMenu();
@@ -228,6 +285,10 @@ public class MainController {
 
             compiledCodeLines.clear();
             hideCompileTab();
+            clearMemoryVisualisation(memoryVisualisationMiniJaja);
+            hideMemoryTab(memoryTabMinijaja);
+            clearMemoryVisualisation(memoryVisualisationJajaCode);
+            hideMemoryTab(memoryTabJajacode);
 
             console.getWriter().writeLine("[INFO] File loaded : " + selectedFile.getName());
             return true;
@@ -600,6 +661,8 @@ public class MainController {
         err = interpreterMiniJaja.interpretCode(code);
 
         if(err == null){
+            showMemoryTab(memoryTabMinijaja);
+            Platform.runLater(() -> memoryVisualisationMiniJaja.updateMemory(interpreterMiniJaja.getMemory().toStringTab()));
             console.getWriter().writeLine("[INFO] MiniJaja interpretation successfully completed");
         } else {
             console.getWriter().writeLine("[ERROR] " + err);
@@ -624,6 +687,8 @@ public class MainController {
         err = interpreterJajaCode.interpretCode(compiledCode);
 
         if(err == null){
+            showMemoryTab(memoryTabJajacode);
+            Platform.runLater(() -> memoryVisualisationJajaCode.updateMemory(interpreterJajaCode.getMemory().toStringTab()));
             console.getWriter().writeLine("[INFO] JajaCode interpretation successfully completed");
         } else {
             console.getWriter().writeLine("[ERROR] " + err);
@@ -648,7 +713,6 @@ public class MainController {
             }
 
             Platform.runLater(this::focusSelectedCell);
-
         }
     }
 
@@ -701,6 +765,11 @@ public class MainController {
 
         compiledCodeLines.clear();
         hideCompileTab();
+
+        clearMemoryVisualisation(memoryVisualisationMiniJaja);
+        hideMemoryTab(memoryTabMinijaja);
+        clearMemoryVisualisation(memoryVisualisationJajaCode);
+        hideMemoryTab(memoryTabJajacode);
     }
 
     /**
@@ -748,14 +817,36 @@ public class MainController {
             return;
         }
 
-        Compiler compiler = new Compiler(console.getWriter());
-        String res = compiler.compileCode(code);
+        // Disable compile button while compilation is in progress
+        // if (btnCompile != null) btnCompile.setDisable(true);
 
-        if (res != null){
-            showCompiledTab();
-            loadCompiledCodeToListView(res);
-            console.getWriter().writeLine("[INFO] Compilation successful!");
-        }
+        Task<String> compileTask = new Task<>(){
+            @Override
+            protected String call() {
+                Compiler compiler = new Compiler(console.getWriter());
+                return compiler.compileCode(code);
+            }
+        };
+
+        compileTask.setOnSucceeded(e -> {
+            String res = compileTask.getValue();
+            if (res != null){
+                showCompiledTab();
+                loadCompiledCodeToListView(res);
+                console.getWriter().writeLine("[INFO] Compilation successful!");
+            }
+            // if (btnCompile != null) btnCompile.setDisable(false);
+        });
+
+        compileTask.setOnFailed(e -> {
+            Throwable ex = compileTask.getException();
+            console.getWriter().writeLine("[ERROR] Compilation failed: " + (ex != null ? ex.getMessage() : "Unknown error"));
+            // if (btnCompile != null) btnCompile.setDisable(false);
+        });
+
+        Thread t = new Thread(compileTask, "Compiler-Thread");
+        t.setDaemon(true);
+        t.start();
     }
 
     /**
@@ -772,24 +863,54 @@ public class MainController {
 
         if(!isMinijajaFile()){
             console.getWriter().writeLine("[ERROR] Compilation and interpretation is only available for MiniJaja (.mjj) files");
+            return;
         }
 
-        Compiler compiler = new Compiler(console.getWriter());
-        String compiledCode = compiler.compileCode(code);
+        // Disable compiler and run buttons while compilation is in progress
+        // if (btnCompile != null) btnCompile.setDisable(true);
+        // if (btnRunCompile != null) btnRunCompile.setDisable(true);
 
-        if(compiledCode != null){
-            showCompiledTab();
-            loadCompiledCodeToListView(compiledCode);
-            String err = null;
-            InterpreterJajaCode interpreterJajaCode = new InterpreterJajaCode(console.getWriter());
-            err = interpreterJajaCode.interpretCode(compiledCode);
-
-            if(err == null){
-                console.getWriter().writeLine("[INFO] Compilation and interpretation successfully completed");
-            } else {
-                console.getWriter().writeLine("[ERROR] " + err);
+        // Create task to call later
+        Task<String> compileAndRunTask = new Task<>() {
+            @Override
+            protected String call() {
+                Compiler compiler = new Compiler(console.getWriter());
+                return compiler.compileCode(code);
             }
-        }
+        };
+
+        compileAndRunTask.setOnSucceeded(e -> {
+            String compiledCode = compileAndRunTask.getValue();
+            if(compiledCode != null) {
+                showCompiledTab();
+                loadCompiledCodeToListView(compiledCode);
+
+                // Interpret compiled code
+                String err = null;
+                InterpreterJajaCode interpreterJajaCode = new InterpreterJajaCode(console.getWriter());
+                err = interpreterJajaCode.interpretCode(compiledCode);
+
+                if(err == null){
+                    console.getWriter().writeLine("[INFO] Compilation and interpretation successfully completed");
+                } else {
+                    console.getWriter().writeLine("[ERROR] " + err);
+                }
+            }
+
+            if (btnCompile != null) btnCompile.setDisable(false);
+            if (btnRunCompile != null) btnRunCompile.setDisable(false);
+        });
+
+        compileAndRunTask.setOnFailed(e -> {
+            Throwable ex = compileAndRunTask.getException();
+            console.getWriter().writeLine("[ERROR] Compilation failed: " + (ex != null ? ex.getMessage() : "Unknown error"));
+            //if (btnCompile != null) btnCompile.setDisable(false);
+            //if (btnRunCompile != null) btnRunCompile.setDisable(false);
+        });
+
+        Thread t = new Thread(compileAndRunTask, "Compiler-Run-Thread");
+        t.setDaemon(true);
+        t.start();
     }
 
     /**
@@ -872,6 +993,8 @@ public class MainController {
         }
     }
 
+    //TODO: replace the functions with showTab and hideTab (more generic functions)
+
     /**
      * Hides the compiled code tab from the editor tab pane
      */
@@ -892,5 +1015,61 @@ public class MainController {
             }
             editorTabPane.getSelectionModel().select(compiledTab);
         }
+    }
+
+    /**
+     * Displays a memory tab in the editor if it is not already visible
+     *
+     * @param memoryTab the Tab representing the memory view
+     */
+    public void showMemoryTab(Tab memoryTab){
+        if(editorTabPane != null && memoryTab != null){
+            if(!editorTabPane.getTabs().contains(memoryTab)){
+                editorTabPane.getTabs().add(memoryTab);
+            }
+        }
+    }
+
+    /**
+     * Hides the memory tab from the editor tab pane
+     *
+     * @param memoryTab the Tab representing the memory view
+     */
+    public void hideMemoryTab(Tab memoryTab){
+        if(editorTabPane != null && memoryTab != null){
+            editorTabPane.getTabs().remove(memoryTab);
+        }
+    }
+
+    /**
+     * Clears the contents of the memory visualisation
+     *
+     * @param memoryVisualisation the MemoryVisualisation instance to clear
+     */
+    private void clearMemoryVisualisation(MemoryVisualisation memoryVisualisation){
+        if(memoryVisualisation != null){
+            memoryVisualisation.clear();
+        }
+    }
+
+    /**
+     * Starts debugging the current code when the "Run" debug button is clicked
+     */
+    public void onClickRunDebug(){
+        //TODO
+    }
+
+    /**
+     * Stops the current debugging session when the "Stop" debug button is clicked
+     */
+    public void onClickStopDebug(){
+        //TODO
+    }
+
+    /**
+     * Executes the next instruction in the debugging session when the "Next" debug button is clicked
+     */
+    public void onClickNextDebug(){
+        //TODO
     }
 }
