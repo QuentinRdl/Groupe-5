@@ -56,7 +56,7 @@ public class HashMap<K,V>
     /**
      * Returns the index of key
      *
-     * @param key
+     * @param key the key we want the index
      * @return the index of key
      */
     public int getIndex(Object key){
@@ -175,12 +175,14 @@ public class HashMap<K,V>
             if (key==null && buckets[index].get(i).getKey()==null){
                 V value = buckets[index].get(i).getValue();
                 buckets[index].remove(i);
+                i--;
                 sizeHashMap--;
                 return value;
             }
             if ((key!=null && buckets[index].get(i).getKey()!=null) && key.equals(buckets[index].get(i).getKey())){
                 V value = buckets[index].get(i).getValue();
                 buckets[index].remove(i);
+                i--;
                 sizeHashMap--;
                 return value;
             }
