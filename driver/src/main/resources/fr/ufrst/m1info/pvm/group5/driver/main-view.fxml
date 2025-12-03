@@ -61,11 +61,15 @@
           <Tab fx:id="compiledTab" text="Compiled Code">
             <ListView fx:id="compiledCodeListView"/>
           </Tab>
+        </TabPane>
+
+        <TabPane fx:id="outputTabPane">
+          <Tab fx:id="outputTab" text="Output" closable="false">
+            <TextArea fx:id="output" editable="false" prefHeight="150"/>
+          </Tab>
           <Tab fx:id="memoryTabMinijaja" text="MiniJaja Memory Visualisation"/>
           <Tab fx:id="memoryTabJajacode" text="JajaCode Memory Visualisation"/>
         </TabPane>
-
-        <TextArea fx:id="output" editable="false" prefHeight="150"/>
       </SplitPane>
 
     </VBox>

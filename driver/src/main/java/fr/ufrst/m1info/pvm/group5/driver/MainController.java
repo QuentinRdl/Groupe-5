@@ -65,6 +65,9 @@ public class MainController {
     private TabPane editorTabPane;
 
     @FXML
+    private TabPane outputTabPane;
+
+    @FXML
     private Tab sourceTab;
 
     @FXML
@@ -1044,9 +1047,9 @@ public class MainController {
      * @param memoryTab the Tab representing the memory view
      */
     public void showMemoryTab(Tab memoryTab){
-        if(editorTabPane != null && memoryTab != null){
-            if(!editorTabPane.getTabs().contains(memoryTab)){
-                editorTabPane.getTabs().add(memoryTab);
+        if(outputTabPane != null && memoryTab != null){
+            if(!outputTabPane.getTabs().contains(memoryTab)){
+                outputTabPane.getTabs().add(memoryTab);
             }
         }
     }
@@ -1057,8 +1060,8 @@ public class MainController {
      * @param memoryTab the Tab representing the memory view
      */
     public void hideMemoryTab(Tab memoryTab){
-        if(editorTabPane != null && memoryTab != null){
-            editorTabPane.getTabs().remove(memoryTab);
+        if(outputTabPane != null && memoryTab != null){
+            outputTabPane.getTabs().remove(memoryTab);
         }
     }
 
