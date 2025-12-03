@@ -32,10 +32,8 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.kordamp.ikonli.fontawesome5.FontAwesomeRegular;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 
 /**
@@ -1053,127 +1051,271 @@ public class MainController {
         }
     }
 
-    InterpreterMiniJaja debugInterpreter = null;
+    InterpreterMiniJaja debugInterpreterMjj = null;
+    InterpreterJajaCode debugInterpreterJjc = null;
     boolean debugHalted = false;
     int debugCurrentLine = -1;
+
+
+    /**
+     * Runs the adequat interpreter on debug mode (InterpreterMiniJaja / InterpreterJajaCode)
+     * @param interpreter interpreter to run the debug func
+     */
+    public void globalRunDebugFunc(Object interpreter) {
+        // Determine interpreter type
+        boolean mjj = interpreter instanceof InterpreterMiniJaja;
+        boolean jjc = interpreter instanceof InterpreterJajaCode;
+
+        if (!mjj && !jjc) {
+            // Given interpreter object is neither an interpreter JajaCode nor an interpreter MiniJaja
+            return;
+        }
+
+        // Get code based on interpreter type
+        String code = mjj ? getModifiedCode() : getCompiledCode();
+        if(code == null || code.isEmpty() || isCodeEmptyChars(code)){
+            console.getWriter().writeLine("[INFO] No code to debug !");
+            return;
+        }
+
+        System.out.println("DEBUG code = " + code);
+
+        // Clean previous debug state
+        if(debugInterpreterMjj != null){
+            try { debugInterpreterMjj.stopInterpretation(); } catch (Exception _){ }
+            debugInterpreterMjj = null;
+        }
+        if(debugInterpreterJjc != null){
+            try { debugInterpreterJjc.stopInterpretation(); } catch (Exception _){ }
+            debugInterpreterJjc = null;
+        }
+        debugHalted = false;
+        debugCurrentLine = -1;
+
+        // Setup interpreter and subscribe to halted events
+        if(mjj) {
+            debugInterpreterMjj = (InterpreterMiniJaja) interpreter;
+
+            debugInterpreterMjj.getInterpretationHaltedEvent().subscribe(event -> {
+                // event runs on a worker thread -> Update controller state and print current line.
+                debugHalted = event.isPursuable();
+                debugCurrentLine = event.line();
+
+                // Retrieve the line text if possible (use editor lines for MiniJaja)
+                String lineText = "";
+                int lineIdx = debugCurrentLine - 1;
+                if(lineIdx >= 0 && lineIdx < codeLines.size()){
+                    lineText = codeLines.get(lineIdx).getCode();
+                }
+                console.getWriter().writeLine("[DEBUG] Line " + debugCurrentLine + ": " + lineText);
+
+                // If the interpreter signaled that the halt is pursuable, we are paused and
+                // the user can request the next step. Capture a memory snapshot and enable UI.
+                if (event.isPursuable()) {
+                    String[] currMemoryState = null;
+                    try {
+                        if (debugInterpreterMjj != null && debugInterpreterMjj.getMemory() != null) {
+                            currMemoryState = debugInterpreterMjj.getMemory().toStringTab();
+                        }
+                    } catch (Exception _ex) {
+                        // ignore snapshot errors
+                    }
+
+                    final String[] currMemoryTab = currMemoryState;
+                    Platform.runLater(() -> {
+                        if (btnDebugNext != null) btnDebugNext.setDisable(false);
+                        if (btnDebugStop != null) btnDebugStop.setDisable(false);
+
+                        if (currMemoryTab != null && memoryVisualisationMiniJaja != null) {
+                            showMemoryTab(memoryTabMinijaja);
+                            memoryVisualisationMiniJaja.updateMemory(currMemoryTab);
+                        }
+                    });
+
+                    return;
+                }
+
+                // Final halt: capture memory state
+                String[] currMemoryState = null;
+                try {
+                    if (debugInterpreterMjj != null && debugInterpreterMjj.getMemory() != null) {
+                        currMemoryState = debugInterpreterMjj.getMemory().toStringTab();
+                    }
+                } catch (Exception _ex) {
+                    // ignore snapshot errors
+                }
+
+                // Stop the interpreter and clear reference
+                try { if (debugInterpreterMjj != null) debugInterpreterMjj.stopInterpretation(); } catch (Exception _){ }
+                debugInterpreterMjj = null;
+                debugHalted = false;
+
+                final String[] memoryStateTab = currMemoryState;
+                Platform.runLater(() -> {
+                    if (btnDebugNext != null) btnDebugNext.setDisable(true);
+                    if (btnDebugStop != null) btnDebugStop.setDisable(true);
+
+                    if (memoryStateTab != null && memoryVisualisationMiniJaja != null) {
+                        showMemoryTab(memoryTabMinijaja);
+                        memoryVisualisationMiniJaja.updateMemory(memoryStateTab);
+                    }
+                });
+
+                console.getWriter().writeLine("[INFO] Debugging stopped (final halt).");
+            });
+
+            // Start interpretation in STEP_BY_STEP mode
+            String err = debugInterpreterMjj.startCodeInterpretation(code, InterpretationMode.STEP_BY_STEP);
+            if(err != null){
+                console.getWriter().writeLine("[ERROR] " + err);
+                // cleanup
+                try { if (debugInterpreterMjj != null) debugInterpreterMjj.stopInterpretation(); } catch (Exception _){ }
+                debugInterpreterMjj = null;
+                debugHalted = false;
+                if(btnDebugNext != null) btnDebugNext.setDisable(true);
+                if(btnDebugStop != null) btnDebugStop.setDisable(true);
+                return;
+            }
+
+            console.getWriter().writeLine("[INFO] MiniJaja step-by-step interpretation started");
+            if(btnDebugNext != null) btnDebugNext.setDisable(true); // will be enabled when first halt occurs
+            if(btnDebugStop != null) btnDebugStop.setDisable(false);
+
+        } else { // JajaCode
+            debugInterpreterJjc = (InterpreterJajaCode) interpreter;
+
+            debugInterpreterJjc.getInterpretationHaltedEvent().subscribe(event -> {
+                debugHalted = event.isPursuable();
+                debugCurrentLine = event.line();
+
+                // Retrieve the line text if possible (use compiled lines for JajaCode)
+                String lineText = "";
+                int lineIdx = debugCurrentLine - 1;
+                if(lineIdx >= 0 && lineIdx < compiledCodeLines.size()){
+                    lineText = compiledCodeLines.get(lineIdx).getCode();
+                }
+                console.getWriter().writeLine("[DEBUG] Line " + debugCurrentLine + ": " + lineText);
+
+                if (event.isPursuable()) {
+                    String[] currMemoryState = null;
+                    try {
+                        if (debugInterpreterJjc != null && debugInterpreterJjc.getMemory() != null) {
+                            currMemoryState = debugInterpreterJjc.getMemory().toStringTab();
+                        }
+                    } catch (Exception _ex) {
+                        // ignore snapshot errors
+                    }
+
+                    final String[] currMemoryTab = currMemoryState;
+                    Platform.runLater(() -> {
+                        if (btnDebugNext != null) btnDebugNext.setDisable(false);
+                        if (btnDebugStop != null) btnDebugStop.setDisable(false);
+
+                        if (currMemoryTab != null && memoryVisualisationJajaCode != null) {
+                            showMemoryTab(memoryTabJajacode);
+                            memoryVisualisationJajaCode.updateMemory(currMemoryTab);
+                        }
+                    });
+
+                    return;
+                }
+
+                // Final halt: capture memory state
+                String[] currMemoryState = null;
+                try {
+                    if (debugInterpreterJjc != null && debugInterpreterJjc.getMemory() != null) {
+                        currMemoryState = debugInterpreterJjc.getMemory().toStringTab();
+                    }
+                } catch (Exception _ex) {
+                    // ignore snapshot errors
+                }
+
+                // Stop the interpreter and clear reference
+                try { if (debugInterpreterJjc != null) debugInterpreterJjc.stopInterpretation(); } catch (Exception _){ }
+                debugInterpreterJjc = null;
+                debugHalted = false;
+
+                final String[] memoryStateTab = currMemoryState;
+                Platform.runLater(() -> {
+                    if (btnDebugNext != null) btnDebugNext.setDisable(true);
+                    if (btnDebugStop != null) btnDebugStop.setDisable(true);
+
+                    if (memoryStateTab != null && memoryVisualisationJajaCode != null) {
+                        showMemoryTab(memoryTabJajacode);
+                        memoryVisualisationJajaCode.updateMemory(memoryStateTab);
+                    }
+                });
+
+                console.getWriter().writeLine("[INFO] Debugging stopped (final halt).");
+            });
+
+            // Start interpretation in STEP_BY_STEP mode
+            String err = debugInterpreterJjc.startCodeInterpretation(code, InterpretationMode.STEP_BY_STEP);
+            if(err != null){
+                console.getWriter().writeLine("[ERROR] " + err);
+                try { if (debugInterpreterJjc != null) debugInterpreterJjc.stopInterpretation(); } catch (Exception _){ }
+                debugInterpreterJjc = null;
+                debugHalted = false;
+                if(btnDebugNext != null) btnDebugNext.setDisable(true);
+                if(btnDebugStop != null) btnDebugStop.setDisable(true);
+                return;
+            }
+
+            console.getWriter().writeLine("[INFO] JajaCode step-by-step interpretation started");
+            if(btnDebugNext != null) btnDebugNext.setDisable(true);
+            if(btnDebugStop != null) btnDebugStop.setDisable(false);
+        }
+    }
 
 
     /**
      * Starts debugging the current code when the "Run" debug button is clicked
      */
     public void onClickRunDebug(){
-        // Only allow MiniJaja step-by-step debugging
-        if(!isMinijajaFile()){
-            console.getWriter().writeLine("[INFO] Step-by-step debugging is only available for MiniJaja files (.mjj)");
+        boolean miniJaja = isMinijajaFile();
+        boolean jajaCode = isJajaCode();
+
+        if(!miniJaja && !jajaCode) {
+            console.getWriter().writeLine("[ERROR] Debug is only available for MiniJaja files and JajaCode files (.mjj & .jjc)");
             return;
         }
 
-        // Get code from editor
-        String code = getModifiedCode();
-        if(code == null || code.isEmpty() || isCodeEmptyChars(code)){
-            console.getWriter().writeLine("[INFO] No code to debug !");
+        if(!isCompiledTab()){
+            // For MiniJaja files, create the MiniJaja interpreter and delegate
+            InterpreterMiniJaja interpreter = new InterpreterMiniJaja(console.getWriter());
+            globalRunDebugFunc(interpreter);
+        } else {
+            InterpreterJajaCode interpreter = new InterpreterJajaCode(console.getWriter());
+            globalRunDebugFunc(interpreter);
+        }
+
+
+        return;
+
+        /*
+        String compiledCode = getCompiledCode();
+
+        if(compiledCode.isEmpty() || isCodeEmptyChars(compiledCode)){
+            console.getWriter().writeLine("[ERROR] No code to interpret !");
             return;
         }
 
-        // Clean previous debug state
-        if(debugInterpreter != null){
-            try { debugInterpreter.stopInterpretation(); } catch (Exception _){ }
-            debugInterpreter = null;
-        }
-        debugHalted = false;
-        debugCurrentLine = -1;
+        String err = null;
+        InterpreterJajaCode interpreterJajaCode = new InterpreterJajaCode(console.getWriter());
+        err = interpreterJajaCode.interpretCode(compiledCode);
 
-        // Create interpreter and subscribe to halted events
-        debugInterpreter = new InterpreterMiniJaja(console.getWriter());
-        debugInterpreter.getInterpretationHaltedEvent().subscribe(event -> {
-            // event runs on a worker thread -> Update controller state and print current line.
-            // Update internal state from event
-            debugHalted = event.isPursuable();
-            debugCurrentLine = event.line();
+         */
 
-            // Retrieve the line text if possible
-            String lineText = "";
-            int lineIdx = debugCurrentLine - 1;
-            if(lineIdx >= 0 && lineIdx < codeLines.size()){
-                lineText = codeLines.get(lineIdx).getCode();
-            }
-            //System.out.println("DEBUG lineText = " + lineText);
-            console.getWriter().writeLine("[DEBUG] Line " + debugCurrentLine + ": " + lineText);
 
-            // If the interpreter signaled that the halt is pursuable, we are paused and
-            // the user can request the next step. Capture a memory snapshot and enable UI.
-            if (event.isPursuable()) {
-                String[] currMemoryState = null;
-                // TODO : Get memory state
-
-                final String[] currMemoryTab = currMemoryState;
-                Platform.runLater(() -> {
-                    if (btnDebugNext != null) btnDebugNext.setDisable(false);
-                    if (btnDebugStop != null) btnDebugStop.setDisable(false);
-
-                    if (currMemoryTab != null && memoryVisualisationMiniJaja != null) {
-                        // TODO : Memory visualisation
-                    }
-                });
-
-                return;
-            }
-            // else (because return at the end of the if)
-            // If the interpreter signaled that the halt is not pursuable, it means
-            // we reached a final halt (end of the code). Stop interpretation and
-            // clean up the debug state. Capture the state of the memory before stopping
-            // so we can display it on the UI thread.
-
-            String[] currMemoryState = null;
-            try {
-                if (debugInterpreter != null && debugInterpreter.getMemory() != null) {
-                    currMemoryState = debugInterpreter.getMemory().toStringTab();
-                }
-            } catch (Exception _ex) {
-                // ignore snapshot errors
-            }
-
-            // Stop the interpreter and clear reference
-            try { if (debugInterpreter != null) debugInterpreter.stopInterpretation(); } catch (Exception _){ }
-            debugInterpreter = null;
-            debugHalted = false;
-
-            // Update the memory state on FX thread
-            final String[] memoryStateTab = currMemoryState;
-            Platform.runLater(() -> {
-                if (btnDebugNext != null) btnDebugNext.setDisable(true);
-                if (btnDebugStop != null) btnDebugStop.setDisable(true);
-
-                // TODO : Memory visualisation with memoryState
-            });
-
-            console.getWriter().writeLine("[INFO] Debugging stopped (final halt).");
-        });
-
-        // Start interpretation in STEP_BY_STEP mode
-        String err = debugInterpreter.startCodeInterpretation(code, InterpretationMode.STEP_BY_STEP);
-        if(err != null){
-            console.getWriter().writeLine("[ERROR] " + err);
-            // cleanup
-            debugInterpreter = null;
-            debugHalted = false;
-            if(btnDebugNext != null) btnDebugNext.setDisable(true);
-            if(btnDebugStop != null) btnDebugStop.setDisable(true);
-            return;
-        }
-
-        console.getWriter().writeLine("[INFO] MiniJaja step-by-step interpretation started");
-        if(btnDebugNext != null) btnDebugNext.setDisable(true); // will be enabled when first halt occurs
-        if(btnDebugStop != null) btnDebugStop.setDisable(false);
     }
 
     /**
      * Stops the current debugging session when the "Stop" debug button is clicked
      */
     public void onClickStopDebug(){
-        if(debugInterpreter != null){
-            debugInterpreter.stopInterpretation();
-            debugInterpreter = null;
+        if(debugInterpreterMjj != null){
+            debugInterpreterMjj.stopInterpretation();
+            debugInterpreterMjj = null;
         }
         debugHalted = false;
         debugCurrentLine = -1;
@@ -1188,7 +1330,7 @@ public class MainController {
      * Executes the next instruction in the debugging session when the "Next" debug button is clicked
      */
     public void onClickNextDebug(){
-        if(debugInterpreter == null){
+        if(debugInterpreterMjj == null){
             console.getWriter().writeLine("[INFO] No active debugging session");
             return;
         }
@@ -1201,6 +1343,6 @@ public class MainController {
         // Clear the halted flag and resume interpretation for one step
         debugHalted = false;
         if(btnDebugNext != null) btnDebugNext.setDisable(true);
-        debugInterpreter.resumeInterpretation(InterpretationMode.STEP_BY_STEP);
+        debugInterpreterMjj.resumeInterpretation(InterpretationMode.STEP_BY_STEP);
     }
 }

@@ -60,7 +60,7 @@ public abstract class Interpreter {
     /**
      * Stops the current interpretation
      */
-    abstract void stopInterpretation();
+    public abstract void stopInterpretation();
 
     /**
      * Resumes the current interpretation in the given mode
