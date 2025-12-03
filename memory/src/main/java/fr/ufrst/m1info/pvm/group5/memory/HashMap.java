@@ -63,7 +63,9 @@ public class HashMap<K,V>
         if (key==null){
             return 0;
         }
-        return Math.abs(key.hashCode()) % capacity;
+        int h = key.hashCode();
+        h = h ^ (h >>> 16);
+        return Math.abs(h) % capacity;
     }
 
     /**

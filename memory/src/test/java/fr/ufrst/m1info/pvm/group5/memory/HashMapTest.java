@@ -3,13 +3,10 @@ package fr.ufrst.m1info.pvm.group5.memory;
 import org.junit.jupiter.api.Test;
 
 
-import java.util.Collection;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit test for simple App.
- */
 class HashMapTest
 {
 
