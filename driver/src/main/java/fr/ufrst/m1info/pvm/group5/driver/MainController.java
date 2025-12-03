@@ -437,9 +437,9 @@ public class MainController {
      */
     public void saveAs(File file){
         if (file != null){
-          saveToFile(file);
-          currentFile = file;
-          fileLabel.setText(currentFile.getName());
+            saveToFile(file);
+            currentFile = file;
+            fileLabel.setText(currentFile.getName());
         }
     }
 
@@ -1064,7 +1064,7 @@ public class MainController {
     public void onClickRunDebug(){
         // Only allow MiniJaja step-by-step debugging
         if(!isMinijajaFile()){
-            console.getWriter().writeLine("[ERROR] Step-by-step debugging is only available for MiniJaja files (.mjj)");
+            console.getWriter().writeLine("[INFO] Step-by-step debugging is only available for MiniJaja files (.mjj)");
             return;
         }
 
@@ -1086,30 +1086,69 @@ public class MainController {
         // Create interpreter and subscribe to halted events
         debugInterpreter = new InterpreterMiniJaja(console.getWriter());
         debugInterpreter.getInterpretationHaltedEvent().subscribe(event -> {
-             // event runs on a worker thread (triggerAsync). Update controller state and print current line.
-             debugHalted = event.isPursuable();
-             debugCurrentLine = event.line();
+            // event runs on a worker thread -> Update controller state and print current line.
+            // Update internal state from event
+            debugHalted = event.isPursuable();
+            debugCurrentLine = event.line();
 
-             // Retrieve the line text if possible (line numbers are 1-based)
-             String lineText = "";
-             int lineIdx = debugCurrentLine - 1;
-             if(lineIdx >= 0 && lineIdx < codeLines.size()){
-                 lineText = codeLines.get(lineIdx).getCode();
-             }
+            // Retrieve the line text if possible
+            String lineText = "";
+            int lineIdx = debugCurrentLine - 1;
+            if(lineIdx >= 0 && lineIdx < codeLines.size()){
+                lineText = codeLines.get(lineIdx).getCode();
+            }
+            //System.out.println("DEBUG lineText = " + lineText);
+            console.getWriter().writeLine("[DEBUG] Line " + debugCurrentLine + ": " + lineText);
 
-             console.getWriter().writeLine("[DEBUG] Line " + debugCurrentLine + ": " + lineText);
+            // If the interpreter signaled that the halt is pursuable, we are paused and
+            // the user can request the next step. Capture a memory snapshot and enable UI.
+            if (event.isPursuable()) {
+                String[] currMemoryState = null;
+                // TODO : Get memory state
 
-             // Show memory and update its view on the JavaFX thread
-             showMemoryTab(memoryTabMinijaja);
-             Platform.runLater(() -> {
-                 if(debugInterpreter != null && memoryVisualisationMiniJaja != null){
-                     memoryVisualisationMiniJaja.updateMemory(debugInterpreter.getMemory().toStringTab());
-                 }
-                 // Enable Next button when halted and pursuable
-                 if(btnDebugNext != null) btnDebugNext.setDisable(!debugHalted);
-                 if(btnDebugStop != null) btnDebugStop.setDisable(false);
-             });
-         });
+                final String[] currMemoryTab = currMemoryState;
+                Platform.runLater(() -> {
+                    if (btnDebugNext != null) btnDebugNext.setDisable(false);
+                    if (btnDebugStop != null) btnDebugStop.setDisable(false);
+
+                    if (currMemoryTab != null && memoryVisualisationMiniJaja != null) {
+                        // TODO : Memory visualisation
+                    }
+                });
+
+                return;
+            }
+            // else (because return at the end of the if)
+            // If the interpreter signaled that the halt is not pursuable, it means
+            // we reached a final halt (end of the code). Stop interpretation and
+            // clean up the debug state. Capture the state of the memory before stopping
+            // so we can display it on the UI thread.
+
+            String[] currMemoryState = null;
+            try {
+                if (debugInterpreter != null && debugInterpreter.getMemory() != null) {
+                    currMemoryState = debugInterpreter.getMemory().toStringTab();
+                }
+            } catch (Exception _ex) {
+                // ignore snapshot errors
+            }
+
+            // Stop the interpreter and clear reference
+            try { if (debugInterpreter != null) debugInterpreter.stopInterpretation(); } catch (Exception _){ }
+            debugInterpreter = null;
+            debugHalted = false;
+
+            // Update the memory state on FX thread
+            final String[] memoryStateTab = currMemoryState;
+            Platform.runLater(() -> {
+                if (btnDebugNext != null) btnDebugNext.setDisable(true);
+                if (btnDebugStop != null) btnDebugStop.setDisable(true);
+
+                // TODO : Memory visualisation with memoryState
+            });
+
+            console.getWriter().writeLine("[INFO] Debugging stopped (final halt).");
+        });
 
         // Start interpretation in STEP_BY_STEP mode
         String err = debugInterpreter.startCodeInterpretation(code, InterpretationMode.STEP_BY_STEP);
@@ -1150,12 +1189,12 @@ public class MainController {
      */
     public void onClickNextDebug(){
         if(debugInterpreter == null){
-            console.getWriter().writeLine("[DEBUG] No active debugging session");
+            console.getWriter().writeLine("[INFO] No active debugging session");
             return;
         }
 
         if(!debugHalted){
-            console.getWriter().writeLine("[DEBUG] Interpreter is not halted yet");
+            console.getWriter().writeLine("[INFO] Interpreter is not halted yet");
             return;
         }
 
