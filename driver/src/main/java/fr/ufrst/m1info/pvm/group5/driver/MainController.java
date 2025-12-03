@@ -80,8 +80,8 @@ public class MainController {
 
     private MemoryVisualisation memoryVisualisationJajaCode;
 
-    private boolean isModified = false;
-    private boolean isLoadingFile = false;
+    private boolean isModified = false; //indicates whether the file has been modified
+    private boolean isLoadingFile = false; //indicates whether the file is currently being loaded
 
     @FXML
     private Button btnSave;
@@ -1094,6 +1094,10 @@ public class MainController {
         //TODO
     }
 
+    /**
+     * Marks the current file as modified
+     * Updates the tab title by adding a dot indicator if not already marked
+     */
     private void markAsModified(){
         if(!isModified){
             isModified = true;
