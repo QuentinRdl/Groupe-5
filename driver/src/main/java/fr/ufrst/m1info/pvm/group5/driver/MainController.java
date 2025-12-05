@@ -43,9 +43,6 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
  */
 public class MainController {
     @FXML
-    private Label fileLabel;
-
-    @FXML
     private ListView<CodeLine> codeListView;
     private ObservableList<CodeLine> codeLines;
 
@@ -67,6 +64,12 @@ public class MainController {
     private TabPane editorTabPane;
 
     @FXML
+    private TabPane outputTabPane;
+
+    @FXML
+    private Tab sourceTab;
+
+    @FXML
     private Tab compiledTab;
 
     @FXML
@@ -78,6 +81,9 @@ public class MainController {
     private MemoryVisualisation memoryVisualisationMiniJaja;
 
     private MemoryVisualisation memoryVisualisationJajaCode;
+
+    private boolean isModified = false; //indicates whether the file has been modified
+    private boolean isLoadingFile = false; //indicates whether the file is currently being loaded
 
     @FXML
     private Button btnSave;
@@ -118,11 +124,13 @@ public class MainController {
                 @Override
                 public void onEnterPressed(CodeLine codeLine) {
                     handleEnterPressed(codeLine);
+                    markAsModified();
                 }
 
                 @Override
                 public void onDeletePressed(CodeLine codeLine) {
                     handleDeleteEmptyLine(codeLine);
+                    markAsModified();
                 }
 
                 @Override
@@ -130,6 +138,12 @@ public class MainController {
 
                 @Override
                 public void onDownPressed(int index) { handleDownPressed(index);}
+
+                @Override
+                public void onModified(){
+                    if(isLoadingFile) return;
+                    markAsModified();
+                }
             });
             return cell;
         });
@@ -165,15 +179,15 @@ public class MainController {
         hideMemoryTab(memoryTabJajacode);
 
         FontIcon playIcon = new FontIcon(FontAwesomeSolid.PLAY);
-        playIcon.setIconColor(Color.DARKBLUE);
+        playIcon.setIconColor(Color.web("#398989"));
         playIcon.setIconSize(12);
 
         FontIcon stopIcon = new FontIcon(FontAwesomeSolid.STOP);
-        stopIcon.setIconColor(Color.DARKRED);
+        stopIcon.setIconColor(Color.web("#BF2237"));
         stopIcon.setIconSize(12);
 
         FontIcon nextIcon = new FontIcon(FontAwesomeSolid.ARROW_RIGHT);
-        nextIcon.setIconColor(Color.DARKGREEN);
+        nextIcon.setIconColor(Color.web("#FFD270"));
         nextIcon.setIconSize(12);
 
         btnDebugRun.setGraphic(playIcon);
@@ -266,6 +280,7 @@ public class MainController {
         }
 
         try {
+            isLoadingFile = true;
             // Delete old cells
             codeLines.clear();
 
@@ -279,8 +294,10 @@ public class MainController {
                 }
             }
 
-            fileLabel.setText(selectedFile.getName());
             currentFile = selectedFile;
+
+            isModified = false;
+            sourceTab.setText(currentFile.getName());
 
             compiledCodeLines.clear();
             hideCompileTab();
@@ -288,6 +305,10 @@ public class MainController {
             hideMemoryTab(memoryTabMinijaja);
             clearMemoryVisualisation(memoryVisualisationJajaCode);
             hideMemoryTab(memoryTabJajacode);
+
+            Platform.runLater(() -> {
+                isLoadingFile = false;
+            });
 
             console.getWriter().writeLine("[INFO] File loaded : " + selectedFile.getName());
             return true;
@@ -297,15 +318,6 @@ public class MainController {
             console.getWriter().writeLine("[ERROR] " + e.getMessage());
             return false;
         }
-    }
-
-    /**
-     * Returns the label that displays the name of the currently loaded file
-     *
-     * @return the Label showing the selected file name
-     */
-    public Label getFileLabel(){
-        return fileLabel;
     }
 
     /**
@@ -362,6 +374,13 @@ public class MainController {
     public Tab getCompiledTab(){
         return compiledTab;
     }
+
+    /**
+     * Returns the tab displaying the source code
+     *
+     * @return the Tab that shows the source code
+     */
+    public Tab getSourceTab() { return sourceTab; }
 
     /**
      * Returns the ListView component used to display compiled code lines
@@ -435,9 +454,9 @@ public class MainController {
      */
     public void saveAs(File file){
         if (file != null){
-            saveToFile(file);
             currentFile = file;
-            fileLabel.setText(currentFile.getName());
+            saveToFile(file);
+            sourceTab.setText(currentFile.getName());
         }
     }
 
@@ -453,6 +472,8 @@ public class MainController {
             Files.write(file.toPath(), lines , StandardCharsets.UTF_8);
 
             console.getWriter().writeLine("[INFO] File saved " + file.getName());
+            isModified = false;
+            sourceTab.setText(currentFile.getName());
 
         } catch (IOException e){
             console.getWriter().writeLine("[ERROR] Error during saving : " + e.getMessage());
@@ -760,7 +781,8 @@ public class MainController {
         codeLines.add(new CodeLine(1, ""));
         codeListView.getSelectionModel().select(0);
         currentFile = null;
-        fileLabel.setText("New file");
+        isModified = false;
+        sourceTab.setText("Untitled");
 
         compiledCodeLines.clear();
         hideCompileTab();
@@ -829,7 +851,8 @@ public class MainController {
 
         compileTask.setOnSucceeded(e -> {
             String res = compileTask.getValue();
-            if(res != null){
+            if (res != null){
+                compiledTab.setText(getBaseFileName(currentFile.getName()) + ".jjc");
                 showCompiledTab();
                 loadCompiledCodeToListView(res);
                 console.getWriter().writeLine("[INFO] Compilation successful!");
@@ -881,6 +904,7 @@ public class MainController {
         compileAndRunTask.setOnSucceeded(e -> {
             String compiledCode = compileAndRunTask.getValue();
             if(compiledCode != null) {
+                compiledTab.setText(getBaseFileName(currentFile.getName()) + ".jjc");
                 showCompiledTab();
                 loadCompiledCodeToListView(compiledCode);
 
@@ -1022,9 +1046,9 @@ public class MainController {
      * @param memoryTab the Tab representing the memory view
      */
     public void showMemoryTab(Tab memoryTab){
-        if(editorTabPane != null && memoryTab != null){
-            if(!editorTabPane.getTabs().contains(memoryTab)){
-                editorTabPane.getTabs().add(memoryTab);
+        if(outputTabPane != null && memoryTab != null){
+            if(!outputTabPane.getTabs().contains(memoryTab)){
+                outputTabPane.getTabs().add(memoryTab);
             }
         }
     }
@@ -1035,8 +1059,8 @@ public class MainController {
      * @param memoryTab the Tab representing the memory view
      */
     public void hideMemoryTab(Tab memoryTab){
-        if(editorTabPane != null && memoryTab != null){
-            editorTabPane.getTabs().remove(memoryTab);
+        if(outputTabPane != null && memoryTab != null){
+            outputTabPane.getTabs().remove(memoryTab);
         }
     }
 
@@ -1390,5 +1414,22 @@ public class MainController {
             if(btnDebugNext != null) btnDebugNext.setDisable(true);
             debugInterpreterJjc.resumeInterpretation(InterpretationMode.STEP_BY_STEP);
         }
+    }
+
+    /**
+     * Marks the current file as modified
+     * Updates the tab title by adding a dot indicator if not already marked
+     */
+    private void markAsModified(){
+        if(!isModified){
+            isModified = true;
+
+            if(currentFile != null){
+                sourceTab.setText(currentFile.getName() + " •");
+            } else {
+                sourceTab.setText("Untitled •");
+            }
+        }
+
     }
 }
