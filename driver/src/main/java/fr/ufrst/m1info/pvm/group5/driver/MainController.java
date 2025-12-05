@@ -1288,25 +1288,6 @@ public class MainController {
             InterpreterJajaCode interpreter = new InterpreterJajaCode(console.getWriter());
             globalRunDebugFunc(interpreter);
         }
-
-
-        return;
-
-        /*
-        String compiledCode = getCompiledCode();
-
-        if(compiledCode.isEmpty() || isCodeEmptyChars(compiledCode)){
-            console.getWriter().writeLine("[ERROR] No code to interpret !");
-            return;
-        }
-
-        String err = null;
-        InterpreterJajaCode interpreterJajaCode = new InterpreterJajaCode(console.getWriter());
-        err = interpreterJajaCode.interpretCode(compiledCode);
-
-         */
-
-
     }
 
     /**
@@ -1330,19 +1311,38 @@ public class MainController {
      * Executes the next instruction in the debugging session when the "Next" debug button is clicked
      */
     public void onClickNextDebug(){
-        if(debugInterpreterMjj == null){
-            console.getWriter().writeLine("[INFO] No active debugging session");
-            return;
-        }
 
-        if(!debugHalted){
-            console.getWriter().writeLine("[INFO] Interpreter is not halted yet");
-            return;
-        }
+        if(!isCompiledTab()){
+            if(debugInterpreterMjj == null){
+                console.getWriter().writeLine("[INFO] No active debugging session");
+                return;
+            }
 
-        // Clear the halted flag and resume interpretation for one step
-        debugHalted = false;
-        if(btnDebugNext != null) btnDebugNext.setDisable(true);
-        debugInterpreterMjj.resumeInterpretation(InterpretationMode.STEP_BY_STEP);
+            if(!debugHalted){
+                console.getWriter().writeLine("[INFO] Interpreter is not halted yet");
+                return;
+            }
+
+            // Clear the halted flag and resume interpretation until nextstep
+            debugHalted = false;
+            if(btnDebugNext != null) btnDebugNext.setDisable(true);
+            debugInterpreterMjj.resumeInterpretation(InterpretationMode.STEP_BY_STEP);
+        } else {
+
+            if(debugInterpreterJjc == null){
+                console.getWriter().writeLine("[INFO] No active debugging session");
+                return;
+            }
+
+            if(!debugHalted){
+                console.getWriter().writeLine("[INFO] Interpreter is not halted yet");
+                return;
+            }
+
+            // Clear the halted flag and resume interpretation for one step
+            debugHalted = false;
+            if(btnDebugNext != null) btnDebugNext.setDisable(true);
+            debugInterpreterJjc.resumeInterpretation(InterpretationMode.STEP_BY_STEP);
+        }
     }
 }
