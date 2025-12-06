@@ -45,6 +45,16 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret File One")
+    void FileOne() {
+        Assertions.assertNull(imj.interpretFile("src/test/resources/1.mjj"));
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("x : 8\nx : 11\n", e.oldText());
+        });
+        writer.write("");
+    }
+
+    @Test
     @DisplayName("Interpret File Array")
     void Array() {
         Assertions.assertNull(imj.interpretFile("src/test/resources/Array.mjj"));
