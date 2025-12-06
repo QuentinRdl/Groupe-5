@@ -79,6 +79,16 @@ public class MethodeNode extends ASTNode implements WithdrawalNode {
         if (params != null) params.checkType(m);
         if (instrs != null) instrs.checkType(m);
         m.popScope();
+        if (params != null) {
+            if (params instanceof WithdrawalNode withdrawalNode) {
+                withdrawalNode.withdrawInterpret(m);
+            } else if (params instanceof ParamListNode paramListNode) {
+                List<ParamNode> formals = paramListNode.toList();
+                for (ParamNode p : formals) {
+                    m.withdrawDecl(p.ident.identifier);
+                }
+            }
+        }
         return returnType.getValueType().name().toLowerCase();
     }
     @Override
