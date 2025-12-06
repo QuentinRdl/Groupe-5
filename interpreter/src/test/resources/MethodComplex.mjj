@@ -1,6 +1,8 @@
 class C {
     int x = 1;
     int y = 100;
+    int resInt;
+    boolean resBool;
 
     int addition(int op1,int op2){
         return op1 + op2;
@@ -20,11 +22,14 @@ class C {
 
     main{
         write("addition : ");
-        writeln(addition(x,y));
+        resInt = addition(x,y);
+        writeln(resInt);
         write("substraction : ");
-        writeln(substraction(x,y));
+        resInt = substraction(x,y);
+        writeln(resInt);
         write("inferior : ");
-        writeln(inferior(x,y));
+        resBool = inferior(x,y);
+        writeln(resBool);
         helloWorld();
     }
 }
