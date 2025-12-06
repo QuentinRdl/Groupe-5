@@ -45,6 +45,16 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret File Array")
+    void Array() {
+        Assertions.assertNull(imj.interpretFile("src/test/resources/Array.mjj"));
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("4\n33\n81\nfalse\ntrue\nfalse\nfalse\n", e.oldText());
+        });
+        writer.write("");
+    }
+
+    @Test
     @DisplayName("Interpret File BasicOperations")
     void BasicOperations() {
         Assertions.assertNull(imj.interpretFile("src/test/resources/BasicOperations.mjj"));
