@@ -1150,6 +1150,7 @@ public class MainController {
     InterpreterJajaCode debugInterpreterJjc = null;
     boolean debugHalted = false;
     int debugCurrentLine = -1;
+    InterpretationMode currentDebugMode = InterpretationMode.STEP_BY_STEP;
 
     // Store event subscribers so we can unsubscribe them later
     private java.util.function.Consumer<InterpretationHaltedData> debugMjjSubscriber = null;
@@ -1217,9 +1218,14 @@ public class MainController {
 
             // Configure breakpoints for MiniJaja code
             java.util.Set<Integer> breakpoints = getBreakpointLines();
+
             if(!breakpoints.isEmpty()){
                 debugInterpreterMjj.setBreakpoints(new java.util.ArrayList<>(breakpoints));
-                console.getWriter().writeLine("[INFO] Breakpoints set at lines: " + breakpoints);
+                currentDebugMode = InterpretationMode.BREAKPOINTS;
+                console.getWriter().writeLine("[INFO] Breakpoints mode - halting at lines: " + breakpoints);
+            } else {
+                currentDebugMode = InterpretationMode.STEP_BY_STEP;
+                console.getWriter().writeLine("[INFO] Step-by-step mode - no breakpoints set");
             }
 
             // Create and store the subscriber so we can unsubscribe later
@@ -1307,8 +1313,8 @@ public class MainController {
             // Subscribe the handler to the event
             debugInterpreterMjj.getInterpretationHaltedEvent().subscribe(debugMjjSubscriber);
 
-            // Start interpretation in set by step mode
-            String err = debugInterpreterMjj.startCodeInterpretation(code, InterpretationMode.STEP_BY_STEP);
+            // Start interpretation with selected mode
+            String err = debugInterpreterMjj.startCodeInterpretation(code, currentDebugMode);
             if(err != null){
                 console.getWriter().writeLine("[ERROR] " + err);
                 // cleanup
@@ -1325,7 +1331,9 @@ public class MainController {
                 return;
             }
 
-            console.getWriter().writeLine("[INFO] MiniJaja step-by-step interpretation started");
+            String modeDescription = (currentDebugMode == InterpretationMode.BREAKPOINTS)
+                ? "breakpoints mode" : "step-by-step mode";
+            console.getWriter().writeLine("[INFO] MiniJaja interpretation started in " + modeDescription);
             if(btnDebugNext != null) btnDebugNext.setDisable(true); // Will be enabled when first halt happens
             if(btnDebugStop != null) btnDebugStop.setDisable(false);
 
@@ -1334,9 +1342,14 @@ public class MainController {
 
             // Configure breakpoints for JajaCode
             java.util.Set<Integer> breakpoints = getCompiledBreakpointLines();
+
             if(!breakpoints.isEmpty()){
                 debugInterpreterJjc.setBreakpoints(new java.util.ArrayList<>(breakpoints));
-                console.getWriter().writeLine("[INFO] Breakpoints set at lines: " + breakpoints);
+                currentDebugMode = InterpretationMode.BREAKPOINTS;
+                console.getWriter().writeLine("[INFO] Breakpoints mode - halting at lines: " + breakpoints);
+            } else {
+                currentDebugMode = InterpretationMode.STEP_BY_STEP;
+                console.getWriter().writeLine("[INFO] Step-by-step mode - no breakpoints set");
             }
 
             // Create and store the subscriber so we can unsubscribe later
@@ -1420,8 +1433,8 @@ public class MainController {
             // Subscribe the handler to the event
             debugInterpreterJjc.getInterpretationHaltedEvent().subscribe(debugJjcSubscriber);
 
-            // Start interpretation in STEP_BY_STEP mode
-            String err = debugInterpreterJjc.startCodeInterpretation(code, InterpretationMode.STEP_BY_STEP);
+            // Start interpretation with selected mode
+            String err = debugInterpreterJjc.startCodeInterpretation(code, currentDebugMode);
             if(err != null) {
                 console.getWriter().writeLine("[ERROR] " + err);
                 try {
@@ -1436,7 +1449,9 @@ public class MainController {
                 return;
             }
 
-            console.getWriter().writeLine("[INFO] JajaCode step-by-step interpretation started");
+            String modeDescription = (currentDebugMode == InterpretationMode.BREAKPOINTS)
+                ? "breakpoints mode" : "step-by-step mode";
+            console.getWriter().writeLine("[INFO] JajaCode interpretation started in " + modeDescription);
             if(btnDebugNext != null) btnDebugNext.setDisable(true);
             if(btnDebugStop != null) btnDebugStop.setDisable(false);
         }
@@ -1517,10 +1532,10 @@ public class MainController {
                 return;
             }
 
-            // Clear the halted flag and resume interpretation until nextstep
+            // Clear the halted flag and resume interpretation
             debugHalted = false;
             if(btnDebugNext != null) btnDebugNext.setDisable(true);
-            debugInterpreterMjj.resumeInterpretation(InterpretationMode.STEP_BY_STEP);
+            debugInterpreterMjj.resumeInterpretation(currentDebugMode);
         } else {
 
             if(debugInterpreterJjc == null){
@@ -1533,10 +1548,10 @@ public class MainController {
                 return;
             }
 
-            // Clear the halted flag and resume interpretation for one step
+            // Clear the halted flag and resume interpretation
             debugHalted = false;
             if(btnDebugNext != null) btnDebugNext.setDisable(true);
-            debugInterpreterJjc.resumeInterpretation(InterpretationMode.STEP_BY_STEP);
+            debugInterpreterJjc.resumeInterpretation(currentDebugMode);
         }
     }
 
