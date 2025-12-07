@@ -1600,10 +1600,7 @@ class MainControllerTest extends ApplicationTest {
 
     @Test
     void testDebugButtonsInitialState(){
-        WaitForAsyncUtils.waitForFxEvents();
-        System.out.println("first works");
         verifyThat("#btnDebugRun", isVisible());
-        System.out.println("second works");
         verifyThat("#btnDebugStop", isVisible());
         verifyThat("#btnDebugNext", isVisible());
         verifyThat("#btnDebugRun", isEnabled());
@@ -1896,13 +1893,13 @@ class MainControllerTest extends ApplicationTest {
         }
     }
 
-    @Disabled
     @Test
     void testDebugButtonsStateAfterStopDebug() throws Exception {
         File testFile = createTestFile("state_test.mjj",
                 "class C {",
                 "    main {",
                 "        int x = 10;",
+                "        x++;",
                 "    }",
                 "}");
 
