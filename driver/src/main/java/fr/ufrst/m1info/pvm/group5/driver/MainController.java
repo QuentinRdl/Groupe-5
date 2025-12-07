@@ -1286,6 +1286,7 @@ public class MainController {
                     }
 
                     Platform.runLater(() -> {
+                        highlightDebugLine(lineIdx, compiledCodeLines, compiledCodeListView);
                         if(btnDebugNext != null) btnDebugNext.setDisable(false);
                         if(btnDebugStop != null) btnDebugStop.setDisable(false);
 
@@ -1321,6 +1322,7 @@ public class MainController {
                 debugHalted = false;
 
                 Platform.runLater(() -> {
+                    clearDebugHighlight(compiledCodeLines, compiledCodeListView);
                     if(btnDebugNext != null) btnDebugNext.setDisable(true);
                     if(btnDebugStop != null) btnDebugStop.setDisable(true);
 
@@ -1412,6 +1414,7 @@ public class MainController {
             }
             debugInterpreterJjc.stopInterpretation();
             debugInterpreterJjc = null;
+            clearDebugHighlight(compiledCodeLines, compiledCodeListView);
         }
 
         debugHalted = false;
