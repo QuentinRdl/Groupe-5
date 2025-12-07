@@ -55,7 +55,7 @@ public class CodeLineCell extends ListCell<CodeLine> {
         lineNumberLabel.getStyleClass().add("line-number");
 
         breakpointCircle = new Circle(6);
-        breakpointCircle.setFill(Color.web("#850606"));
+        breakpointCircle.setFill(Color.web("#BF2237"));
         breakpointCircle.setVisible(false);
 
         lineNumberContainer = new StackPane();
