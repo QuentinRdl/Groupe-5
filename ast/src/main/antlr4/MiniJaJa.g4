@@ -205,6 +205,7 @@ factor returns [ASTNode node]
     | 'false' {$node = new BooleanNode(false);}
     | n=NOMBRE {$node = new NumberNode(Integer.parseInt($n.text));}
     | '(' exp ')' {$node = $exp.node;}
+    | 'length' '(' id=ident ')' {$node = new LengthNode($id.node);}
     ;
 
 ident1 returns [ASTNode node]

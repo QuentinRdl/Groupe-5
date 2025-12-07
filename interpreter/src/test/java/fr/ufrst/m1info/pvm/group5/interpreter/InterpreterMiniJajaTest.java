@@ -139,6 +139,16 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret File Quicksort")
+    void Quicksort() {
+        Assertions.assertNull(imj.interpretFile("src/test/resources/Quick_sort.mjj"));
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("4,81,63,12,33,22,16,44,55,23,27,5,14,18,6,30,87,31,10,43, \n4,5,6,10,12,14,16,18,22,23,27,30,31,33,43,44,55,63,81,87, \n", e.oldText());
+        });
+        writer.write("");
+    }
+
+    @Test
     @DisplayName("Interpret File Simple")
     void Simple() {
         Assertions.assertNull(imj.interpretFile("src/test/resources/Simple.mjj"));
