@@ -211,7 +211,7 @@ class CodeLineCellTest extends ApplicationTest {
 
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField codeField = cell.getCodeField();
+        var codeField = cell.getCodeField();
         assertNotNull(codeField);
         assertEquals("int x = 10;", codeField.getText());
 

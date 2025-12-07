@@ -122,6 +122,7 @@ public class MainController {
         // allows ListView to know how to create its cells
         codeListView.setCellFactory(lv -> {
             CodeLineCell cell = new CodeLineCell();
+            cell.setMiniJaja(true); // Source code is MiniJaja
             cell.setListener(new CodeLineCellListener() {
                 @Override
                 public void onEnterPressed(CodeLine codeLine) {
@@ -154,6 +155,7 @@ public class MainController {
         compiledCodeListView.setItems(compiledCodeLines);
         compiledCodeListView.setCellFactory(lv -> {
             CodeLineCell cell = new CodeLineCell();
+            cell.setMiniJaja(false); // Compiled code is JajaCode
             cell.setCodeEditable(false);
             return cell;
         });
