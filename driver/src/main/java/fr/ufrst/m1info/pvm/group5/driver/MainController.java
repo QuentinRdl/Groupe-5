@@ -1176,6 +1176,8 @@ public class MainController {
                     }
 
                     Platform.runLater(() -> {
+                        highlightDebugLine(lineIdx, codeLines, codeListView);
+
                         if(btnDebugNext != null) btnDebugNext.setDisable(false);
                         if(btnDebugStop != null) btnDebugStop.setDisable(false);
 
@@ -1212,6 +1214,7 @@ public class MainController {
                 debugHalted = false;
 
                 Platform.runLater(() -> {
+                    clearDebugHighlight(codeLines, codeListView);
                     if(btnDebugNext != null) btnDebugNext.setDisable(true);
                     if(btnDebugStop != null) btnDebugStop.setDisable(true);
 
@@ -1283,6 +1286,7 @@ public class MainController {
                     }
 
                     Platform.runLater(() -> {
+                        highlightDebugLine(lineIdx, compiledCodeLines, compiledCodeListView);
                         if(btnDebugNext != null) btnDebugNext.setDisable(false);
                         if(btnDebugStop != null) btnDebugStop.setDisable(false);
 
@@ -1318,6 +1322,7 @@ public class MainController {
                 debugHalted = false;
 
                 Platform.runLater(() -> {
+                    clearDebugHighlight(compiledCodeLines, compiledCodeListView);
                     if(btnDebugNext != null) btnDebugNext.setDisable(true);
                     if(btnDebugStop != null) btnDebugStop.setDisable(true);
 
@@ -1398,6 +1403,7 @@ public class MainController {
             }
             debugInterpreterMjj.stopInterpretation();
             debugInterpreterMjj = null;
+            clearDebugHighlight(codeLines, codeListView);
         }
 
         if(debugInterpreterJjc != null){
@@ -1408,6 +1414,7 @@ public class MainController {
             }
             debugInterpreterJjc.stopInterpretation();
             debugInterpreterJjc = null;
+            clearDebugHighlight(compiledCodeLines, compiledCodeListView);
         }
 
         debugHalted = false;
@@ -1474,5 +1481,37 @@ public class MainController {
                 sourceTab.setText("Untitled •");
             }
         }
+    }
+
+    /**
+     * Highlights the specified line in a ListView during debugging
+     *
+     * @param lineIndex index of the line to highlight
+     * @param lines the list of CodeLine objects
+     * @param listView the ListView displaying the lines
+     */
+    public void highlightDebugLine(int lineIndex, ObservableList<CodeLine> lines, ListView<CodeLine> listView){
+        for(CodeLine line : lines){
+            line.setCurrentDebugLine(false);
+        }
+
+        if(lineIndex >= 0 && lineIndex < codeLines.size()){
+            lines.get(lineIndex).setCurrentDebugLine(true);
+        }
+
+        listView.refresh();
+    }
+
+    /**
+     * Removes any debug highlight from the given ListView
+     *
+     * @param lines the list of CodeLine objects
+     * @param listView the ListView displaying the lines
+     */
+    public void clearDebugHighlight(ObservableList<CodeLine> lines, ListView<CodeLine> listView){
+        for(CodeLine line : lines){
+            line.setCurrentDebugLine(false);
+        }
+        listView.refresh();
     }
 }
