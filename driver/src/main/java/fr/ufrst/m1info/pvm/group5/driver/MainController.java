@@ -1487,7 +1487,7 @@ public class MainController {
      * @param lines the list of CodeLine objects
      * @param listView the ListView displaying the lines
      */
-    private void highlightDebugLine(int lineIndex, ObservableList<CodeLine> lines, ListView<CodeLine> listView){
+    public void highlightDebugLine(int lineIndex, ObservableList<CodeLine> lines, ListView<CodeLine> listView){
         for(CodeLine line : lines){
             line.setCurrentDebugLine(false);
         }
@@ -1505,7 +1505,7 @@ public class MainController {
      * @param lines the list of CodeLine objects
      * @param listView the ListView displaying the lines
      */
-    private void clearDebugHighlight(ObservableList<CodeLine> lines, ListView<CodeLine> listView){
+    public void clearDebugHighlight(ObservableList<CodeLine> lines, ListView<CodeLine> listView){
         for(CodeLine line : lines){
             line.setCurrentDebugLine(false);
         }
