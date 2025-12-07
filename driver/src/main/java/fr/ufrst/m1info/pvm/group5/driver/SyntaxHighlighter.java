@@ -15,7 +15,7 @@ public class SyntaxHighlighter {
     // MiniJaja keywords
     private static final String[] MINIJAJA_KEYWORDS = {
         "main", "class", "int", "boolean", "void", "if", "else", "while",
-        "return", "true", "false", "final", "new", "this"
+        "return", "true", "false", "final"
     };
 
     // JajaCode instructions
@@ -27,7 +27,7 @@ public class SyntaxHighlighter {
         "goto", "if", "ifeq", "ifne",
         "invoke", "invokestatic", "return",
         "wr", "wrl", "rd",
-        "swap", "halt"
+        "swap", "halt", "add", "sub", "mul", "div", "jcstop"
     };
 
     // Operators and special characters
