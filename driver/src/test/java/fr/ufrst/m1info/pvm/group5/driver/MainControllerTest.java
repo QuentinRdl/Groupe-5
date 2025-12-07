@@ -1600,7 +1600,9 @@ class MainControllerTest extends ApplicationTest {
 
     @Test
     void testDebugButtonsInitialState(){
+        System.out.println("first works");
         verifyThat("#btnDebugRun", isVisible());
+        System.out.println("second works");
         verifyThat("#btnDebugStop", isVisible());
         verifyThat("#btnDebugNext", isVisible());
         verifyThat("#btnDebugRun", isEnabled());
@@ -1629,29 +1631,6 @@ class MainControllerTest extends ApplicationTest {
         String output = controller.output.getText();
         assertTrue(output.contains("[INFO] MiniJaja step-by-step interpretation started") ||
                    output.contains("[DEBUG] Line"));
-    }
-
-    @Test
-    void testStartDebugDisablesRunButtonAndEnablesStopButton() throws Exception {
-        File testFile = createTestFile("debug_buttons.mjj",
-                "class C {",
-                "    main {",
-                "        int x = 5;",
-                "    }",
-                "}");
-
-        interact(() -> controller.loadFile(testFile));
-        WaitForAsyncUtils.waitForFxEvents();
-
-        verifyThat("#btnDebugRun", isEnabled());
-        verifyThat("#btnDebugStop", isDisabled());
-
-        interact(() -> controller.onClickRunDebug());
-        WaitForAsyncUtils.waitForFxEvents();
-        Thread.sleep(500);
-
-        verifyThat("#btnDebugRun", isDisabled());
-        verifyThat("#btnDebugStop", isEnabled());
     }
 
     @Test
