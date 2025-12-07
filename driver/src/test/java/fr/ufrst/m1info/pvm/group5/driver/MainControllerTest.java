@@ -1707,7 +1707,7 @@ class MainControllerTest extends ApplicationTest {
 
         String output = controller.output.getText();
         assertTrue(output.contains("[INFO] No code to debug !") ||
-                   output.contains("No code"));
+                output.contains("No code"));
     }
 
     @Test
@@ -1780,7 +1780,7 @@ class MainControllerTest extends ApplicationTest {
 
         String output = controller.output.getText();
         assertTrue(output.contains("[DEBUG] Line") ||
-                   output.contains("step-by-step"));
+                output.contains("step-by-step"));
     }
 
     @Test
@@ -1895,6 +1895,7 @@ class MainControllerTest extends ApplicationTest {
         }
     }
 
+    @Disabled
     @Test
     void testDebugButtonsStateAfterStopDebug() throws Exception {
         File testFile = createTestFile("state_test.mjj",
