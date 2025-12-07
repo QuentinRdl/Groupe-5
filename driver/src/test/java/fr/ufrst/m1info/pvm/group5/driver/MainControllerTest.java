@@ -102,11 +102,18 @@ class MainControllerTest extends ApplicationTest {
      * @param lineIndex index of the code line to look for
      * @return the matching TextField, or null if none is found
      */
-    private TextField getTextFieldForLine(int lineIndex) {
+    private javafx.scene.Node getTextFieldForLine(int lineIndex) {
         for (Object node : controller.getCodeListView().lookupAll(".code-field")) {
-            if (node instanceof TextField tf) {
-                // Checks if this TextField corresponds to the target line
-                CodeLine codeLine = controller.getCodeLines().get(lineIndex);
+            CodeLine codeLine = controller.getCodeLines().get(lineIndex);
+
+            // Handle InlineCssTextArea (new syntax highlighting implementation)
+            if (node instanceof org.fxmisc.richtext.InlineCssTextArea textArea) {
+                if (codeLine.getCode().equals(textArea.getText())) {
+                    return textArea;
+                }
+            }
+            // Handle TextField (legacy implementation)
+            else if (node instanceof TextField tf) {
                 if (codeLine.getCode().equals(tf.getText())) {
                     return tf;
                 }
@@ -269,7 +276,7 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField codeField = getTextFieldForLine(0);
+        var codeField = getTextFieldForLine(0);
         assertNotNull(codeField);
 
         clickOn(codeField).eraseText(codeLines.getFirst().getCode().length()).write("int y = 12;");
@@ -299,7 +306,7 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField firstField = getTextFieldForLine(0);
+        var firstField = getTextFieldForLine(0);
         assertNotNull(firstField, "The first TextField should exist");
 
         clickOn(firstField);
@@ -330,7 +337,7 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField field = getTextFieldForLine(0);
+        var field = getTextFieldForLine(0);
         assertNotNull(field);
 
         clickOn(field);
@@ -364,7 +371,7 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField firstField = getTextFieldForLine(0);
+        var firstField = getTextFieldForLine(0);
         assertNotNull(firstField);
 
         clickOn(firstField).eraseText(controller.getCodeLines().get(0).getCode().length()).write("boolean x = true;");
@@ -429,7 +436,7 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField firstField = getTextFieldForLine(0);
+        var firstField = getTextFieldForLine(0);
         assertNotNull(firstField);
 
         clickOn(firstField).type(KeyCode.ENTER);
@@ -566,13 +573,33 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField firstField = getTextFieldForLine(0);
+        var firstField = getTextFieldForLine(0);
         assertNotNull(firstField);
 
         clickOn(firstField).type(KeyCode.ENTER);
         WaitForAsyncUtils.waitForFxEvents();
 
         assertEquals(3, controller.getCodeLines().size());
+        // Detailed debug output to reveal invisible characters causing assertion mismatch
+        String debugLine = controller.getCodeLines().getFirst().getCode();
+        System.out.println("---DEBUG START---");
+        System.out.println("debugLine as-is: [" + debugLine + "]");
+        System.out.println("debugLine (repr): \"" + debugLine.replace("\\r", "\\\r").replace("\\n", "\\\n") + "\"");
+        System.out.println("debugLine length: " + debugLine.length());
+        System.out.print("debugLine char codes: ");
+        for (int i = 0; i < debugLine.length(); i++) {
+            System.out.print(((int) debugLine.charAt(i)));
+            if (i < debugLine.length() - 1) System.out.print(",");
+        }
+        System.out.println();
+        byte[] bytes = debugLine.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        System.out.print("debugLine bytes: ");
+        for (int i = 0; i < bytes.length; i++) {
+            System.out.print(bytes[i]);
+            if (i < bytes.length - 1) System.out.print(",");
+        }
+        System.out.println();
+        System.out.println("---DEBUG END---");
         assertEquals("int x = 10;", controller.getCodeLines().get(0).getCode());
         assertEquals("", controller.getCodeLines().get(1).getCode());
         assertEquals("x++;", controller.getCodeLines().get(2).getCode());
@@ -603,13 +630,19 @@ class MainControllerTest extends ApplicationTest {
         assertEquals(1, controller.getCodeListView().getSelectionModel().getSelectedIndex());
 
         // Find the TextField of the selected row
-        TextField field = getTextFieldForLine(1);
+        var field = getTextFieldForLine(1);
         assertNotNull(field);
 
         clickOn(field);
         WaitForAsyncUtils.waitForFxEvents();
 
-        interact(field::end);
+        interact(() -> {
+            if (field instanceof org.fxmisc.richtext.InlineCssTextArea textArea) {
+                textArea.moveTo(textArea.getText().length());
+            } else if (field instanceof TextField tf) {
+                tf.end();
+            }
+        });
         WaitForAsyncUtils.waitForFxEvents();
 
         assertEquals("abc", controller.getCodeLines().get(1).getCode());
@@ -651,7 +684,7 @@ class MainControllerTest extends ApplicationTest {
         assertEquals(1, controller.getCodeListView().getSelectionModel().getSelectedIndex());
 
         // Find the TextField of the selected row
-        TextField field = getTextFieldForLine(1);
+        var field = getTextFieldForLine(1);
         assertNotNull(field);
 
         clickOn(field);
@@ -679,7 +712,7 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField field = getTextFieldForLine(0);
+        var field = getTextFieldForLine(0);
         assertNotNull(field);
 
         clickOn(field);
@@ -705,15 +738,20 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField field = getTextFieldForLine(0);
+        var field = getTextFieldForLine(0);
         assertNotNull(field);
 
         clickOn(field);
         WaitForAsyncUtils.waitForFxEvents();
 
         interact(() -> {
-            field.positionCaret(2);
-            field.requestFocus();
+            if (field instanceof org.fxmisc.richtext.InlineCssTextArea textArea) {
+                textArea.moveTo(2);
+                textArea.requestFocus();
+            } else if (field instanceof TextField tf) {
+                tf.positionCaret(2);
+                tf.requestFocus();
+            }
         });
         WaitForAsyncUtils.waitForFxEvents();
 
@@ -743,13 +781,19 @@ class MainControllerTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         assertEquals(1, controller.getCodeListView().getSelectionModel().getSelectedIndex());
 
-        TextField field = getTextFieldForLine(1);
+        var field = getTextFieldForLine(1);
         assertNotNull(field);
 
         clickOn(field);
         WaitForAsyncUtils.waitForFxEvents();
 
-        interact(field::end);
+        interact(() -> {
+            if (field instanceof org.fxmisc.richtext.InlineCssTextArea textArea) {
+                textArea.moveTo(textArea.getText().length());
+            } else if (field instanceof TextField tf) {
+                tf.end();
+            }
+        });
         WaitForAsyncUtils.waitForFxEvents();
 
         type(KeyCode.BACK_SPACE);
@@ -785,7 +829,7 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField field = getTextFieldForLine(0);
+        var field = getTextFieldForLine(0);
         assertNotNull(field);
 
         clickOn(field);
@@ -876,7 +920,7 @@ class MainControllerTest extends ApplicationTest {
         assertEquals(1, controller.getCodeListView().getSelectionModel().getSelectedIndex());
 
         // Find the TextField of the selected row
-        TextField field = getTextFieldForLine(1);
+        var field = getTextFieldForLine(1);
         assertNotNull(field);
 
         clickOn(field);
@@ -901,7 +945,7 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField field = getTextFieldForLine(0);
+        var field = getTextFieldForLine(0);
         assertNotNull(field);
 
         clickOn(field);
@@ -926,7 +970,7 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField field = getTextFieldForLine(0);
+        var field = getTextFieldForLine(0);
         assertNotNull(field);
 
         clickOn(field);
@@ -951,7 +995,7 @@ class MainControllerTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         assertEquals(2, controller.getCodeListView().getSelectionModel().getSelectedIndex());
 
-        TextField field = getTextFieldForLine(2);
+        var field = getTextFieldForLine(2);
         assertNotNull(field);
 
         clickOn(field);
@@ -1179,10 +1223,17 @@ class MainControllerTest extends ApplicationTest {
         });
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField field = (TextField) controller.getCompiledCodeListView().lookup(".code-field");
+        var field = controller.getCompiledCodeListView().lookup(".code-field");
         assertNotNull(field);
 
-        assertFalse(field.isEditable());
+        // Check if the field is not editable
+        boolean isEditable = false;
+        if (field instanceof org.fxmisc.richtext.InlineCssTextArea textArea) {
+            isEditable = textArea.isEditable();
+        } else if (field instanceof TextField tf) {
+            isEditable = tf.isEditable();
+        }
+        assertFalse(isEditable);
     }
 
     @Test
@@ -1357,7 +1408,7 @@ class MainControllerTest extends ApplicationTest {
         interact(() -> controller.getCodeListView().scrollTo(0));
         WaitForAsyncUtils.waitForFxEvents();
 
-        TextField firstField = getTextFieldForLine(0);
+        var firstField = getTextFieldForLine(0);
         assertNotNull(firstField);
 
         clickOn(firstField).eraseText(controller.getCodeLines().get(0).getCode().length()).write("boolean x = true;");
@@ -1471,7 +1522,7 @@ class MainControllerTest extends ApplicationTest {
 
         assertFalse(controller.getSourceTab().getText().contains("•"));
 
-        TextField firstField = getTextFieldForLine(0);
+        var firstField = getTextFieldForLine(0);
         assertNotNull(firstField);
 
         clickOn(firstField);
@@ -1493,7 +1544,7 @@ class MainControllerTest extends ApplicationTest {
         assertFalse(controller.getSourceTab().getText().contains("•"));
         assertEquals(1, controller.getCodeLines().size());
 
-        TextField firstField = getTextFieldForLine(0);
+        var firstField = getTextFieldForLine(0);
         assertNotNull(firstField);
 
         clickOn(firstField);
@@ -1515,7 +1566,7 @@ class MainControllerTest extends ApplicationTest {
         assertFalse(controller.getSourceTab().getText().contains("•"));
         assertEquals(2, controller.getCodeLines().size());
 
-        TextField firstField = getTextFieldForLine(0);
+        var firstField = getTextFieldForLine(0);
         assertNotNull(firstField);
 
         clickOn(firstField);
@@ -1537,7 +1588,7 @@ class MainControllerTest extends ApplicationTest {
         assertEquals(2, controller.getCodeLines().size());
         assertFalse(controller.getSourceTab().getText().contains("•"));
 
-        TextField firstField = getTextFieldForLine(0);
+        var firstField = getTextFieldForLine(0);
         assertNotNull(firstField);
 
         clickOn(firstField);
@@ -1574,7 +1625,7 @@ class MainControllerTest extends ApplicationTest {
     void testSaveAsRemovesModificationMark() {
         assertEquals(1, controller.getCodeLines().size());
 
-        TextField firstField = getTextFieldForLine(0);
+        var firstField = getTextFieldForLine(0);
         assertNotNull(firstField);
 
         clickOn(firstField);

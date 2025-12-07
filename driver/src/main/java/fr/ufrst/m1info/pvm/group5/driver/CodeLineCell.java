@@ -68,7 +68,7 @@ public class CodeLineCell extends ListCell<CodeLine> {
         lineNumberContainer.getChildren().addAll(breakpointCircle, lineNumberLabel);
 
         codeField = new InlineCssTextArea();
-        codeField.getStyleClass().add("styled-text-area");
+        codeField.getStyleClass().addAll("styled-text-area", "code-field");
         codeField.setWrapText(false);
         codeField.setPrefHeight(30);
         HBox.setHgrow(codeField, Priority.ALWAYS);
@@ -87,20 +87,37 @@ public class CodeLineCell extends ListCell<CodeLine> {
 
         // listens for changes in the text field to synchronise the changes and apply syntax highlighting
         codeField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(getItem() != null){
-                getItem().setCode(newValue);
+            if (isUpdating) return; // prevent reacting to programmatic updates
+
+            // Normalize the text: remove any newline characters that may have been inserted
+            String cleaned = newValue;
+            if (cleaned != null && (cleaned.contains("\n") || cleaned.contains("\r"))) {
+                cleaned = cleaned.replace("\r", "").replace("\n", "");
+                // update the text area and avoid re-entering the listener
+                isUpdating = true;
+                int caret = codeField.getCaretPosition();
+                codeField.replaceText(cleaned);
+                // restore caret position (clamped)
+                final int pos = Math.min(caret, cleaned.length());
+                codeField.moveTo(pos);
+                isUpdating = false;
             }
-            if (newValue != null && !newValue.isEmpty()){
+
+            if(getItem() != null){
+                getItem().setCode(cleaned);
+            }
+
+            if (cleaned != null && !cleaned.isEmpty()){
                 wasEmptyOnLastBackspace = false;
             }
 
-            if(listener != null && !isUpdating && oldValue != null && !oldValue.equals(newValue)) {
+            if(listener != null && !isUpdating && oldValue != null && !oldValue.equals(cleaned)) {
                 listener.onModified();
             }
 
             // Apply syntax highlighting
-            if (!isUpdating && newValue != null) {
-                applySyntaxHighlighting(newValue);
+            if (!isUpdating && cleaned != null) {
+                applySyntaxHighlighting(cleaned);
             }
         });
 
@@ -113,7 +130,10 @@ public class CodeLineCell extends ListCell<CodeLine> {
             if(listener == null) return;
 
             switch (code) {
-                case KeyCode.ENTER -> listener.onEnterPressed(getItem());
+                case KeyCode.ENTER -> {
+                    listener.onEnterPressed(getItem());
+                    event.consume(); // Prevent InlineCssTextArea from adding newline
+                }
                 case KeyCode.BACK_SPACE -> {
                     String currentText = codeField.getText();
                     int caretPos = codeField.getCaretPosition();
@@ -140,6 +160,12 @@ public class CodeLineCell extends ListCell<CodeLine> {
             }
         });
 
+        // Also consume Enter in KEY_TYPED phase to prevent newline insertion in InlineCssTextArea
+        codeField.setOnKeyTyped(event -> {
+            if (event.getCharacter().equals("\r") || event.getCharacter().equals("\n")) {
+                event.consume();
+            }
+        });
 
         container = new HBox();
         container.getStyleClass().add("code-line");
