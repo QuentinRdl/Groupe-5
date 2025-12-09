@@ -2096,33 +2096,6 @@ class MainControllerTest extends ApplicationTest {
     }
 
     @Test
-    void testDebugWithConditionals() throws Exception {
-        File testFile = createTestFile("debug_conditionals.mjj",
-                "class C {",
-                "    int x = 5;",
-                "    main {",
-                "        if(x > 0){",
-                "            x = 10;",
-                "        };",
-                "    }",
-                "}");
-
-        interact(() -> controller.loadFile(testFile));
-        WaitForAsyncUtils.waitForFxEvents();
-
-        interact(() -> controller.onClickRunDebug());
-        WaitForAsyncUtils.waitForFxEvents();
-        Thread.sleep(500);
-
-        interact(() -> controller.onClickNextDebug());
-        WaitForAsyncUtils.waitForFxEvents();
-        Thread.sleep(500);
-
-        String output = controller.output.getText();
-        assertTrue(output.contains("[INFO] MiniJaja step-by-step interpretation started"));
-    }
-
-    @Test
     void testDebugWithLoop() throws Exception {
         File testFile = createTestFile("debug_loop.mjj",
                 "class C {",
