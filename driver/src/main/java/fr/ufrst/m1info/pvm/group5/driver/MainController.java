@@ -1224,11 +1224,8 @@ public class MainController {
 
                 // Clean everything -> Stop threads
                 if(debugInterpreterMjj != null) {
-                    System.out.println("Trying to shut down the thread");
-                    debugInterpreterMjj.stopInterpretation(); // FIXME : Thread is not apparently not alive shown by debugging stopIntrepretation
+                    debugInterpreterMjj.stopInterpretation();
                 }
-
-                //debugInterpreterMjj = null;
             };
 
             // Subscribe the handler to the event

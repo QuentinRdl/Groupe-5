@@ -1695,12 +1695,6 @@ class MainControllerTest extends ApplicationTest {
         }
     }
 
-
-
-
-
->>>>>>> driver/src/test/java/fr/ufrst/m1info/pvm/group5/driver/MainControllerTest.java
-
     @Test
     void testStartDebugOnSimpleMiniJajaFile() throws Exception {
         File testFile = createTestFile("simple_debug.mjj",
@@ -1720,8 +1714,7 @@ class MainControllerTest extends ApplicationTest {
         Thread.sleep(500); // Wait for debug to initialize
 
         String output = controller.output.getText();
-        assertTrue(output.contains("[INFO] MiniJaja step-by-step interpretation started") ||
-                   output.contains("[DEBUG] Line"));
+        assertTrue(output.contains("[DEBUG] Line"));
     }
 
     @Test
