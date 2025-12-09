@@ -1608,6 +1608,9 @@ class MainControllerTest extends ApplicationTest {
                 "        x = 10;",
                 "    }",
                 "}");
+
+        java.util.Set<Integer> breakpoints = controller.getBreakpointLines();
+        assertTrue(breakpoints.isEmpty());
     }
     
     @Test
