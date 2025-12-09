@@ -15,19 +15,14 @@ public class SyntaxHighlighter {
     // MiniJaja keywords
     private static final String[] MINIJAJA_KEYWORDS = {
         "main", "class", "int", "boolean", "void", "if", "else", "while",
-        "return", "true", "false", "final", "new", "this"
+        "return", "true", "false", "final", "write", "writeln", "length"
     };
 
     // JajaCode instructions
     private static final String[] JAJACODE_KEYWORDS = {
-        "init", "new", "newarray", "nop", "pop", "push", "pushr",
-        "aload", "astore", "dup", "dupx1",
-        "load", "store", "inc",
-        "binop", "neg", "cmp", "and", "not", "or",
-        "goto", "if", "ifeq", "ifne",
-        "invoke", "invokestatic", "return",
-        "wr", "wrl", "rd",
-        "swap", "halt", "add", "sub", "mul", "div", "jcstop"
+        "init", "new", "newarray", "nop", "pop", "push", "aload", "astore", "dup", "load",
+        "store", "inc", "neg", "cmp", "and", "not", "or", "goto", "if", "invoke", "return",
+        "swap", "add", "sub", "mul", "div", "jcstop", "write", "writeln", "sup", "length", "ainc"
     };
 
     // Operators and special characters

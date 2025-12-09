@@ -581,26 +581,6 @@ class MainControllerTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
 
         assertEquals(3, controller.getCodeLines().size());
-        // Detailed debug output to reveal invisible characters causing assertion mismatch
-        String debugLine = controller.getCodeLines().getFirst().getCode();
-        System.out.println("---DEBUG START---");
-        System.out.println("debugLine as-is: [" + debugLine + "]");
-        System.out.println("debugLine (repr): \"" + debugLine.replace("\\r", "\\\r").replace("\\n", "\\\n") + "\"");
-        System.out.println("debugLine length: " + debugLine.length());
-        System.out.print("debugLine char codes: ");
-        for (int i = 0; i < debugLine.length(); i++) {
-            System.out.print(((int) debugLine.charAt(i)));
-            if (i < debugLine.length() - 1) System.out.print(",");
-        }
-        System.out.println();
-        byte[] bytes = debugLine.getBytes(java.nio.charset.StandardCharsets.UTF_8);
-        System.out.print("debugLine bytes: ");
-        for (int i = 0; i < bytes.length; i++) {
-            System.out.print(bytes[i]);
-            if (i < bytes.length - 1) System.out.print(",");
-        }
-        System.out.println();
-        System.out.println("---DEBUG END---");
         assertEquals("int x = 10;", controller.getCodeLines().get(0).getCode());
         assertEquals("", controller.getCodeLines().get(1).getCode());
         assertEquals("x++;", controller.getCodeLines().get(2).getCode());
@@ -1735,12 +1715,4 @@ class MainControllerTest extends ApplicationTest {
             assertFalse(line.isCurrentDebugLine());
         }
     }
-
-
-
-
-
-
-
-
 }
