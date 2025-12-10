@@ -319,6 +319,45 @@ class CompilerTest {
     }
 
     @Test
+    @DisplayName("Compile File Method")
+    void CompileMethod()  {
+        String res= comp.compileFile("src/test/resources/Method.mjj");
+        String expected = "init\n" +
+                "push(1)\n" +
+                "new(x,INT,var,0)\n" +
+                "push(100)\n" +
+                "new(y,INT,var,0)\n" +
+                "push(9)\n" +
+                "new(addition,INT,meth,0)\n" +
+                "goto(16)\n" +
+                "new(op2,INT,var,1)\n" +
+                "new(op1,INT,var,2)\n" +
+                "load(op1)\n" +
+                "load(op2)\n" +
+                "add\n" +
+                "swap\n" +
+                "return\n" +
+                "load(x)\n" +
+                "load(y)\n" +
+                "invoke(addition)\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "store(x)\n" +
+                "push(0)\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "pop\n" +
+                "jcstop";
+        Assertions.assertEquals(expected,res);
+    }
+
+    @Test
     @DisplayName("Compile File OperationPrevalence")
     void CompileOperationPrevalence()  {
         String res= comp.compileFile("src/test/resources/OperationPrevalence.mjj");
