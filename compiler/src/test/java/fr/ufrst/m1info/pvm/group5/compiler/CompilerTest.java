@@ -466,6 +466,77 @@ class CompilerTest {
     }
 
     @Test
+    @DisplayName("Compile File MethodRecursive")
+    void CompileMethodRecursive()  {
+        String res= comp.compileFile("src/test/resources/MethodRecursive.mjj");
+        String expected = "init\n" +
+                "push(5)\n" +
+                "new(x,INT,var,0)\n" +
+                "push(7)\n" +
+                "new(countdown,VOID,meth,0)\n" +
+                "goto(25)\n" +
+                "new(n,INT,var,1)\n" +
+                "load(n)\n" +
+                "push(1)\n" +
+                "neg\n" +
+                "sup\n" +
+                "if(14)\n" +
+                "goto(23)\n" +
+                "load(n)\n" +
+                "writeln\n" +
+                "load(n)\n" +
+                "push(1)\n" +
+                "sub\n" +
+                "invoke(countdown)\n" +
+                "swap\n" +
+                "pop\n" +
+                "pop\n" +
+                "swap\n" +
+                "return\n" +
+                "push(28)\n" +
+                "new(countup,VOID,meth,0)\n" +
+                "goto(46)\n" +
+                "new(n,INT,var,1)\n" +
+                "load(n)\n" +
+                "push(1)\n" +
+                "neg\n" +
+                "sup\n" +
+                "if(35)\n" +
+                "goto(44)\n" +
+                "load(n)\n" +
+                "push(1)\n" +
+                "sub\n" +
+                "invoke(countup)\n" +
+                "swap\n" +
+                "pop\n" +
+                "pop\n" +
+                "load(n)\n" +
+                "writeln\n" +
+                "swap\n" +
+                "return\n" +
+                "load(x)\n" +
+                "invoke(countdown)\n" +
+                "swap\n" +
+                "pop\n" +
+                "pop\n" +
+                "load(x)\n" +
+                "invoke(countup)\n" +
+                "swap\n" +
+                "pop\n" +
+                "pop\n" +
+                "push(0)\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "pop\n" +
+                "jcstop";
+        Assertions.assertEquals(expected,res);
+    }
+
+    @Test
     @DisplayName("Compile File OperationPrevalence")
     void CompileOperationPrevalence()  {
         String res= comp.compileFile("src/test/resources/OperationPrevalence.mjj");
