@@ -941,12 +941,13 @@ class CompilerTest {
                 "jcstop";
         String[] listE=expected.split("\n");
         String[] listR=res.split("\n");
-        for (int i=0;i< listE.length;i++){
-            if (!listE[i].equals(listR[i])){
-                System.out.println("Line "+(i+1)+" : Expected : "+listE[i]+" Res :"+listR[i]);
+        StringBuilder differences = new StringBuilder();
+        for (int i = 0; i < listE.length; i++) {
+            if (!listE[i].equals(listR[i])) {
+                differences.append("Line ").append(i + 1).append(" : Expected : ").append(listE[i]).append(" Res : ").append(listR[i]).append("\n");
             }
         }
-        Assertions.assertEquals(expected,res);
+        Assertions.assertEquals(expected, res, differences.toString());
     }
 
     @Test
@@ -1087,12 +1088,13 @@ class CompilerTest {
                 "jcstop";
         String[] listE=expected.split("\n");
         String[] listR=res.split("\n");
-        for (int i=0;i< listE.length;i++){
-            if (!listE[i].equals(listR[i])){
-                System.out.println("Line "+(i+1)+" : Expected : "+listE[i]+" Res :"+listR[i]);
+        StringBuilder differences = new StringBuilder();
+        for (int i = 0; i < listE.length; i++) {
+            if (!listE[i].equals(listR[i])) {
+                differences.append("Line ").append(i + 1).append(" : Expected : ").append(listE[i]).append(" Res : ").append(listR[i]).append("\n");
             }
         }
-        Assertions.assertEquals(expected,res);
+        Assertions.assertEquals(expected, res, differences.toString());
     }
 
     @Test
