@@ -703,7 +703,7 @@ class CompilerTest {
                 "return\n" +
                 "push(43)\n" +
                 "new(partition,INT,meth,0)\n" +
-                "goto(104)\n" +
+                "goto(106)\n" +
                 "new(fin,INT,var,1)\n" +
                 "new(deb,INT,var,2)\n" +
                 "load(deb)\n" +
@@ -776,7 +776,7 @@ class CompilerTest {
                 "new(trirapide,VOID,meth,0)\n" +
                 "goto(154)\n" +
                 "new(fin,INT,var,1)\n" +
-                "new(deb,INT,var,2)\n" +
+                "new(debut,INT,var,2)\n" +
                 "new(pivot,INT,var,0)\n" +
                 "load(fin)\n" +
                 "load(debut)\n" +
@@ -906,7 +906,13 @@ class CompilerTest {
                 "pop\n" +
                 "pop\n" +
                 "jcstop";
-        System.out.println();
+        String[] listE=expected.split("\n");
+        String[] listR=res.split("\n");
+        for (int i=0;i< listE.length;i++){
+            if (!listE[i].equals(listR[i])){
+                System.out.println("Line "+(i+1)+" : Expected : "+listE[i]+" Res :"+listR[i]);
+            }
+        }
         Assertions.assertEquals(expected,res);
     }
 
