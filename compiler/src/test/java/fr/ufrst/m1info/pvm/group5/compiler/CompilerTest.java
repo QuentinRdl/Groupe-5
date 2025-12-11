@@ -143,6 +143,74 @@ class CompilerTest {
     }
 
     @Test
+    @DisplayName("Compile File Array")
+    void CompileArray()  {
+        String res= comp.compileFile("src/test/resources/Array.mjj");
+        String expected = "init\n" +
+                "push(3)\n" +
+                "newarray(arrI,INT)\n" +
+                "push(4)\n" +
+                "newarray(arrB,BOOL)\n" +
+                "push(0)\n" +
+                "new(x,INT,var,0)\n" +
+                "push(0)\n" +
+                "push(4)\n" +
+                "astore(arrI)\n" +
+                "push(1)\n" +
+                "push(33)\n" +
+                "astore(arrI)\n" +
+                "push(2)\n" +
+                "push(81)\n" +
+                "astore(arrI)\n" +
+                "push(0)\n" +
+                "push(jcfaux)\n" +
+                "astore(arrB)\n" +
+                "push(1)\n" +
+                "push(jcvrai)\n" +
+                "astore(arrB)\n" +
+                "push(2)\n" +
+                "push(jcfaux)\n" +
+                "astore(arrB)\n" +
+                "push(3)\n" +
+                "push(jcfaux)\n" +
+                "astore(arrB)\n" +
+                "push(3)\n" +
+                "load(x)\n" +
+                "sup\n" +
+                "not\n" +
+                "if(40)\n" +
+                "load(x)\n" +
+                "aload(arrI)\n" +
+                "writeln\n" +
+                "push(1)\n" +
+                "inc(x)\n" +
+                "goto(29)\n" +
+                "push(0)\n" +
+                "store(x)\n" +
+                "push(4)\n" +
+                "load(x)\n" +
+                "sup\n" +
+                "not\n" +
+                "if(53)\n" +
+                "load(x)\n" +
+                "aload(arrB)\n" +
+                "writeln\n" +
+                "push(1)\n" +
+                "inc(x)\n" +
+                "goto(42)\n" +
+                "push(0)\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "swap\n" +
+                "pop\n" +
+                "pop\n" +
+                "jcstop";
+        Assertions.assertEquals(expected,res);
+    }
+
+    @Test
     @DisplayName("Compile File BasicOperations")
     void CompileBasicOperations()  {
         String res= comp.compileFile("src/test/resources/BasicOperations.mjj");
