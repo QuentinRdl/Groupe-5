@@ -966,6 +966,46 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret Call Void Method In Var")
+    void CallVoidMethodInVar() {
+        String errMessage=imj.interpretCode("class C { void f(){write(\"f\"); };main{int x = f();}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Call Int Method In Bool Var")
+    void CallIntMethodInBoolVar() {
+        String errMessage=imj.interpretCode("class C { int f(){return 5; };main{boolean x = f();}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Call Bool Method In Int Var")
+    void CallBoolMethodIntVar() {
+        String errMessage=imj.interpretCode("class C { boolean f(){return false; };main{int x = f();}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ASTInvalidDynamicTypeException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Method With Void Args")
+    void MethodWithVoidArgs() {
+        String errMessage=imj.interpretCode("class C { void f(void arg1){ };main{}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Method In Method")
+    void MethodInMethod() {
+        String errMessage=imj.interpretCode("class C { void f(){void f2(){return false; }; };main{f();}}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
     @DisplayName("Interpret Boolean Index")
     void BooleanIndex() {
         String errMessage=imj.interpretCode("class C { int t[20]; main{t[false]=3;}}");
