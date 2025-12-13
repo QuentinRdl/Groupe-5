@@ -1038,10 +1038,32 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
-    @DisplayName("Interpret Method Many Args")
-    void MethodManyArgs() {
+    @DisplayName("Interpret Method Many Args Type Error")
+    void MethodManyArgsTypeError() {
         String errMessage=imj.interpretCode("class C { void f(boolean x,boolean y,int z){ }; main{ f(false,1,99);}}");
         Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Method Three Args")
+    void MethodThreeArgs() {
+        String errMessage=imj.interpretCode("class C { void f(boolean x,int y,int z){ writeln(x); writeln(y); writeln(z);}; main{ f(false,1,99);}}");
+        Assertions.assertNull(errMessage);
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("false\n1\n99\n", e.oldText());
+        });
+        writer.write("");
+    }
+
+    @Test
+    @DisplayName("Interpret Method Eight Args")
+    void MethodEightArgs() {
+        String errMessage=imj.interpretCode("class C { void f(boolean a,int b,int c,int d,boolean e,int f,int g,int h){ writeln(a); writeln(b); writeln(c); writeln(d); writeln(e); writeln(f); writeln(g); writeln(h); }; main{ f(false,1,99,27,true,5,10,81);}}");
+        Assertions.assertNull(errMessage);
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("false\n1\n99\n27\ntrue\n5\n10\n81\n", e.oldText());
+        });
+        writer.write("");
     }
 
     @Test
