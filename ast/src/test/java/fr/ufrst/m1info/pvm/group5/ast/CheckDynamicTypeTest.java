@@ -1747,7 +1747,7 @@ class CheckDynamicTypeTest {
         ASTNode params = ASTMocks.createNode(ASTNode.class, null, i -> List.of());
 
         ASTNode instrs = mock(ASTNode.class);
-        when(instrs.checkType(memory)).thenReturn("void");
+        when(instrs.checkType(memory)).thenReturn("int");
 
         MethodeNode method = new MethodeNode(returnType, ident, params, null, instrs);
 
@@ -1768,7 +1768,7 @@ class CheckDynamicTypeTest {
                 null
         );
 
-        assertEquals("bool", method.checkType(memory));
+        assertThrows(ASTInvalidDynamicTypeException.class, () -> method.checkType(memory));
     }
     @Test
     void testMethodeNodeCheckType_Int() {
@@ -1777,7 +1777,7 @@ class CheckDynamicTypeTest {
                 new IdentNode("f"),
                 ASTMocks.createNode(ASTNode.class, null, i -> List.of()),
                 null,
-                null
+                new InstructionsNode(new ReturnNode(new NumberNode(3)),null)
         );
         assertEquals("int", m.checkType(mock(Memory.class)));
     }
@@ -1789,7 +1789,7 @@ class CheckDynamicTypeTest {
                 new IdentNode("f"),
                 ASTMocks.createNode(ASTNode.class, null, i -> List.of()),
                 null,
-                null
+                new InstructionsNode(new ReturnNode(new BooleanNode(false)),null)
         );
         assertEquals("bool", m.checkType(mock(Memory.class)));
     }
@@ -1810,7 +1810,7 @@ class CheckDynamicTypeTest {
         Memory mem = mock(Memory.class);
 
         ASTNode instrs = mock(ASTNode.class);
-        when(instrs.checkType(mem)).thenReturn("void");
+        when(instrs.checkType(mem)).thenReturn("int");
 
         MethodeNode m = new MethodeNode(
                 new TypeNode(ValueType.INT),

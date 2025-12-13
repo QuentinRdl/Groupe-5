@@ -54,11 +54,23 @@ public class ExpListNode extends ASTNode {
         }
         return children;
     }
+
+    /**
+     * Evaluate every expression in the list
+     *
+     * @param m the memory
+     * @return the list of evaluated values
+     * @throws ASTInvalidOperationException
+     * @throws ASTInvalidMemoryException
+     * @throws ASTInvalidDynamicTypeException
+     */
     public List<Value> evalList(Memory m)
             throws ASTInvalidOperationException, ASTInvalidMemoryException, ASTInvalidDynamicTypeException {
         List<Value> values = new ArrayList<>();
 
-        if (head instanceof EvaluableNode evaluableHead) {
+        if (head instanceof ExpListNode expListNode) {
+            values.addAll(expListNode.evalList(m));
+        } else if (head instanceof EvaluableNode evaluableHead) {
             values.add(evaluableHead.eval(m));
         } else {
             throw new ASTInvalidOperationException("Head of ExpListNode is not evaluable.");
