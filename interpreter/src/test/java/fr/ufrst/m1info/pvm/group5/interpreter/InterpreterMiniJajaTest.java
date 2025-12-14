@@ -1336,6 +1336,20 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret If Array")
+    void IfArray() {
+        String errMessage=imj.interpretCode("class C { boolean t[5]; main{ if(t){};}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret While Array")
+    void WhileArray() {
+        String errMessage=imj.interpretCode("class C { boolean t[5]; main{ while(t){};}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
     @DisplayName("Interpret Random String")
     void randomString() {
         String errMessage=imj.interpretCode("ezudzedezezbclassdezdoncCdzedo{dezodjintezpodjy;podkezdmain{ydpocke=dozejd10;}}");
