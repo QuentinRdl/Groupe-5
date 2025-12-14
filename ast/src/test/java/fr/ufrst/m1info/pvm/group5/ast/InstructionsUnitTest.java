@@ -1021,4 +1021,46 @@ class InstructionsUnitTest {
         assertThrows(StackIsEmptyException.class, () -> r.execute(0, memory));
     }
 
+
+    //Length
+    @Test
+    void length_simple(){
+        Map<String, Value[]> heap = new HashMap<>();
+
+        Value[] values = {
+                new Value(1),
+                new Value(2),
+                new Value(3)
+        };
+        heap.put("x", values);
+        ASTMocks.addHeapToMock(memory, heap);
+        LengthInstruction l = new LengthInstruction("x");
+
+        var res = l.execute(0, memory);
+
+        ASTMocks.Pair<String, Value> top = storage.pop();
+        assertEquals(3, top.second().valueInt);
+        assertEquals(".", top.first());
+        assertEquals(1, res);
+
+    }
+
+    @Test
+    void length_empty(){
+        Map<String, Value[]> heap = new HashMap<>();
+
+        Value[] values = {};
+        heap.put("x", values);
+        ASTMocks.addHeapToMock(memory, heap);
+        LengthInstruction l = new LengthInstruction("x");
+
+        var res = l.execute(0, memory);
+
+        ASTMocks.Pair<String, Value> top = storage.pop();
+        assertEquals(0, top.second().valueInt);
+        assertEquals(".", top.first());
+        assertEquals(1, res);
+
+    }
+
 }
