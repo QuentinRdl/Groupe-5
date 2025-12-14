@@ -1,7 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.ast.instructions;
 
 import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidDynamicTypeException;
-import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidTypeException;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 import fr.ufrst.m1info.pvm.group5.memory.ValueType;

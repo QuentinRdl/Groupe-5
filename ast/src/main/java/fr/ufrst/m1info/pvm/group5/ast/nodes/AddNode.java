@@ -21,9 +21,7 @@ public class AddNode extends BinaryOperator{
     @Override
     protected String controlType(String leftType, String rightType) throws ASTInvalidDynamicTypeException {
         if (!leftType.equals("int") || !rightType.equals("int")){
-            throw new ASTInvalidDynamicTypeException(
-                    "Add operator must be used with 2 operand of type int"
-            );
+            throw new ASTInvalidDynamicTypeException(this.getLine(), "int", (leftType.equals("int"))?leftType:rightType, "add (+)");
         }
         return "int";
     }
