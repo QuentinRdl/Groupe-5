@@ -387,7 +387,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("test",new Value("t")));
         LoadInstruction l = new LoadInstruction("test");
 
-        assertThrows(ASTInvalidTypeException.class, () -> l.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> l.execute(0, memory));
     }
 
     @Test
@@ -450,7 +450,7 @@ class InstructionsUnitTest {
 
         StoreInstruction s = new StoreInstruction("test");
 
-        assertThrows(ASTInvalidTypeException.class, () -> s.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> s.execute(0, memory));
     }
 
     //add
@@ -474,7 +474,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
         AddInstruction a = new AddInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> a.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> a.execute(0, memory));
     }
 
     @Test
@@ -483,7 +483,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
         AddInstruction a = new AddInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> a.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> a.execute(0, memory));
     }
 
     //mul
@@ -507,7 +507,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
         MulInstruction m = new MulInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> m.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> m.execute(0, memory));
     }
 
     @Test
@@ -516,7 +516,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
         MulInstruction m = new MulInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> m.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> m.execute(0, memory));
     }
 
 
@@ -541,7 +541,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
         SubInstruction s = new SubInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> s.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> s.execute(0, memory));
     }
 
     @Test
@@ -550,7 +550,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
         SubInstruction s = new SubInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> s.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> s.execute(0, memory));
     }
 
     //div
@@ -574,7 +574,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
         DivInstruction d = new DivInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> d.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> d.execute(0, memory));
     }
 
     @Test
@@ -583,7 +583,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
         DivInstruction d = new DivInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> d.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> d.execute(0, memory));
     }
 
     @Test
@@ -617,7 +617,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
         OrInstruction o = new OrInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> o.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> o.execute(0, memory));
     }
 
     @Test
@@ -626,7 +626,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
         OrInstruction o = new OrInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> o.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> o.execute(0, memory));
     }
 
     //and
@@ -650,7 +650,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
         AndInstruction a = new AndInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> a.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> a.execute(0, memory));
     }
 
     @Test
@@ -659,7 +659,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
         AndInstruction a = new AndInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> a.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> a.execute(0, memory));
     }
 
     //neg
@@ -681,7 +681,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("op",new Value(true)));
 
         NegInstruction n = new NegInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> n.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> n.execute(0, memory));
     }
 
     @Test
@@ -689,7 +689,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("op",new Value("t")));
 
         NegInstruction n = new NegInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> n.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> n.execute(0, memory));
     }
 
     //not
@@ -711,7 +711,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("op",new Value(1)));
 
         NotInstruction n = new NotInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> n.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> n.execute(0, memory));
     }
 
     @Test
@@ -719,7 +719,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("op",new Value("t")));
 
         NotInstruction n = new NotInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> n.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> n.execute(0, memory));
     }
 
     //cmp
@@ -757,7 +757,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
         CmpInstruction c = new CmpInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> c.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> c.execute(0, memory));
     }
 
     @Test
@@ -766,7 +766,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
         CmpInstruction c = new CmpInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> c.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> c.execute(0, memory));
     }
 
     @Test
@@ -775,7 +775,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
         CmpInstruction c = new CmpInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> c.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> c.execute(0, memory));
     }
 
     //sup
@@ -799,7 +799,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value(true)));
 
         SupInstruction s = new SupInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> s.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> s.execute(0, memory));
     }
 
     @Test
@@ -808,7 +808,7 @@ class InstructionsUnitTest {
         storage.add(new ASTMocks.Pair<>("opr",new Value("t")));
 
         SupInstruction s = new SupInstruction();
-        assertThrows(ASTInvalidTypeException.class, () -> s.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> s.execute(0, memory));
     }
 
     //inc
@@ -833,7 +833,7 @@ class InstructionsUnitTest {
 
         IncInstruction i = new IncInstruction("test");
 
-        assertThrows(ASTInvalidTypeException.class, () -> i.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> i.execute(0, memory));
     }
 
     @Test
@@ -843,7 +843,7 @@ class InstructionsUnitTest {
 
         IncInstruction i = new IncInstruction("test");
 
-        assertThrows(ASTInvalidTypeException.class, () -> i.execute(0, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> i.execute(0, memory));
     }
 
 

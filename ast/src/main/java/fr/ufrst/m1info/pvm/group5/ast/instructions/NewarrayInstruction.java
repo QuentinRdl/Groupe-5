@@ -33,5 +33,4 @@ public class NewarrayInstruction extends Instruction {
     }
 
     public String toString() { return "newarray";}
-    }
 }

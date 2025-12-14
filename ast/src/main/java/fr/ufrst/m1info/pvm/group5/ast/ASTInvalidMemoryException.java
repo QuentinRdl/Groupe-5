@@ -11,7 +11,7 @@ public class ASTInvalidMemoryException extends RuntimeException {
     - Tentative de modification d'une constante : Attempted to change constant value {identificateur}
      */
 
-    private ASTInvalidMemoryException(String message) {
+    public ASTInvalidMemoryException(String message) {
         super(message);
     }
 

@@ -103,9 +103,7 @@ public class AffectationNode extends ASTNode{
             String identName = identifier instanceof TabNode
                     ? ((IdentNode) ((TabNode) identifier).getChildren().get(0)).identifier
                     : ((IdentNode) identifier).identifier;
-            throw new ASTInvalidMemoryException(
-                    "AffectationNode: variable " + identName + " not defined"
-            );
+            throw ASTInvalidMemoryException.UndefinedVariable(identName, this.getLine());
         }
 
         return "void";

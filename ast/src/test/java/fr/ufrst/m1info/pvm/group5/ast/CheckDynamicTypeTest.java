@@ -970,7 +970,7 @@ class CheckDynamicTypeTest {
     @DisplayName("InstructionsNode - checkType() fails if statement fails")
     void testInstructionsNode_FailingInstruction() throws Exception {
         ASTNode instr = mock(ASTNode.class);
-        when(instr.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException("Error"));
+        when(instr.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(-1, "type", "type", "op"));
 
         InstructionsNode node = new InstructionsNode(instr, null);
 
@@ -1021,7 +1021,7 @@ class CheckDynamicTypeTest {
     @DisplayName("MainNode - checkType() fails if vars fails")
     void testMainNode_VarsFail() throws Exception {
         ASTNode vars = mock(ASTNode.class, withSettings().extraInterfaces(WithdrawalNode.class));
-        when(vars.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException("Error"));
+        when(vars.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(-1, "type", "type", "op"));
 
         MainNode node = new MainNode(vars, null);
 
@@ -1032,7 +1032,7 @@ class CheckDynamicTypeTest {
     @DisplayName("MainNode - checkType() fails if instrs fails")
     void testMainNode_InstrsFail() throws Exception {
         ASTNode instrs = mock(ASTNode.class);
-        when(instrs.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException("Error"));
+        when(instrs.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(-1, "type", "type", "op"));
 
         MainNode node = new MainNode(null, instrs);
 
@@ -1722,7 +1722,7 @@ class CheckDynamicTypeTest {
     @DisplayName("ExpListNode - checkType() throws if head throws")
     void testExpListNode_CheckType_HeadThrows() throws Exception {
         ASTNode bad = mock(ASTNode.class);
-        when(bad.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException("err"));
+        when(bad.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(-1, "type", "type", "op"));
 
         ExpListNode list = new ExpListNode(bad, null);
 
@@ -1880,7 +1880,7 @@ class CheckDynamicTypeTest {
     @DisplayName("AppelENode.checkType - method not found (error)")
      void testAppelENode_CheckType_NotFound() {
         IdentNode ident = new IdentNode("ghostFunc");
-        when(memoryMock.getMethod("ghostFunc")).thenThrow(new Memory.MemoryIllegalArgException("Unknown method ghostFunc"));
+        when(memoryMock.getMethod("ghostFunc")).thenThrow(new Memory.MemoryIllegalArgException("Memory", "op", "reason"));
 
         AppelENode node = new AppelENode(ident, null);
         assertThrows(Memory.MemoryIllegalArgException.class, () -> node.checkType(memoryMock));
