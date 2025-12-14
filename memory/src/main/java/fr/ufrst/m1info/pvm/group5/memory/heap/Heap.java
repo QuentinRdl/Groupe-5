@@ -317,7 +317,7 @@ public class Heap {
      */
     public Value getValue(int address, int offset) throws InvalidMemoryAddressException{
         HeapElement target = checkAddress(address);
-        if(offset >= target.size())
+        if(offset >= target.size() || offset < 0)
             throw new IndexOutOfBounds(address, offset, target.size());
         if(target.isFree())
             throw new InvalidMemoryAddressException(address);
@@ -334,7 +334,7 @@ public class Heap {
      */
     public void setValue(int address, int offset, Value value) throws InvalidMemoryAddressException{
         HeapElement target = checkAddress(address);
-        if(offset >= target.size())
+        if(offset >= target.size() || offset < 0)
             throw new IndexOutOfBounds(address, offset, target.size());
         if(target.isFree())
             throw new InvalidMemoryAddressException(address);

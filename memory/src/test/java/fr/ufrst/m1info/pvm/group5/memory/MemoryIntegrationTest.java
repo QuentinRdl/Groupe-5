@@ -1,6 +1,8 @@
 package fr.ufrst.m1info.pvm.group5.memory;
 
 import fr.ufrst.m1info.pvm.group5.memory.heap.Heap;
+import fr.ufrst.m1info.pvm.group5.memory.heap.IndexOutOfBounds;
+import fr.ufrst.m1info.pvm.group5.memory.heap.InvalidMemoryAddressException;
 import fr.ufrst.m1info.pvm.group5.memory.symbol_table.DataType;
 import fr.ufrst.m1info.pvm.group5.memory.symbol_table.EntryKind;
 
@@ -295,7 +297,7 @@ class MemoryIntegrationTest {
         Value val = (Value) ret;
         StackObject stack_ret = StackObject.valueToStackObj(val);
         assertEquals(value, stack_ret.getValue());
-        assertThrows(Memory.MemoryIllegalArgException.class, () -> {
+        assertThrows(Stack.ConstantModificationException.class, () -> {
             mem.affectValue(id, newValue);
         });
     }
@@ -377,7 +379,7 @@ class MemoryIntegrationTest {
         // First declaration should succeed
         mem.declVarClass("classVar");
         // Second declaration (any identifier) should fail because a class var already exists
-        assertThrows(Memory.MemoryIllegalArgException.class, () -> mem.declVarClass("another"));
+        assertThrows(Memory.MemoryIllegalOperationException.class, () -> mem.declVarClass("another"));
     }
 
     @Test
@@ -386,8 +388,9 @@ class MemoryIntegrationTest {
         mem.declVar("idInTable", 1, DataType.INT);
 
         // Attempting to declare a class var with the same identifier must fail (symbolTable.contains branch)
-        Memory.MemoryIllegalArgException ex = assertThrows(Memory.MemoryIllegalArgException.class, () -> mem.declVarClass("idInTable"));
-        assertTrue(ex.getMessage().contains("Symbol Table") || ex.getMessage().contains("Symbol"));
+        Memory.MemoryIllegalOperationException ex = assertThrows(Memory.MemoryIllegalOperationException.class, () -> mem.declVarClass("idInTable"));
+        System.out.println(ex.getMessage());
+        assertTrue(ex.getMessage().contains("a class variable has already been defined"));
     }
 
     @Test
@@ -399,8 +402,8 @@ class MemoryIntegrationTest {
         assertFalse(mem.symbolTable.contains("idOnStackOnly"));
 
         // Now declVarClass should throw because stack.hasObj(identifier) is true
-        Memory.MemoryIllegalArgException ex = assertThrows(Memory.MemoryIllegalArgException.class, () -> mem.declVarClass("idOnStackOnly"));
-        assertTrue(ex.getMessage().contains("Stack"));
+        Memory.MemoryIllegalOperationException ex = assertThrows(Memory.MemoryIllegalOperationException.class, () -> mem.declVarClass("idOnStackOnly"));
+        assertTrue(ex.getMessage().contains("a class variable has already been defined"));
     }
 
     @Test
@@ -561,8 +564,8 @@ class MemoryIntegrationTest {
 
         mem.declTab("arr", 5, DataType.BOOL);
 
-        assertThrows(java.lang.ArrayIndexOutOfBoundsException.class, () -> mem.affectValT("arr", -1, val));
-        assertThrows(UnmappedMemoryAddressException.class, () -> mem.affectValT("arr", 6, val));
+        assertThrows(IndexOutOfBounds.class, () -> mem.affectValT("arr", -1, val));
+        assertThrows(IndexOutOfBounds.class, () -> mem.affectValT("arr", 6, val));
     }
 
     static Stream<Arguments> tabLengthTestProvider() {
