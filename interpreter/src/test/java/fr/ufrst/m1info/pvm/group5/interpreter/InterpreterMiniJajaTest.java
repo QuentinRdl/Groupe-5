@@ -1181,6 +1181,21 @@ class InterpreterMiniJajaTest {
         Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
     }
 
+    @Test
+    @DisplayName("Interpret Array Initialize With Value")
+    void ArrayInitializeWithValue() {
+        String errMessage=imj.interpretCode("class C { int t[5]=8; main{ }}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
+
+    @Test
+    @DisplayName("Interpret Final Array")
+    void FinalArray() {
+        String errMessage=imj.interpretCode("class C { final int t[5]; main{ }}");
+        Assertions.assertNotEquals(null,errMessage);
+        Assertions.assertEquals(ParseCancellationException.class.toString(),errMessage.split(":")[0].trim());
+    }
 
     @Test
     @DisplayName("Interpret Random String")
