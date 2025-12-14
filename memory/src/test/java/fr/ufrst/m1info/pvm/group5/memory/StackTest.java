@@ -404,7 +404,7 @@ class StackTest {
         String msg = "Invalid variable name";
         Stack.InvalidNameException ex = new Stack.InvalidNameException(msg);
 
-        assertEquals(msg, ex.getMessage());
+        assertEquals("[WARNING] This is a critical internal error that shouldn't be displayed ! - Stack : "+msg+" is an invalid identifier", ex.getMessage());
     }
 
 

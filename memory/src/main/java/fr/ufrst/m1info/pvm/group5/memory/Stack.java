@@ -18,9 +18,9 @@ public class Stack {
     /**
      * Exception thrown when attempting to pop a scope from the stack when no scopes exist.
      */
-    public static class NoScopeException extends RuntimeException{
-        public NoScopeException(String msg) {
-            super(msg);
+    public static class NoScopeException extends InnerMemoryException{
+        public NoScopeException() {
+            super("Stack : Attempted to remove a scope from the stack, while none exists");
         }
     }
 
@@ -48,12 +48,12 @@ public class Stack {
      * Thrown when attempting to construct a Stack_Object using the generic constructor
      * for kinds that require a specialized constructor (rn only vars and csts)
      */
-    public static class InvalidStackObjectConstructionException extends RuntimeException {
+    public static class InvalidStackObjectConstructionException extends InnerMemoryException {
         @Serial
         private static final long serialVersionUID = 1L;
 
         public InvalidStackObjectConstructionException(String message) {
-            super(message);
+            super("Stack : Wrong attempt to construct a value of the stack, " + message);
         }
     }
 
@@ -61,9 +61,9 @@ public class Stack {
      * Exception thrown when attempting to create or set a variable with an invalid (null/empty) name.
      * This is unchecked so existing callers don't need to change their signatures.
      */
-    public static class InvalidNameException extends RuntimeException{
-        public InvalidNameException(String msg) {
-            super(msg);
+    public static class InvalidNameException extends InnerMemoryException{
+        public InvalidNameException(String name) {
+            super("Stack : "+name+" is an invalid identifier");
         }
     }
 
@@ -88,7 +88,7 @@ public class Stack {
      * @throws NoScopeException if no scope are present
      */
     public void popScope() throws NoScopeException {
-        if(scopeDepth == 0) throw new NoScopeException("There are currently 0 scopes, cannot pop");
+        if(scopeDepth == 0) throw new NoScopeException();
 
         // If we are here then no exception has been thrown, then we can remove all vars from current scope
         while(!stackContent.isEmpty() && stackContent.peek().getScope() == scopeDepth) {
