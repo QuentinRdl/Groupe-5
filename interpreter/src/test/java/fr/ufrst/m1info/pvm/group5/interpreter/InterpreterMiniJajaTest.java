@@ -1311,6 +1311,31 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret Negative Array")
+    void NegativeArray() {
+        String errMessage=imj.interpretCode("class C { int t[5]; main{ t=-t;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Not Array")
+    void NotArray() {
+        String errMessage=imj.interpretCode("class C { boolean t[5]; main{ t=!t;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Boolean Array")
+    void BooleanArray() {
+        String errMessage=imj.interpretCode("class C { boolean t[5]; main{ t[0]=false; t[1]=true; t[2]=false; t[3]=true; t[4]=false; writeln(t[0]); writeln(t[1]); writeln(t[2]); writeln(t[3]); writeln(t[4]);}}");
+        Assertions.assertNull(errMessage);
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("false\ntrue\nfalse\ntrue\nfalse\n", e.oldText());
+        });
+        writer.write("");
+    }
+
+    @Test
     @DisplayName("Interpret Random String")
     void randomString() {
         String errMessage=imj.interpretCode("ezudzedezezbclassdezdoncCdzedo{dezodjintezpodjy;podkezdmain{ydpocke=dozejd10;}}");
