@@ -51,6 +51,10 @@ instruction returns [Instruction inst]
     | 'if' '(' n=NOMBRE ')' {$inst = new IfInstruction(Integer.parseInt($n.text));}
     | 'new' '(' id=IDENTIFIER ',' type ',' entrykind ',' scope=NOMBRE ')' {$inst = new NewInstruction($id.text,$type.dt,$entrykind.ek,Integer.parseInt($scope.text));}
     | 'newarray' '(' id=IDENTIFIER ',' type ')' {$inst = new NewarrayInstruction($id.text,$type.dt);}
+    | 'ainc' '(' i=IDENTIFIER ')' {$inst = new AincInstruction($i.text);}
+    | 'load' '(' i=IDENTIFIER ')' {$inst = new AloadInstruction($i.text);}
+    | 'store' '(' i=IDENTIFIER ')' {$inst = new AstoreInstruction($i.text);}
+    | 'length' '(' i=IDENTIFIER ')' {$inst = new LengthInstruction($i.text);}
     ;
 
 valeur returns [Value v]
