@@ -1,6 +1,7 @@
 package fr.ufrst.m1info.pvm.group5.ast.nodes;
 import fr.ufrst.m1info.pvm.group5.ast.*;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
+import fr.ufrst.m1info.pvm.group5.memory.ValueType;
 import fr.ufrst.m1info.pvm.group5.memory.symbol_table.DataType;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 
@@ -15,13 +16,13 @@ public class AffectationNode extends ASTNode{
         this.identifier = identifier;
         this.expression = expression;
         if(identifier == null || expression == null){
-            throw new ASTBuildException("AffectationNode cannot have null nodes");
+            throw new ASTBuildException("Affectation",(identifier==null)?"identifier":"expression", "affectation cannot have null children");
         }
         if(!(identifier instanceof IdentNode) && !(identifier instanceof TabNode)){
-            throw new ASTBuildException("AffectationNode identifier must be IdentNode or TabNode");
+            throw new ASTBuildException("Affectation","identifier", "affectation identifier must be a variable or an array");
         }
         if(!(expression instanceof EvaluableNode)){
-            throw new ASTBuildException("AffectationNode cannot have non-evaluable nodes");
+            throw new ASTBuildException("Affectation","expression", "affectation's expression must be evaluable");
         }
     }
 
@@ -50,21 +51,19 @@ public class AffectationNode extends ASTNode{
             IdentNode arrayIdent = (IdentNode) tabNode.getChildren().get(0);
             ASTNode indexExp = tabNode.getChildren().get(1);
             Value indexVal = ((EvaluableNode) indexExp).eval(m);
-            if (indexVal.type != fr.ufrst.m1info.pvm.group5.memory.ValueType.INT) {
-                throw new ASTInvalidDynamicTypeException("Array index must be an integer");
-            }
             int index = indexVal.valueInt;
             Value value = ((EvaluableNode) expression).eval(m);
             m.affectValT(arrayIdent.identifier, index, value);
         } else {
             Value v = ((EvaluableNode) expression).eval(m);
             String id = ((IdentNode) identifier).identifier;
-            if (m.isArray(id) && (!(expression instanceof IdentNode)|| !m.isArray(((IdentNode) expression).identifier))){
+            // Should be done in type-checking
+            /*if (m.isArray(id) && (!(expression instanceof IdentNode)|| !m.isArray(((IdentNode) expression).identifier))){
                 throw new ASTInvalidOperationException("Line "+ getLine() +" : Value cannot be affected into array");
             }
             if (!m.isArray(id) && expression instanceof IdentNode && m.isArray(((IdentNode) expression).identifier)){
                 throw new ASTInvalidOperationException("Line "+ getLine() +" : Value cannot be affected into array");
-            }
+            }*/
             m.affectValue(id, v);
         }
     }
@@ -80,37 +79,25 @@ public class AffectationNode extends ASTNode{
                 ASTNode indexExp = tabNode.getChildren().get(1);
                 String indexType = indexExp.checkType(m);
                 if (!"int".equals(indexType)) {
-                    throw new ASTInvalidDynamicTypeException(
-                            "AffectationNode: array index must be of type int, got " + indexType
-                    );
+                    throw new ASTInvalidDynamicTypeException(this.getLine(), "int", indexType, "affectation");
                 }
                 DataType arrayDataType = m.tabType(arrayIdent.identifier);
                 String arrayTypeStr;
                 if (arrayDataType == DataType.INT) arrayTypeStr = "int";
                 else if (arrayDataType == DataType.BOOL) arrayTypeStr = "bool";
-                else throw new ASTInvalidDynamicTypeException(
-                            "AffectationNode: array type not supported for " + arrayIdent.identifier
-                    );
+                else throw new ASTInvalidDynamicTypeException(this.getLine(), "int or bool", "array", "affectation");
                 if (!exprType.equals(arrayTypeStr)) {
-                    throw new ASTInvalidDynamicTypeException(
-                            "AffectationNode: type of expression (" + exprType +
-                                    ") incompatible with array type (" + arrayTypeStr + ")"
-                    );
+                    throw new ASTInvalidDynamicTypeException(this.getLine(), arrayTypeStr, exprType, "affectation");
                 }
             } else {
                 DataType varDataType = m.dataTypeOf(((IdentNode) identifier).identifier);
                 String varTypeStr;
                 if (varDataType == DataType.INT) varTypeStr = "int";
                 else if (varDataType == DataType.BOOL) varTypeStr = "bool";
-                else throw new ASTInvalidDynamicTypeException(
-                            "AffectationNode: variable type not supported for " + ((IdentNode) identifier).identifier
-                    );
+                else throw new ASTInvalidDynamicTypeException(this.getLine(), "int or bool", varDataType.toString(), "affectation");
 
                 if (!exprType.equals(varTypeStr)) {
-                    throw new ASTInvalidDynamicTypeException(
-                            "AffectationNode: type of expression (" + exprType +
-                                    ") incompatible with the type of the variable (" + varTypeStr + ")"
-                    );
+                    throw new ASTInvalidDynamicTypeException(this.getLine(), varTypeStr, exprType, "affectation");
                 }
             }
         } catch (IllegalArgumentException e) {

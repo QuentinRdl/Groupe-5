@@ -7,7 +7,7 @@ package fr.ufrst.m1info.pvm.group5.ast;
  * This exception mostly exists for debugging purposes and shouldn't occur during production, besides for the division by 0.
  */
 public class ASTInvalidOperationException extends RuntimeException {
-    public ASTInvalidOperationException(String message) {
-        super(message);
+    public ASTInvalidOperationException(String operation, String node, int line) {
+        super(String.format("Line %d : Trying to use invalid operation %s on %s node", line, operation, node));
     }
 }

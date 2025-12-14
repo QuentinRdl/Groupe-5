@@ -21,9 +21,7 @@ public class BinMinusNode extends BinaryOperator {
     @Override
     protected String controlType(String leftType, String rightType) throws ASTInvalidDynamicTypeException {
         if (!leftType.equals("int") || !rightType.equals("int")){
-            throw new ASTInvalidDynamicTypeException(
-                    "Minus operator must be used with 2 operand of type int"
-            );
+            throw new ASTInvalidDynamicTypeException(this.getLine(), "int", (!leftType.equals("int"))?leftType:rightType, "substraction");
         }
         return "int";
     }

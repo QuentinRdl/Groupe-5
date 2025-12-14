@@ -16,13 +16,13 @@ public class ClassNode extends ASTNode {
         this.decls = decls;
         this.main = main;
         if(ident == null){
-            throw new ASTBuildException("Class node cannot have null identifier");
+            throw new ASTBuildException("Class", "identifier", "Class node cannot have a null identifier");
         }
         if(main == null){
-            throw new ASTBuildException("Class must contain a main method");
+            throw new ASTBuildException("Class", "main", "Class node cannot have a null main method");
         }
         if(decls != null && !(decls instanceof WithdrawalNode)){
-            throw new ASTBuildException("Class node declaration must be withradawable");
+            throw new ASTBuildException("Class", "declaration", "Class node declarations must be withdrawable");
         }
     }
 

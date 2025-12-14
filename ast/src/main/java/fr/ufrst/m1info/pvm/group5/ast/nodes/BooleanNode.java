@@ -29,7 +29,7 @@ public class BooleanNode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) throws ASTInvalidOperationException {
-        throw new ASTInvalidOperationException("Cannot interpret Boolean node");
+        throw new ASTInvalidOperationException("interpretation", "boolean", this.getLine());
     }
 
     @Override

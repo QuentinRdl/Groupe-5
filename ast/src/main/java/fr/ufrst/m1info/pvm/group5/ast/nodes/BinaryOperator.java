@@ -25,15 +25,15 @@ public abstract class BinaryOperator extends ASTNode implements EvaluableNode {
         this.left = left;
         this.right = right;
         if (this.left == null || this.right == null) {
-            throw new ASTBuildException("Binary operator cannot have a null operand");
+            throw new ASTBuildException(this.toString(), (this.left == null) ? "left operand" : "right operand", "binary operator operation cannot be null");
         }
         if (!(left instanceof EvaluableNode) || !(right instanceof EvaluableNode)) {
-            throw new ASTBuildException("Binary operator cannot have a non-evaluable operand");
+            throw new ASTBuildException(this.toString(), (!(left instanceof EvaluableNode)) ? "left operand" : "right operand", "binary operator operation cannot be null");
         }
     }
 
     public void interpret(Memory m) {
-        throw new ASTInvalidOperationException("Cannot interpret BinaryOperator");
+        throw new ASTInvalidOperationException("interpretation", this.toString(), this.getLine());
     }
 
     public Value eval(Memory m) throws ASTInvalidMemoryException, ASTInvalidOperationException {

@@ -15,9 +15,10 @@ public class ArrayNode extends ASTNode implements WithdrawalNode {
     private final ASTNode sizeExp;
 
     public ArrayNode(TypeNode type, IdentNode ident, ASTNode sizeExp) {
-        if (type == null || ident == null || sizeExp == null) {
-            throw new ASTBuildException("ArrayNode requires non-null type, identifier, and size expression");
-        }
+        if(type == null) throw new ASTBuildException("Array", "type", "type must not be null");
+        if(ident==null) throw new ASTBuildException("Array", "ident", "ident must not be null");
+        if(sizeExp==null) throw new ASTBuildException("Array", "sizeExp", "size must not be null");
+        if(!(sizeExp instanceof EvaluableNode))  throw new ASTBuildException("Array", "sizeExp", "size must be evaluable");
         this.type = type;
         this.ident = ident;
         this.sizeExp = sizeExp;
@@ -35,22 +36,20 @@ public class ArrayNode extends ASTNode implements WithdrawalNode {
 
     @Override
     public void interpret(Memory m) throws ASTInvalidMemoryException, ASTInvalidOperationException, ASTInvalidDynamicTypeException {
-        if (!(sizeExp instanceof EvaluableNode)) {
-            throw new ASTInvalidOperationException("Array size expression is not evaluable");
-        }
         Value sizeVal = ((EvaluableNode) sizeExp).eval(m);
-
+        /* TypeCheck
         if (sizeVal.type != ValueType.INT) {
             throw new ASTInvalidDynamicTypeException("Array size must be an integer");
-        }
+        }*/
         int size = sizeVal.valueInt;
 
-        if (size <= 0) {
-            throw new ASTInvalidOperationException("Array size must be positive (greater than 0)");
-        }
         DataType dt = ValueType.toDataType(type.valueType);
 
-        m.declTab(ident.identifier, size, dt);
+        try {
+            m.declTab(ident.identifier, size, dt);
+        }catch (Exception e) {
+            throw new RuntimeException("Line "+this.getLine()+" : "+e.getMessage());
+        }
     }
 
     @Override
@@ -65,13 +64,9 @@ public class ArrayNode extends ASTNode implements WithdrawalNode {
 
     @Override
     public String checkType(Memory m) throws ASTInvalidDynamicTypeException {
-        if (!(sizeExp instanceof EvaluableNode)) {
-            throw new ASTInvalidDynamicTypeException("Array size expression is not evaluable");
-        }
-
         String sizeType = sizeExp.checkType(m);
         if (!sizeType.equals("int")) {
-            throw new ASTInvalidDynamicTypeException("Array size must be of type int, but got: " + sizeType);
+            throw new ASTInvalidDynamicTypeException(this.getLine(), "int", sizeType, "array declaration");
         }
         DataType dt = ValueType.toDataType(type.valueType);
         m.declTab(ident.identifier, 1, dt);

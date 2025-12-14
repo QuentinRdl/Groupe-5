@@ -49,7 +49,7 @@ public abstract class ASTNode {
     public Event<InterpretationStoppedData> interpretationStoppedEvent(){
         if(this.InterpretationStoppedEvent == null){
             if(this.root == null){
-                throw new ASTBuildException("line "+this.line + " - " + this.getClass().getSimpleName() + " : No root node has been set for the current tree");
+                throw new RuntimeException("line "+this.line + " - " + this.getClass().getSimpleName() + " : No root node has been set for the current tree");
             }
             return root.interpretationStoppedEvent();
         }

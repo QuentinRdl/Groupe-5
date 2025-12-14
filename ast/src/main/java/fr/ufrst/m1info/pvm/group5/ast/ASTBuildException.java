@@ -5,11 +5,11 @@ package fr.ufrst.m1info.pvm.group5.ast;
  * This exception exists solely for debugging purposes and shouldn't occur during production
  */
 public class ASTBuildException extends RuntimeException {
-    public ASTBuildException(String message) {
+    private ASTBuildException(String message) {
         super("[WARNING] This is a critical internal error that shouldn't be displayed ! - " + message);
     }
 
     public ASTBuildException(String builderNode, String paramNode, String reason){
-        this(String.format("Failed to build an Abstract Syntax Tree from the source : Tried to create node %s with %s, which is %s",builderNode, paramNode, reason))
+        this(String.format("Failed to build an Abstract Syntax Tree from the source : Tried to create node %s with %s, which is %s",builderNode, paramNode, reason));
     }
 }
