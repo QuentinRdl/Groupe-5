@@ -23,7 +23,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.concurrent.Task;
-import javafx.scene.text.TextFlow;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -141,6 +140,9 @@ public class MainController {
 
                 @Override
                 public void onDownPressed(int index) { handleDownPressed(index);}
+
+                //@verride
+                //public void onTabPressed(int index) { handleTabPressed(index);}
 
                 @Override
                 public void onModified(){
