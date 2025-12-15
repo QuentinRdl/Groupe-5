@@ -72,6 +72,7 @@ public class CodeLineCell extends ListCell<CodeLine> {
         codeField.getStyleClass().addAll("styled-text-area", "code-field");
         codeField.setWrapText(false);
         codeField.setPrefHeight(30);
+        codeField.setPrefWidth(1000);
         HBox.setHgrow(codeField, Priority.ALWAYS);
 
 
