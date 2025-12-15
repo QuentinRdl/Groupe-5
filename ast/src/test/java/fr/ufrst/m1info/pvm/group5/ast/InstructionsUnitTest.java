@@ -1134,6 +1134,93 @@ class InstructionsUnitTest {
     }
 
     //astore
+    @Test
+    void astore_simple(){
+        Map<String, Value[]> heap = new HashMap<>();
+
+        Value[] values = {
+                new Value(1),
+                new Value(2),
+                new Value(3)
+        };
+        heap.put("x", values);
+        ASTMocks.addHeapToMock(memory, heap);
+
+        storage.push(new ASTMocks.Pair<>("test1",new Value(1)));
+        storage.push(new ASTMocks.Pair<>("test2",new Value(7)));
+
+        AstoreInstruction a = new AstoreInstruction("x");
+
+        var res = a.execute(0, memory);
+
+        Value[] actual = heap.get("x");
+
+        assertEquals(3, actual.length);
+        assertEquals(1, actual[0].valueInt);
+        assertEquals(7, actual[1].valueInt);
+        assertEquals(3, actual[2].valueInt);
+        assertEquals(1, res);
+
+    }
+
+    @Test
+    void astore_not_array(){
+        Map<String, Value[]> heap = new HashMap<>();
+
+        ASTMocks.addHeapToMock(memory, heap);
+
+        storage.push(new ASTMocks.Pair<>("x",new Value(1)));
+
+        AstoreInstruction a = new AstoreInstruction("x");
+
+        assertThrows(ASTInvalidTypeException.class, () -> a.execute(0, memory));
+
+    }
+
+
+    @Test
+    void astore_not_int_index(){
+        Map<String, Value[]> heap = new HashMap<>();
+
+        Value[] values = {
+                new Value(1),
+                new Value(2),
+                new Value(3)
+        };
+        heap.put("x", values);
+        ASTMocks.addHeapToMock(memory, heap);
+
+        storage.push(new ASTMocks.Pair<>("test1",new Value("1"))); //index
+        storage.push(new ASTMocks.Pair<>("test2",new Value(7))); //value
+
+        AstoreInstruction a = new AstoreInstruction("x");
+
+        assertThrows(ASTInvalidTypeException.class, () -> a.execute(0, memory));
+
+    }
+
+    @Test
+    void astore_not_int_value(){
+        Map<String, Value[]> heap = new HashMap<>();
+
+        Value[] values = {
+                new Value(1),
+                new Value(2),
+                new Value(3)
+        };
+        heap.put("x", values);
+        ASTMocks.addHeapToMock(memory, heap);
+
+        storage.push(new ASTMocks.Pair<>("test1",new Value(1))); //index
+        storage.push(new ASTMocks.Pair<>("test2",new Value("7"))); //value
+
+        AstoreInstruction a = new AstoreInstruction("x");
+
+        assertThrows(ASTInvalidTypeException.class, () -> a.execute(0, memory));
+
+    }
+
+    //ainc
 
 
 }
