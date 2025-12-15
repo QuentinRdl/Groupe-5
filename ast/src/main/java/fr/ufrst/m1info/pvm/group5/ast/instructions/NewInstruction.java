@@ -50,7 +50,7 @@ public class NewInstruction extends Instruction{
                 v=new Value();
             }
         }catch (Exception e){
-            v=new Value();
+            return address+1;
         }
         if(kind == EntryKind.METHOD)
             compatibleType(ValueType.INT, DataType.toValueType(type));
