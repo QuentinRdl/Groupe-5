@@ -53,7 +53,9 @@ public class NewInstruction extends Instruction{
                 v=new Value();
             }
         }catch (Exception e){
-            return address+1;
+            if(kind == EntryKind.VARIABLE)
+                return address+1;
+            v = new Value();
         }
         compatibleType(List.of(ValueType.INT, ValueType.BOOL, ValueType.VOID), DataType.toValueType(type));
         if (kind==EntryKind.VARIABLE){

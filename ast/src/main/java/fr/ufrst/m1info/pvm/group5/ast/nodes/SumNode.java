@@ -76,15 +76,18 @@ public class SumNode extends ASTNode {
         }
 
         if (identifier instanceof TabNode) {
-            TabNode tabNode = (TabNode) identifier;
-            IdentNode arrayIdent = (IdentNode) tabNode.getChildren().get(0);
-            if (!m.contains(arrayIdent.identifier)) {
-                throw ASTInvalidMemoryException.UndefinedVariable(arrayIdent.identifier, this.getLine());
-            }
-            identifier.checkType(m);
+            String identType = identifier.checkType(m);
+            if(!identType.equals("int")){
+                throw new InterpretationInvalidTypeException(this.getLine(), "int", exprType, "sum");
+            };
         } else {
             IdentNode identNode = (IdentNode) identifier;
-            DataType dataType = m.dataTypeOf(identNode.identifier);
+            DataType dataType;
+            try {
+                dataType = m.dataTypeOf(identNode.identifier);
+            }catch (Memory.MemoryIllegalArgException e){
+                throw ASTInvalidMemoryException.UndefinedVariable(identNode.identifier, this.getLine());
+            }
 
             if (dataType != DataType.INT) {
                 throw new InterpretationInvalidTypeException(this.getLine(), "int", dataType.name(), "sum");

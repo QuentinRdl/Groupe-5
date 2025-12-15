@@ -17,11 +17,13 @@ public class InvokeInstruction extends Instruction {
     public int execute(int address, Memory m) {
         Value vMeth = (Value) m.val(ident);
         if (vMeth==null) {
-            throw ASTInvalidMemoryException.UndefinedVariable("ident", this.getLine());
+            throw ASTInvalidMemoryException.UndefinedVariable(ident, this.getLine());
         }
         try {
             m.getMethod(ident);
         } catch (Exception e) {
+            if(m.dataTypeOf(ident) == null)
+                throw ASTInvalidMemoryException.UndefinedVariable(ident, this.getLine());
             throw ASTInvalidMemoryException.InvalidVariable(ident, this.getLine(), "method", m.dataTypeOf(ident).name());
         }
         int newAdr=vMeth.valueInt;

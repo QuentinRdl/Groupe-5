@@ -435,7 +435,7 @@ public class Memory {
 
     public boolean contains(String identifier) {
         if (identifier == null || identifier.isEmpty()) return false;
-        return symbolTable.contains(identifier);
+        return val(identifier) != null;
     }
 
     public void declTab(String identifier, int size, DataType type) {

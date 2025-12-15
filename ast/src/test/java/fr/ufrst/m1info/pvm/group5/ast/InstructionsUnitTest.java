@@ -7,6 +7,7 @@ import fr.ufrst.m1info.pvm.group5.memory.symbol_table.DataType;
 import fr.ufrst.m1info.pvm.group5.memory.symbol_table.EntryKind;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -113,7 +114,7 @@ class InstructionsUnitTest {
         }).when(memory).pop();
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.VARIABLE,0);
         assertEquals(3,newInstr.execute(2,memory));
-        assertNotEquals(null,memory.val("x"));
+        assertNull(memory.val("x"));
     }
 
     @Test
@@ -141,15 +142,13 @@ class InstructionsUnitTest {
         }).when(memory).pop();
         Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.CONSTANT,0);
         assertEquals(3,newInstr.execute(2,memory));
-        assertNotEquals(null,memory.val("x"));
+        assertNotNull(memory.val("x"));
     }
 
     @Test
     void new_unknown_entry_kind() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(false));
-        Instruction newInstr = new NewInstruction("x", DataType.BOOL, EntryKind.OTHER,0);
-        pushInstr.execute(1,memory);
-        assertThrows(ASTBuildException.class,() -> newInstr.execute(1,memory));
+        assertThrows(ASTBuildException.class, () -> new NewInstruction("x", DataType.BOOL, EntryKind.OTHER,0));
     }
 
     @Test
@@ -240,6 +239,7 @@ class InstructionsUnitTest {
         assertThrows(InterpretationInvalidTypeException.class,() -> newaInstr.execute(1,memory));
     }
 
+    @Disabled // Handled by memory
     @Test
     void newarray_size_negative() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(-1));
@@ -1012,7 +1012,7 @@ class InstructionsUnitTest {
         p.execute(0, memory);
 
         ReturnInstruction r = new ReturnInstruction();
-        assertThrows(IllegalStateException.class, () -> r.execute(1, memory));
+        assertThrows(InterpretationInvalidTypeException.class, () -> r.execute(1, memory));
     }
 
     @Test

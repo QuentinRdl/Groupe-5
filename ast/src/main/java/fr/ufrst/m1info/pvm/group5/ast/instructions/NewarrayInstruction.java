@@ -24,9 +24,13 @@ public class NewarrayInstruction extends Instruction {
 
     @Override
     public int execute(int address, Memory m) {
+        StackObject top = m.top();
+        if (!Objects.equals(top.getName(), ".")){
+            throw ASTInvalidMemoryException.EmptyStack(this.getLine());
+        }
         Value v = ((Value) m.pop());
-        compatibleType(List.of(ValueType.INT, ValueType.BOOL), v.type);
-        compatibleType(DataType.toValueType(type), v.type);
+        compatibleType(List.of(ValueType.INT, ValueType.BOOL), DataType.toValueType(type));
+        compatibleType(ValueType.INT, v.type);
         int size=v.valueInt;
         m.declTab(identifier,size,type);
         return address+1;

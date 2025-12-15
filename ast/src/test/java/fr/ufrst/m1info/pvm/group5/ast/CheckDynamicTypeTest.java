@@ -38,7 +38,7 @@ class CheckDynamicTypeTest {
             String ident = invocation.getArgument(0);
             Value v =memoryStorage.get(ident);
             if (v==null){
-                throw new IllegalArgumentException("");
+                throw new Memory.MemoryIllegalArgException("none", "none", "none");
             }
             return switch (v.type) {
                 case INT -> DataType.INT;
@@ -282,7 +282,7 @@ class CheckDynamicTypeTest {
         when(indexExpr.checkType(memoryMock)).thenReturn("int");
         ASTNode valueExpr = mock(ASTNode.class, withSettings().extraInterfaces(EvaluableNode.class));
         when(valueExpr.checkType(memoryMock)).thenReturn("int");
-        when(memoryMock.tabType("undefinedArr")).thenThrow(IllegalArgumentException.class);
+        when(memoryMock.tabType("undefinedArr")).thenThrow(Memory.MemoryIllegalArgException.class);
         TabNode tabNode = new TabNode(new IdentNode("undefinedArr"), indexExpr);
         AffectationNode affectNode = new AffectationNode(tabNode, valueExpr);
 
@@ -819,6 +819,7 @@ class CheckDynamicTypeTest {
 
         IdentNode identNode = new IdentNode("x");
         IncNode incNode = new IncNode(identNode);
+        when(memoryMock.contains("x")).thenReturn(true);
 
         assertEquals("int", incNode.checkType(memoryMock));
     }
@@ -836,20 +837,23 @@ class CheckDynamicTypeTest {
     @DisplayName("IncNode - checkType() fails if variable not int")
     void testIncNode_NonIntVariable() {
         memoryStorage.put("flag", new Value(true));
+        when(memoryMock.contains("flag")).thenReturn(true);
 
         IdentNode identNode = new IdentNode("flag");
         IncNode incNode = new IncNode(identNode);
 
         assertThrows(InterpretationInvalidTypeException.class, () -> incNode.checkType(memoryMock));
     }
+
     @Test
     @DisplayName("IncNode - checkType() valid with int array and int index")
     void testIncNode_IntArrayIntIndex() throws Exception {
+        memoryStorage.put("arr", new Value(5));
         IdentNode arrayIdent = new IdentNode("arr");
         ASTNode indexExpr = mock(ASTNode.class, withSettings().extraInterfaces(EvaluableNode.class));
         when(indexExpr.checkType(memoryMock)).thenReturn("int");
         when(memoryMock.contains("arr")).thenReturn(true);
-        when(memoryMock.tabLength("arr")).thenReturn(10);
+        when(memoryMock.isArray("arr")).thenReturn(true);
 
         TabNode tabNode = new TabNode(arrayIdent, indexExpr);
         IncNode incNode = new IncNode(tabNode);
@@ -857,7 +861,6 @@ class CheckDynamicTypeTest {
         assertEquals("int", incNode.checkType(memoryMock));
         verify(indexExpr).checkType(memoryMock);
         verify(memoryMock).contains("arr");
-        verify(memoryMock).tabLength("arr");
     }
 
     @Test
@@ -871,7 +874,7 @@ class CheckDynamicTypeTest {
         TabNode tabNode = new TabNode(arrayIdent, indexExpr);
         IncNode incNode = new IncNode(tabNode);
 
-        assertThrows(InterpretationInvalidTypeException.class, () -> incNode.checkType(memoryMock));
+        assertThrows(ASTInvalidMemoryException.class, () -> incNode.checkType(memoryMock));
     }
 
     @Test
@@ -923,11 +926,12 @@ class CheckDynamicTypeTest {
     @Test
     @DisplayName("IncNode - checkType() valid with complex index expression")
     void testIncNode_ComplexIndexExpression() throws Exception {
+        memoryStorage.put("matrix", new Value(5));
         IdentNode arrayIdent = new IdentNode("matrix");
         ASTNode indexExpr = mock(ASTNode.class, withSettings().extraInterfaces(EvaluableNode.class));
         when(indexExpr.checkType(memoryMock)).thenReturn("int");
         when(memoryMock.contains("matrix")).thenReturn(true);
-        when(memoryMock.tabLength("matrix")).thenReturn(100);
+        when(memoryMock.isArray("matrix")).thenReturn(true);
 
         TabNode tabNode = new TabNode(arrayIdent, indexExpr);
         IncNode incNode = new IncNode(tabNode);
@@ -935,7 +939,6 @@ class CheckDynamicTypeTest {
         assertEquals("int", incNode.checkType(memoryMock));
         verify(indexExpr).checkType(memoryMock);
         verify(memoryMock).contains("matrix");
-        verify(memoryMock).tabLength("matrix");
     }
 
     @Test
@@ -1144,7 +1147,7 @@ class CheckDynamicTypeTest {
                 InterpretationInvalidTypeException.class,
                 () -> node.checkType(memoryMock)
         );
-        assertTrue(exception.getMessage().contains("non-bool"));
+        assertTrue(exception.getMessage().contains("type bool"));
     }
 
     @Test
@@ -1274,6 +1277,7 @@ class CheckDynamicTypeTest {
         when(expr.checkType(any(Memory.class))).thenReturn("int");
         Memory memoryMock = mock(Memory.class);
         when(memoryMock.dataTypeOf("x")).thenReturn(DataType.INT);
+        when(memoryMock.contains("x")).thenReturn(true);
 
 
         SumNode sumNode = new SumNode(new IdentNode("x"), expr);
@@ -1305,7 +1309,7 @@ class CheckDynamicTypeTest {
         SumNode sumNode = new SumNode(new IdentNode("x"), expr);
 
         Memory memoryMock = mock(Memory.class);
-        when(memoryMock.dataTypeOf("x")).thenThrow(IllegalArgumentException.class);
+        when(memoryMock.dataTypeOf("x")).thenThrow(Memory.MemoryIllegalArgException.class);
 
         assertThrows(ASTInvalidMemoryException.class, () -> sumNode.checkType(memoryMock));
     }
@@ -1320,6 +1324,7 @@ class CheckDynamicTypeTest {
 
         Memory memoryMock = mock(Memory.class);
         when(memoryMock.dataTypeOf("x")).thenReturn(DataType.BOOL);
+        when(memoryMock.contains("x")).thenReturn(true);
 
         assertThrows(InterpretationInvalidTypeException.class, () -> sumNode.checkType(memoryMock));
     }
@@ -1335,7 +1340,8 @@ class CheckDynamicTypeTest {
 
         Memory memoryMock = mock(Memory.class);
         when(memoryMock.contains("arr")).thenReturn(true);
-        when(memoryMock.tabLength("arr")).thenReturn(10);
+        when(memoryMock.dataTypeOf("arr")).thenReturn(DataType.INT);
+        when(memoryMock.isArray("arr")).thenReturn(true);
 
         TabNode tabNode = new TabNode(arrayIdent, indexExpr);
         SumNode sumNode = new SumNode(tabNode, valueExpr);
@@ -1344,7 +1350,6 @@ class CheckDynamicTypeTest {
         verify(indexExpr).checkType(memoryMock);
         verify(valueExpr).checkType(memoryMock);
         verify(memoryMock).contains("arr");
-        verify(memoryMock).tabLength("arr");
     }
 
     @Test
@@ -1363,7 +1368,7 @@ class CheckDynamicTypeTest {
         TabNode tabNode = new TabNode(arrayIdent, indexExpr);
         SumNode sumNode = new SumNode(tabNode, valueExpr);
 
-        assertThrows(InterpretationInvalidTypeException.class, () -> sumNode.checkType(memoryMock));
+        assertThrows(ASTInvalidMemoryException.class, () -> sumNode.checkType(memoryMock));
     }
 
     @Test
@@ -1379,6 +1384,7 @@ class CheckDynamicTypeTest {
         Memory memoryMock = mock(Memory.class);
         when(memoryMock.contains("x")).thenReturn(true);
         when(memoryMock.tabLength("x")).thenReturn(-1);
+        when(memoryMock.dataTypeOf("x")).thenReturn(DataType.INT);
         TabNode tabNode = new TabNode(arrayIdent, indexExpr);
         SumNode sumNode = new SumNode(tabNode, valueExpr);
 
@@ -1437,7 +1443,8 @@ class CheckDynamicTypeTest {
 
         Memory memoryMock = mock(Memory.class);
         when(memoryMock.contains("matrix")).thenReturn(true);
-        when(memoryMock.tabLength("matrix")).thenReturn(100);
+        when(memoryMock.isArray("matrix")).thenReturn(true);
+        when(memoryMock.dataTypeOf("matrix")).thenReturn(DataType.INT);
 
         TabNode tabNode = new TabNode(arrayIdent, indexExpr);
         SumNode sumNode = new SumNode(tabNode, valueExpr);
@@ -1446,7 +1453,6 @@ class CheckDynamicTypeTest {
         verify(indexExpr).checkType(memoryMock);
         verify(valueExpr).checkType(memoryMock);
         verify(memoryMock).contains("matrix");
-        verify(memoryMock).tabLength("matrix");
     }
 
     @Test
@@ -1952,6 +1958,7 @@ class CheckDynamicTypeTest {
         when(indexExpr.checkType(memoryMock)).thenReturn("int");
         when(memoryMock.contains("arr")).thenReturn(true);
         when(memoryMock.valueTypeOf("arr")).thenReturn(ValueType.INT);
+        when(memoryMock.isArray("arr")).thenReturn(true);
         doCallRealMethod().when(memoryMock).dataTypeOf("arr");
 
         TabNode node = new TabNode(ident, indexExpr);
@@ -1974,6 +1981,7 @@ class CheckDynamicTypeTest {
         ASTNode indexExpr = mock(ASTNode.class, withSettings().extraInterfaces(EvaluableNode.class));
         when(indexExpr.checkType(memoryMock)).thenReturn("int");
         when(memoryMock.contains("flags")).thenReturn(true);
+        when(memoryMock.isArray("flags")).thenReturn(true);
         when(memoryMock.dataTypeOf("flags")).thenReturn(DataType.BOOL);
 
         TabNode node = new TabNode(ident, indexExpr);
@@ -1995,7 +2003,7 @@ class CheckDynamicTypeTest {
 
         TabNode node = new TabNode(ident, indexExpr);
 
-        assertThrows(InterpretationInvalidTypeException.class, () -> node.checkType(memoryMock));
+        assertThrows(ASTInvalidMemoryException.class, () -> node.checkType(memoryMock));
     }
 
     @Test
@@ -2033,6 +2041,7 @@ class CheckDynamicTypeTest {
         ASTNode indexExpr = mock(ASTNode.class, withSettings().extraInterfaces(EvaluableNode.class));
         when(indexExpr.checkType(memoryMock)).thenReturn("int");
         when(memoryMock.contains("matrix")).thenReturn(true);
+        when(memoryMock.isArray("matrix")).thenReturn(true);
         when(memoryMock.dataTypeOf("matrix")).thenReturn(DataType.INT);
 
         TabNode node = new TabNode(ident, indexExpr);

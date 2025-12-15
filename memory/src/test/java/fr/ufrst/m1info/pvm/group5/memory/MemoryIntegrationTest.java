@@ -115,7 +115,7 @@ class MemoryIntegrationTest {
     @MethodSource("typeOfVars")
     void popEmptySymbolTable(String id, Object value, DataType type) {
         mem.stack.setVar("var", value, type);
-        assertThrows(java.lang.IllegalArgumentException.class, () -> mem.pop());
+        assertThrows(Memory.MemoryIllegalArgException.class, () -> mem.pop());
     }
 
     @ParameterizedTest
@@ -249,7 +249,7 @@ class MemoryIntegrationTest {
     @ParameterizedTest
     @MethodSource("typeOfVarsAffect")
     void affectValueNotDeclared(String id, Object value, DataType type, Object newValue) {
-        assertThrows(java.lang.IllegalArgumentException.class, () -> {
+        assertThrows(Memory.MemoryIllegalArgException.class, () -> {
             mem.affectValue(id, newValue);
         });
     }
@@ -439,7 +439,7 @@ class MemoryIntegrationTest {
     @Test
     void valueTypeOfUndefinedVariable() {
         Memory mem = new Memory();
-        assertThrows(IllegalArgumentException.class,() -> mem.valueTypeOf("x"));
+        assertThrows(Memory.MemoryIllegalArgException.class,() -> mem.valueTypeOf("x"));
     }
 
     @Test
@@ -467,7 +467,7 @@ class MemoryIntegrationTest {
     @Test
     void dataTypeOfUndefinedVariable() {
         Memory mem = new Memory();
-        assertThrows(IllegalArgumentException.class,() -> mem.dataTypeOf("x"));
+        assertThrows(Memory.MemoryIllegalArgException.class,() -> mem.dataTypeOf("x"));
     }
 
     @Test
@@ -523,7 +523,7 @@ class MemoryIntegrationTest {
 
         mem.withdrawDecl("arr");
 
-        java.lang.IllegalArgumentException ex = assertThrows(java.lang.IllegalArgumentException.class, () -> mem.val("arr"));
+        Memory.MemoryIllegalArgException ex = assertThrows(Memory.MemoryIllegalArgException.class, () -> mem.val("arr"));
         assertTrue(ex.getMessage().contains("Symbol not found"));
 
         // After freeing the block, the available size of the heap should return to the total space

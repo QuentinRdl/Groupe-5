@@ -17,7 +17,7 @@ public class TabNode extends ASTNode implements EvaluableNode {
             throw new ASTBuildException("Tab", (ident == null)?"identifier":"index", "Tab must have a non-null"+((ident == null)?"identifier":"index"));
         }
         if (!(indexExp instanceof EvaluableNode)) {
-            throw new ASTBuildException("Tab", "index" ,"TabNode index must be evaluable");
+            throw new ASTBuildException("Tab", indexExp.getClass().getName() ,"TabNode index must be evaluable");
         }
         this.ident = ident;
         this.indexExp = indexExp;
@@ -42,7 +42,9 @@ public class TabNode extends ASTNode implements EvaluableNode {
         if (!m.contains(ident.identifier)) {
             throw ASTInvalidMemoryException.UndefinedVariable(ident.identifier, this.getLine());
         }
-
+        if(!m.isArray(ident.identifier)){
+            throw new InterpretationInvalidTypeException("Expected "+ident.identifier+" to be an array", this.getLine());
+        }
         String indexType = indexExp.checkType(m);
         if (!"int".equals(indexType)) {
             throw new InterpretationInvalidTypeException(this.getLine(), "int", indexType, "Tab");

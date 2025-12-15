@@ -3,6 +3,7 @@ package fr.ufrst.m1info.pvm.group5.ast.instructions;
 import fr.ufrst.m1info.pvm.group5.ast.InterpretationInvalidTypeException;
 import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidMemoryException;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
+import fr.ufrst.m1info.pvm.group5.memory.Stack;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 import fr.ufrst.m1info.pvm.group5.memory.ValueType;
 
@@ -23,7 +24,7 @@ public class IfInstruction extends Instruction{
         Value v;
         try {
             v = ((Value) m.pop());
-        }catch (Memory.MemoryIllegalOperationException e){
+        }catch (Stack.StackIsEmptyException e){
             throw ASTInvalidMemoryException.EmptyStack(this.getLine());
         }
         compatibleType(ValueType.BOOL, v.type);

@@ -70,18 +70,15 @@ public class IncNode extends ASTNode{
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         if (ident instanceof TabNode) {
             TabNode tabNode = (TabNode) ident;
-            IdentNode arrayIdent = (IdentNode) tabNode.getChildren().get(0);
-            ASTNode indexExp = tabNode.getChildren().get(1);
-            if (!m.contains(arrayIdent.identifier)) {
-                throw ASTInvalidMemoryException.UndefinedVariable(arrayIdent.identifier, this.getLine());
-            }
-            String indexType = indexExp.checkType(m);
-            if (!"int".equals(indexType)) {
-                throw new InterpretationInvalidTypeException(this.getLine(), "int", indexType, "inc");
-            }
+            tabNode.checkType(m);
         } else {
             IdentNode identNode = (IdentNode) ident;
-            DataType dataType = m.dataTypeOf(identNode.identifier);
+            DataType dataType;
+            try {
+                dataType = m.dataTypeOf(identNode.identifier);
+            }catch (Memory.MemoryIllegalArgException e){
+                throw ASTInvalidMemoryException.UndefinedVariable(identNode.identifier, this.getLine());
+            }
 
             if (dataType != DataType.INT) {
                 throw new InterpretationInvalidTypeException(this.getLine(), "int", dataType.name(), "inc");

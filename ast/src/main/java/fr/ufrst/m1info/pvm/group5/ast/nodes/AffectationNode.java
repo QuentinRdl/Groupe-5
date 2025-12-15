@@ -99,7 +99,7 @@ public class AffectationNode extends ASTNode{
                     throw new InterpretationInvalidTypeException(this.getLine(), varTypeStr, exprType, "affectation");
                 }
             }
-        } catch (IllegalArgumentException e) {
+        } catch (Memory.MemoryIllegalArgException e) {
             String identName = identifier instanceof TabNode
                     ? ((IdentNode) ((TabNode) identifier).getChildren().get(0)).identifier
                     : ((IdentNode) identifier).identifier;
