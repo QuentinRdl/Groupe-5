@@ -117,7 +117,7 @@ public class Memory {
         if (!top.getName().equals(".")) {
             SymbolTableEntry ste = symbolTable.lookup(top.getName());
             if (ste!=null && ste.getKind()==EntryKind.ARRAY){
-                heap.removeReference((int) top.getValue());
+                heap.removeReference(((Value) top.getValue()).valueInt);
             }
             symbolTable.removeEntry(top.getName());
         }

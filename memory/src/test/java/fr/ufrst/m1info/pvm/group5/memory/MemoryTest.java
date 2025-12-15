@@ -257,7 +257,7 @@ class MemoryTest {
 
         verify(heapMocked, times(1)).allocate(5, DataType.INT);
         verify(symbolTableMocked, times(1)).addEntry("arr", EntryKind.ARRAY, DataType.INT);
-        verify(stackMocked, times(1)).setVar("arr", any(Value.class), DataType.INT);
+        verify(stackMocked, times(1)).setVar(eq("arr"), any(Value.class), eq(DataType.INT));
     }
 
     @Test
@@ -282,7 +282,7 @@ class MemoryTest {
     @Test
     void affectValTDelegatesToHeap() {
         int addr = 77;
-        StackObject addrObj = new StackObject("arr", addr, 0, EntryKind.VARIABLE, DataType.INT);
+        StackObject addrObj = new StackObject("arr", new Value(addr), 0, EntryKind.VARIABLE, DataType.INT);
         when(stackMocked.getObject("arr")).thenReturn(addrObj);
 
         Value val = new Value(999);
@@ -296,7 +296,7 @@ class MemoryTest {
     @Test
     void valTReturnsValueFromHeap() {
         int addr = 88;
-        StackObject addrObj = new StackObject("arr", addr, 0, EntryKind.VARIABLE, DataType.INT);
+        StackObject addrObj = new StackObject("arr", new Value(addr), 0, EntryKind.VARIABLE, DataType.INT);
         when(stackMocked.getObject("arr")).thenReturn(addrObj);
 
         Value expected = new Value(42);
@@ -316,7 +316,7 @@ class MemoryTest {
         SymbolTableEntry arrayEntry = new SymbolTableEntry("arr", EntryKind.ARRAY, DataType.INT);
         when(symbolTableMocked.lookup("arr")).thenReturn(arrayEntry);
         int addr = 99;
-        StackObject addrObj = new StackObject("arr", addr, 0, EntryKind.VARIABLE, DataType.INT);
+        StackObject addrObj = new StackObject("arr", new Value(addr), 0, EntryKind.VARIABLE, DataType.INT);
         when(stackMocked.getObject("arr")).thenReturn(addrObj);
 
         when(heapMocked.sizeOf(addr)).thenReturn(5);
