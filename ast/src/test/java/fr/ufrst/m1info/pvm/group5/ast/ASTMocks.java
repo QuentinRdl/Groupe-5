@@ -145,8 +145,8 @@ class ASTMocks {
         }).when(mock).declTab(any(String.class), anyInt(), any(DataType.class));
 
         doAnswer(invocationOnMock -> {
-            int index = invocationOnMock.getArgument(0);
-            String id =  invocationOnMock.getArgument(1);
+            int index = invocationOnMock.getArgument(1);
+            String id =  invocationOnMock.getArgument(0);
             return heap.get(id)[index];
         }).when(mock).valT(anyString(), anyInt());
 
