@@ -27,4 +27,8 @@ public class ASTInvalidMemoryException extends RuntimeException {
     public static ASTInvalidMemoryException EmptyStack(int line) {
         return new ASTInvalidMemoryException(String.format("Attempted to pop a value on an empty stack (at line %d)", line));
     }
+
+    public static ASTInvalidMemoryException InvalidMemoryOperation(int line, String message) {
+        return new ASTInvalidMemoryException("Memory call failed : " +message + "(at line " + line + ")");
+    }
 }
