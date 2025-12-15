@@ -257,7 +257,7 @@ class MemoryTest {
 
         verify(heapMocked, times(1)).allocate(5, DataType.INT);
         verify(symbolTableMocked, times(1)).addEntry("arr", EntryKind.ARRAY, DataType.INT);
-        verify(stackMocked, times(1)).setVar("arr", 123, DataType.INT);
+        verify(stackMocked, times(1)).setVar("arr", any(Value.class), DataType.INT);
     }
 
     @Test

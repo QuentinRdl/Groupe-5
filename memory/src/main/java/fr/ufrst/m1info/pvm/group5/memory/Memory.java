@@ -196,7 +196,7 @@ public class Memory {
             if(obj.getEntryKind() != EntryKind.VARIABLE && obj.getDataType() != DataType.INT) {
                 throw new MemoryIllegalArgException("When referencing an array, we should find an int");
             }
-            int reference_value = (int)obj.getValue();
+            int reference_value = ((Value) obj.getValue()).valueInt;
             heap.removeReference(reference_value);
         }
 
@@ -468,7 +468,7 @@ public class Memory {
         int addr = heap.allocate(size, type);
         heap.addReference(addr);
         symbolTable.addEntry(identifier, EntryKind.ARRAY, type);
-        stack.setVar(identifier, addr, DataType.INT);
+        stack.setVar(identifier, new Value(addr), DataType.INT);
     }
 
     /**
@@ -484,7 +484,7 @@ public class Memory {
             return; // An array should be stocked as an int that has its own reference
         }
 
-        int address = (int) addressObj.getValue();
+        int address = ((Value) addressObj.getValue()).valueInt;
 
         heap.setValue(address, index, value);
     }
@@ -502,7 +502,7 @@ public class Memory {
             return null; // An array should be stocked as an int that has its own reference
         }
 
-        int address = (int) addressObj.getValue();
+        int address = ((Value) addressObj.getValue()).valueInt;
         return heap.getValue(address, index);
     }
 
@@ -520,7 +520,7 @@ public class Memory {
             return -1;
         }
 
-        int address = (int) addressObj.getValue();
+        int address = ((Value) addressObj.getValue()).valueInt;
         return heap.sizeOf(address);
     }
 
