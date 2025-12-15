@@ -163,6 +163,12 @@ class ASTMocks {
             return heap.get(name).length;
         }).when(mock).tabLength(anyString());
 
+        doAnswer(invocation -> {
+            String id = invocation.getArgument(0);
+            return heap.containsKey(id);
+        }).when(mock).isArray(anyString());
+
+
         doAnswer(invocationOnMock -> DataType.INT).when(mock).tabType(any());
         return mock;
     }
