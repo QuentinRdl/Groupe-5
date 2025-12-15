@@ -24,6 +24,9 @@ public class NewInstruction extends Instruction{
         this.type=type;
         this.kind = kind;
         this.scope = scope;
+        if(kind != EntryKind.METHOD && kind != EntryKind.CONSTANT && kind != EntryKind.VARIABLE){
+            throw new ASTBuildException("new", "kind", "variable kind cannot be "+kind);
+        }
     }
 
     @Override
@@ -54,7 +57,7 @@ public class NewInstruction extends Instruction{
         }
         if(kind == EntryKind.METHOD)
             compatibleType(ValueType.INT, DataType.toValueType(type));
-        else
+        else if(kind == EntryKind.CONSTANT || kind == EntryKind.VARIABLE)
             compatibleType(List.of(ValueType.INT, ValueType.BOOL), DataType.toValueType(type));
         compatibleType(DataType.toValueType(type), v.type);
         if (kind==EntryKind.VARIABLE){
