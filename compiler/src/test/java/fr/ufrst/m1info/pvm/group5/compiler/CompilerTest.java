@@ -730,7 +730,7 @@ class CompilerTest {
                 "newarray(tableau,INT)\n" +
                 "push(9)\n" +
                 "new(afficher,VOID,meth,0)\n" +
-                "goto(40)\n" +
+                "goto(41)\n" +
                 "length(tableau)\n" +
                 "new(taille,INT,var,0)\n" +
                 "push(0)\n" +
@@ -763,9 +763,9 @@ class CompilerTest {
                 "pop\n" +
                 "swap\n" +
                 "return\n" +
-                "push(43)\n" +
+                "push(44)\n" +
                 "new(partition,INT,meth,0)\n" +
-                "goto(106)\n" +
+                "goto(107)\n" +
                 "new(fin,INT,var,1)\n" +
                 "new(deb,INT,var,2)\n" +
                 "load(deb)\n" +
@@ -786,13 +786,13 @@ class CompilerTest {
                 "cmp\n" +
                 "or\n" +
                 "not\n" +
-                "if(85)\n" +
+                "if(86)\n" +
                 "load(pivot)\n" +
                 "load(i)\n" +
                 "aload(tableau)\n" +
                 "sup\n" +
-                "if(70)\n" +
-                "goto(82)\n" +
+                "if(71)\n" +
+                "goto(83)\n" +
                 "push(1)\n" +
                 "inc(compt)\n" +
                 "load(compt)\n" +
@@ -807,7 +807,7 @@ class CompilerTest {
                 "astore(tableau)\n" +
                 "push(1)\n" +
                 "inc(i)\n" +
-                "goto(55)\n" +
+                "goto(56)\n" +
                 "load(compt)\n" +
                 "aload(tableau)\n" +
                 "store(temp)\n" +
@@ -829,23 +829,23 @@ class CompilerTest {
                 "pop\n" +
                 "swap\n" +
                 "return\n" +
-                "push(109)\n" +
+                "push(110)\n" +
                 "new(pause,VOID,meth,0)\n" +
-                "goto(111)\n" +
+                "goto(113)\n" +
                 "push(0)\n" +
                 "swap\n" +
                 "return\n" +
-                "push(114)\n" +
+                "push(116)\n" +
                 "new(trirapide,VOID,meth,0)\n" +
-                "goto(154)\n" +
+                "goto(157)\n" +
                 "new(fin,INT,var,1)\n" +
                 "new(debut,INT,var,2)\n" +
                 "new(pivot,INT,var,0)\n" +
                 "load(fin)\n" +
                 "load(debut)\n" +
                 "sup\n" +
-                "if(122)\n" +
-                "goto(150)\n" +
+                "if(124)\n" +
+                "goto(152)\n" +
                 "load(debut)\n" +
                 "load(fin)\n" +
                 "invoke(partition)\n" +
@@ -999,7 +999,7 @@ class CompilerTest {
                 "new(taille,INT,var,0)\n" +
                 "push(9)\n" +
                 "new(afficher,VOID,meth,0)\n" +
-                "goto(37)\n" +
+                "goto(38)\n" +
                 "new(taille,INT,var,1)\n" +
                 "push(0)\n" +
                 "new(i,INT,var,0)\n" +
@@ -1029,9 +1029,9 @@ class CompilerTest {
                 "pop\n" +
                 "swap\n" +
                 "return\n" +
-                "push(40)\n" +
+                "push(41)\n" +
                 "new(f,VOID,meth,0)\n" +
-                "goto(67)\n" +
+                "goto(69)\n" +
                 "new(x,INT,var,1)\n" +
                 "push(10)\n" +
                 "newarray(t1,INT)\n" +
@@ -1041,13 +1041,13 @@ class CompilerTest {
                 "load(i)\n" +
                 "sup\n" +
                 "not\n" +
-                "if(56)\n" +
+                "if(57)\n" +
                 "load(i)\n" +
                 "load(x)\n" +
                 "astore(t1)\n" +
                 "push(1)\n" +
                 "inc(i)\n" +
-                "goto(45)\n" +
+                "goto(46)\n" +
                 "load(t1)\n" +
                 "store(t)\n" +
                 "load(x)\n" +
@@ -1060,9 +1060,9 @@ class CompilerTest {
                 "pop\n" +
                 "swap\n" +
                 "return\n" +
-                "push(70)\n" +
+                "push(72)\n" +
                 "new(pause,VOID,meth,0)\n" +
-                "goto(72)\n" +
+                "goto(75)\n" +
                 "push(0)\n" +
                 "swap\n" +
                 "return\n" +
@@ -1072,7 +1072,7 @@ class CompilerTest {
                 "load(i)\n" +
                 "sup\n" +
                 "not\n" +
-                "if(87)\n" +
+                "if(90)\n" +
                 "load(i)\n" +
                 "load(taille)\n" +
                 "push(1)\n" +
@@ -1080,7 +1080,7 @@ class CompilerTest {
                 "astore(t)\n" +
                 "push(1)\n" +
                 "inc(i)\n" +
-                "goto(74)\n" +
+                "goto(77)\n" +
                 "push(3)\n" +
                 "invoke(f)\n" +
                 "swap\n" +
