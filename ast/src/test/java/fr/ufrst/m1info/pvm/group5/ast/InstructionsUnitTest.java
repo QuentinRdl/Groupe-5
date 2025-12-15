@@ -1063,4 +1063,67 @@ class InstructionsUnitTest {
 
     }
 
+    
+
+    //aload
+    @Test
+    void aload_simple(){
+        Map<String, Value[]> heap = new HashMap<>();
+
+        Value[] values = {
+                new Value(1),
+                new Value(2),
+                new Value(3)
+        };
+        heap.put("x", values);
+        ASTMocks.addHeapToMock(memory, heap);
+
+        storage.push(new ASTMocks.Pair<>("test",new Value(1)));
+
+        AloadInstruction a = new AloadInstruction("x");
+
+        var res = a.execute(0, memory);
+
+        ASTMocks.Pair<String, Value> top = storage.pop();
+        assertEquals(2, top.second().valueInt);
+        assertEquals(".", top.first());
+        assertEquals(1, res);
+    }
+
+
+    @Test
+    void aload_not_array(){
+        Map<String, Value[]> heap = new HashMap<>();
+
+        ASTMocks.addHeapToMock(memory, heap);
+
+        storage.push(new ASTMocks.Pair<>("x",new Value(10)));
+        storage.push(new ASTMocks.Pair<>("test",new Value(1)));
+
+        AloadInstruction a = new AloadInstruction("x");
+
+        assertThrows(ASTInvalidTypeException.class, () -> a.execute(0, memory));
+    }
+
+    @Test
+    void aload_not_int_index(){
+        Map<String, Value[]> heap = new HashMap<>();
+
+        Value[] values = {
+                new Value(1),
+                new Value(2),
+                new Value(3)
+        };
+        heap.put("x", values);
+        ASTMocks.addHeapToMock(memory, heap);
+        storage.push(new ASTMocks.Pair<>("test",new Value("aa")));
+
+        AloadInstruction a = new AloadInstruction("x");
+
+        assertThrows(ASTInvalidTypeException.class, () -> a.execute(0, memory));
+    }
+
+    //astore
+
+
 }
