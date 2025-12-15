@@ -1063,7 +1063,17 @@ class InstructionsUnitTest {
 
     }
 
-    
+    @Test
+    void length_not_array(){
+        Map<String, Value[]> heap = new HashMap<>();
+
+        storage.push(new ASTMocks.Pair<>("x",new Value(1)));
+        ASTMocks.addHeapToMock(memory, heap);
+        LengthInstruction l = new LengthInstruction("x");
+
+        assertThrows(ASTInvalidTypeException.class, () -> l.execute(0, memory));
+
+    }
 
     //aload
     @Test
