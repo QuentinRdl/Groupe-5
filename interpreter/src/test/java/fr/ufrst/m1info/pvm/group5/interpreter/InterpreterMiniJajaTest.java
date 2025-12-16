@@ -1206,7 +1206,7 @@ class InterpreterMiniJajaTest {
     void AffectArrayInValue() {
         String errMessage=imj.interpretCode("class C { int t[5]; int x=5; main{ x=t;}}");
         Assertions.assertNotEquals(null,errMessage);
-        Assertions.assertEquals(ASTInvalidOperationException.class.toString(),errMessage.split(":")[0].trim());
+        Assertions.assertEquals(InterpretationInvalidTypeException.class.toString(),errMessage.split(":")[0].trim());
     }
 
     @Test

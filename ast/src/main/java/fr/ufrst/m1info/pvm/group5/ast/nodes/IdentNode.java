@@ -42,16 +42,19 @@ public class IdentNode extends ASTNode implements EvaluableNode {
             throw ASTInvalidMemoryException.UndefinedVariable(identifier, this.getLine());
         }
 
-        switch (dataType) {
-            case INT:
-                return "int";
-            case BOOL:
-                return "bool";
-            case VOID:
-            default:
-                throw new InterpretationInvalidTypeException(this.getLine(), "int or bool", dataType.name(), "ident");
-        }
+        String stringDataType = switch (dataType) {
+            case INT -> "int";
+            case BOOL -> "bool";
+            default ->
+                    throw new InterpretationInvalidTypeException(this.getLine(), "int or bool", dataType.name(), "ident");
+        };
 
+        if(MemoryCallUtil.safeCall(() -> m.isArray(this.identifier), this)){
+            return "Array<"+stringDataType+">";
+        }
+        else {
+            return stringDataType;
+        }
     }
 
     @Override

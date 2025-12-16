@@ -86,7 +86,9 @@ public class AffectationNode extends ASTNode{
                 if (varDataType == DataType.INT) varTypeStr = "int";
                 else if (varDataType == DataType.BOOL) varTypeStr = "bool";
                 else throw new InterpretationInvalidTypeException(this.getLine(), "int or bool", varDataType.toString(), "affectation");
-
+                if(m.isArray(((IdentNode) identifier).identifier)){
+                    varTypeStr = "Array<"+varTypeStr+">";
+                }
                 if (!exprType.equals(varTypeStr)) {
                     throw new InterpretationInvalidTypeException(this.getLine(), varTypeStr, exprType, "affectation");
                 }
