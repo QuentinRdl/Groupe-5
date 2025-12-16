@@ -143,6 +143,9 @@ public class AppelINode extends ASTNode {
         for (int i = 0; i < formals.size(); i++) {
             ParamNode p = formals.get(i);
             Value argVal = evaluatedArgs.get(i);
+            if (p.type.valueType!=argVal.type){
+                throw new InterpretationInvalidTypeException(this.getLine(), p.type.valueType.toString(), argVal.type.toString(), "method parameter evaluation");
+            }
             m.declVar(p.ident.identifier, argVal, ValueType.toDataType(p.type.valueType));
         }
     }
@@ -198,13 +201,7 @@ public class AppelINode extends ASTNode {
 
     @Override
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
-        SymbolTableEntry methodEntry = MemoryCallUtil.safeCall(() -> m.getMethod(ident.identifier), this);
-        if (methodEntry == null) {
-            throw ASTInvalidMemoryException.UndefinedVariable(ident.identifier, this.getLine());
-        }
-        if (methodEntry.getKind() != EntryKind.METHOD) {
-            throw ASTInvalidMemoryException.InvalidVariable(ident.identifier, this.getLine(), "method", methodEntry.getKind().name());
-        }
+        SymbolTableEntry methodEntry = validateMethodEntry(m);
 
         if (args != null) {
             args.checkType(m);
