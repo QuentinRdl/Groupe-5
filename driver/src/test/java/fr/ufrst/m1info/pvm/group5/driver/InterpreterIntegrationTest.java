@@ -91,9 +91,8 @@ class InterpreterIntegrationTest extends ApplicationTest {
         );
 
         String consoleText = createFileLoadRunAndGetConsole("test.mjj", content);
-        System.out.println(consoleText);
         assertTrue(consoleText.contains("[ERROR]"));
-        assertTrue(consoleText.contains("line 6:5 missing '}' at '<EOF>'"));
+        assertTrue(consoleText.contains("missing '}' at '<EOF>' (at line 6:5)"));
     }
 
 
@@ -109,9 +108,8 @@ class InterpreterIntegrationTest extends ApplicationTest {
         );
 
         String consoleText = createFileLoadRunAndGetConsoleByButton("test.mjj", content);
-        System.out.println(consoleText);
         assertTrue(consoleText.contains("[ERROR]"));
-        assertTrue(consoleText.contains("line 6:5 missing '}' at '<EOF>'"));
+        assertTrue(consoleText.contains("missing '}' at '<EOF>' (at line 6:5)"));
     }
 
 
