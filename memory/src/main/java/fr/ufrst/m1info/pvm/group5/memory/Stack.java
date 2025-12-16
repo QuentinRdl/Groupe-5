@@ -309,23 +309,26 @@ public class Stack {
 
             // Basic identity
             String name = obj.getName();
-            sb.append(name == null ? "<anon>" : name).append("_").append(obj.getScope());
+            sb.append(name == null ? "<anon>" : name);
 
             // Entry kind and declared DataType
-            sb.append(" \tkind=").append(obj.getEntryKind())
-              .append(" \tdataType=").append(obj.getDataType());
+            sb.append("   scope=").append(obj.getScope())
+                    .append("   kind=").append(obj.getEntryKind())
+                    .append("   dataType=").append(obj.getDataType());
 
             // Value description
             Object val = obj.getValue();
-            sb.append(" \tvalue=");
+            sb.append("   value=");
             if (val == null) {
                 sb.append("null");
             } else if (val instanceof Value v) {
-                sb.append("Value(type=").append(v.type).append("){").append(v.toString()).append("}");
+                sb.append("Value(type=").append(v.type).append("){");
+                if(obj.getEntryKind() == EntryKind.ARRAY) sb.append("@");
+                sb.append(v).append("}");
             } else {
                 // For other objects, show runtime class and toString()
                 String cls = val.getClass().getSimpleName();
-                sb.append(cls).append("(").append(val.toString()).append(")");
+                sb.append(cls).append("(").append(val).append(")");
             }
 
             // If the object is a constant and currently uninitialized, mark it

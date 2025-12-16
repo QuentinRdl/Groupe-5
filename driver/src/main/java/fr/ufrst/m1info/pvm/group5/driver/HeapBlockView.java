@@ -16,15 +16,17 @@ public class HeapBlockView extends VBox {
      *
      * @param address the memory address of the block
      * @param size the size of the block
-     * @param allocated true if the block is allocated, false if free
+     * @param allocatedString true if the block is allocated, false if free
      * @param refs the number of references pointing to this block
      * @param bytes the content of the block (can be empty initially)
      */
-    public HeapBlockView(int address, int size, boolean allocated, int refs, String bytes){
+    public HeapBlockView(int address, int size, String allocatedString, int refs, String bytes){
         super();
         setPadding(new Insets(8));
         setSpacing(4);
         getStyleClass().add("heap-block");
+
+        boolean allocated = allocatedString.contains("Allocated");
 
         if (allocated){
             setStyle(" -fx-border-color: #FFD270;");
@@ -32,7 +34,7 @@ public class HeapBlockView extends VBox {
             setStyle(" -fx-border-color: #CC8B00;");
         }
 
-        Label addressLabel = new Label("Block @" + address + (allocated ? " - ALLOCATED" : " - FREE"));
+        Label addressLabel = new Label("Block @" + address + "  -  " + allocatedString.toUpperCase());
         addressLabel.setStyle("-fx-font-weight: bold;");
 
         Label sizeLabel = new Label("Size : " + size);
@@ -40,8 +42,8 @@ public class HeapBlockView extends VBox {
         Label refsLabel = new Label("Refs : " + refs);
 
         dataLabel = new Label();
-        dataLabel.setWrapText(true);
         dataLabel.setMaxWidth(260);
+        dataLabel.setWrapText(true);
 
         getChildren().addAll(addressLabel, sizeLabel, refsLabel, dataLabel);
     }

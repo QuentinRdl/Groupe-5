@@ -156,14 +156,15 @@ public class MemoryVisualisation extends HBox {
         // Parse each line containing a variable and create a visual block
         for(String line : lines){
             if(line.contains("kind=")){ // Only process lines with variable information
-                String name = extract(line, "]", "kind=");
+                String name = extract(line, "]", "scope=");
+                int scope = extractInt(line, "scope=", "dataType=");
                 String kind = extract(line, "kind=", "dataType=");
                 String type = extract(line, "dataType=", "value=");
                 String value = extract(line, "value=", "");
                 String valueContent = extractValueContent(value);
 
                 // Add a StackBlockView at the top of the stack container
-                stackContainer.getChildren().add(new StackBlockView(name, kind, type, valueContent));
+                stackContainer.getChildren().add(new StackBlockView(name, kind, scope, type, valueContent));
             }
         }
     }
@@ -188,7 +189,7 @@ public class MemoryVisualisation extends HBox {
         // Ignore the first line (general heap info like total/available memory)
         for(int i = 1; i < lines.length; i++){
             String line = lines[i].trim();
-            System.out.println("Line " + i + " : " + line);
+
             if(line.isEmpty()) continue; // Skip empty lines
 
             if(line.contains("data:")){
@@ -198,10 +199,11 @@ public class MemoryVisualisation extends HBox {
             } else {
                 int address = extractInt(line, "ext@", "int@");
                 int size = extractInt(line, "size=", (line.contains("Allocated") ? "Allocated" : "Free"));
-                boolean allocated = line.contains("Allocated");
+                String allocated = extract(line, Integer.toString(size), "refs=");
                 int refs = extractInt(line, "refs=", "");
 
-                heapContainer.getChildren().add(new HeapBlockView(address, size, allocated, refs, ""));
+                HeapBlockView block = new HeapBlockView(address, size, allocated, refs, "");
+                heapContainer.getChildren().add(block);
             }
         }
     }
