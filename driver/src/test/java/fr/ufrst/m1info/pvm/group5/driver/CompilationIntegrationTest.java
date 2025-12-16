@@ -268,6 +268,7 @@ class CompilationIntegrationTest extends ApplicationTest {
                 "   }",
                 "}");
         String consoleText = createFileLoadCompileAndRunAndGetConsole("test.mjj", content);
+        System.out.println(consoleText);
         assertTrue(consoleText.contains("8"));
         assertTrue(consoleText.contains("[INFO] Compilation and interpretation successfully completed"));
     }
