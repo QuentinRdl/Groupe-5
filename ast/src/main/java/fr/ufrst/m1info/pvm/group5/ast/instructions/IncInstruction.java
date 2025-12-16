@@ -23,6 +23,8 @@ public class IncInstruction extends Instruction{
     public int execute(int address, Memory m) {
         Value v_add = (Value) MemoryCallUtil.safeCall(() -> m.val(ident), this);
         Value v_pop = (Value) MemoryCallUtil.safeCall(m::pop, this);
+        if(v_add.type == ValueType.EMPTY)
+            throw ASTInvalidMemoryException.UndefinedVariable("x", this.getLine());
         compatibleType(ValueType.INT, v_add.type);
         compatibleType(ValueType.INT, v_pop.type);
         int res = v_pop.valueInt + v_add.valueInt;

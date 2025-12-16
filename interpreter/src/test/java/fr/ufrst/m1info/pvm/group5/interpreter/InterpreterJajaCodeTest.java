@@ -395,7 +395,7 @@ class InterpreterJajaCodeTest {
         String input = "init\npush(jcvrai)\nnew(x,BOOL,var,0)\nload(y)\nstore(x)\npush(0)\nswap\npop\npop\njcstop";
         String errMessage= ijc.interpretCode(input);
         Assertions.assertNotEquals(null,errMessage);
-        Assertions.assertEquals(IllegalArgumentException.class.toString(),errMessage.split(":")[0].trim());
+        Assertions.assertEquals(ASTInvalidMemoryException.class.toString(),errMessage.split(":")[0].trim());
     }
 
     @Test
@@ -413,7 +413,7 @@ class InterpreterJajaCodeTest {
         String input = "init\npush(3)\ninc(x)\npush(0)\nswap\npop\npop\njcstop";
         String errMessage= ijc.interpretCode(input);
         Assertions.assertNotEquals(null,errMessage);
-        Assertions.assertEquals(IllegalArgumentException.class.toString(),errMessage.split(":")[0].trim());
+        Assertions.assertEquals(ASTInvalidMemoryException.class.toString(),errMessage.split(":")[0].trim());
     }
 
     @Test
@@ -682,7 +682,7 @@ class InterpreterJajaCodeTest {
         InterpreterJajaCode ijjc = new InterpreterJajaCode();
         // Creating result
         List<String> expectedErrors = new ArrayList<>();
-        expectedErrors.add("Type error: add instruction expects two INT operands, but received BOOL and INT.");
+        expectedErrors.add("Invalid type, type BOOL given when int is expected for add (at line 4)");
 
         InterpretationMode im = InterpretationMode.STEP_BY_STEP;
         ijjc.interpretationHaltedEvent.subscribe(event -> {

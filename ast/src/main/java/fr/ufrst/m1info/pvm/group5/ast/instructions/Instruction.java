@@ -1,5 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.ast.instructions;
 
+import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidMemoryException;
 import fr.ufrst.m1info.pvm.group5.ast.InterpretationInvalidTypeException;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import fr.ufrst.m1info.pvm.group5.memory.ValueType;

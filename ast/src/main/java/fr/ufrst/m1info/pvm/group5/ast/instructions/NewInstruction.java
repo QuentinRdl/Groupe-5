@@ -54,8 +54,6 @@ public class NewInstruction extends Instruction{
                 v=new Value();
             }
         }catch (Exception e){
-            if(kind == EntryKind.VARIABLE)
-                return address+1;
             v = new Value();
         }
         compatibleType(List.of(ValueType.INT, ValueType.BOOL, ValueType.VOID), DataType.toValueType(type));

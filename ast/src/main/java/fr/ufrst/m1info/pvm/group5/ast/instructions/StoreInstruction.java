@@ -19,8 +19,10 @@ public class StoreInstruction extends Instruction{
     public int execute(int address, Memory m) {
         Value v = (Value) MemoryCallUtil.safeCall(m::pop, this);
         ValueType varType = MemoryCallUtil.safeCall(() -> m.valueTypeOf(ident), this);
-        compatibleType(List.of(ValueType.BOOL, ValueType.INT), varType);
-        compatibleType(varType, v.type);
+        compatibleType(List.of(ValueType.BOOL, ValueType.INT), v.type);
+        if(varType!=ValueType.EMPTY) {
+            compatibleType(varType, v.type);
+        }
         MemoryCallUtil.safeCall(() -> m.affectValue(this.ident, v), this);
         return address+1;
     }

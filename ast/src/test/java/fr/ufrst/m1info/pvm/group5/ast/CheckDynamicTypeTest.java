@@ -1147,7 +1147,7 @@ class CheckDynamicTypeTest {
                 InterpretationInvalidTypeException.class,
                 () -> node.checkType(memoryMock)
         );
-        assertTrue(exception.getMessage().contains("type bool"));
+        assertTrue(exception.getMessage().contains("bool is expected"));
     }
 
     @Test
