@@ -1420,6 +1420,50 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret Declare Var Name Same As Class Name")
+    void DeclareVarNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { int C=5; main{ writeln(C); C+=4; writeln(C);}}");
+        Assertions.assertNull(errMessage);
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("5\n9\n", e.oldText());
+        });
+        writer.write("");
+    }
+
+    @Test
+    @DisplayName("Interpret Declare Final Name Same As Class Name")
+    void DeclareFinalNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { final int C=5; main{ writeln(C);}}");
+        Assertions.assertNull(errMessage);
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("5\n9\n", e.oldText());
+        });
+        writer.write("");
+    }
+
+    @Test
+    @DisplayName("Interpret Declare Array Name Same As Class Name")
+    void DeclareArrayNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { int C[1]; main{ C[0]=5; writeln(C[0]); C[0]+=4; writeln(C[0]);}}");
+        Assertions.assertNull(errMessage);
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("5\n9\n", e.oldText());
+        });
+        writer.write("");
+    }
+
+    @Test
+    @DisplayName("Interpret Declare Method Name Same As Class Name")
+    void DeclareMethodNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { void C(){ writeln(\"5\"); writeln(\"9\");}; main{ C();}}");
+        Assertions.assertNull(errMessage);
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("5\n9\n", e.oldText());
+        });
+        writer.write("");
+    }
+
+    @Test
     @DisplayName("Interpret Random String")
     void randomString() {
         String errMessage=imj.interpretCode("ezudzedezezbclassdezdoncCdzedo{dezodjintezpodjy;podkezdmain{ydpocke=dozejd10;}}");
