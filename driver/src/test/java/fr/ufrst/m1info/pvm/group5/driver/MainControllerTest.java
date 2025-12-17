@@ -1257,6 +1257,9 @@ public class MainControllerTest extends ApplicationTest {
         interact(() -> controller.onCompileClicked());
         WaitForAsyncUtils.waitForFxEvents();
 
+        // Wait for tab selection to complete
+        WaitForAsyncUtils.waitForFxEvents();
+
         assertEquals(controller.getCompiledTab(), controller.getEditorTabPane().getSelectionModel().getSelectedItem());
         verifyThat("#btnCompile", isDisabled());
         verifyThat("#btnRunCompile", isDisabled());
