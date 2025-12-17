@@ -1464,6 +1464,48 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret Affectation Var Name Same As Class Name")
+    void AffectationVarNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ C=5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Increment Var Name Same As Class Name")
+    void IncrementVarNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ C++;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Sum Var Name Same As Class Name")
+    void SumVarNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ C+=5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Write Var Name Same As Class Name")
+    void WriteVarNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ write(C);}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Writeln Var Name Same As Class Name")
+    void WritelnVarNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ writeln(C);}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Expr Var Name Same As Class Name")
+    void ExprVarNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ int x=C;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
     @DisplayName("Interpret Random String")
     void randomString() {
         String errMessage=imj.interpretCode("ezudzedezezbclassdezdoncCdzedo{dezodjintezpodjy;podkezdmain{ydpocke=dozejd10;}}");
