@@ -2585,7 +2585,5 @@ class MainControllerTest extends ApplicationTest {
         } else {
             fail("No heap-block found");
         }
-
     }
-
 }
