@@ -47,7 +47,6 @@ public class InterpreterJajaCode extends Interpreter{
             List<Instruction> jjc = Jajacode.fromString(code);
             interpretJajaCode(jjc);
         } catch (Exception e) {
-            e.printStackTrace();
             errMessage=e.getClass()+" : "+e.getMessage();
         }
         return errMessage;
@@ -83,7 +82,6 @@ public class InterpreterJajaCode extends Interpreter{
             List<Instruction> jjc = Jajacode.fromFile(path);
             interpretJajaCode(jjc);
         } catch (Exception e) {
-            e.printStackTrace();
             errMessage=e.getClass()+" : "+e.getMessage();
         }
         return errMessage;

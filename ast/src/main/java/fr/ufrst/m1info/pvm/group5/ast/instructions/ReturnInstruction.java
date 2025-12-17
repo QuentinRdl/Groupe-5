@@ -10,7 +10,7 @@ public class ReturnInstruction extends Instruction {
     public int execute(int address, Memory m) {
         Value top = (Value) MemoryCallUtil.safeCall(m::pop, this);
         compatibleType(ValueType.INT, top.type);
-        MemoryCallUtil.safeCall(m::popScope, this);
+        MemoryCallUtil.safeCall(m::decrementScope, this);
         return top.valueInt;
     }
 
