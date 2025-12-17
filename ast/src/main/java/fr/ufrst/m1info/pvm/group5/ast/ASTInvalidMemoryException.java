@@ -16,19 +16,11 @@ public class ASTInvalidMemoryException extends RuntimeException {
         return new ASTInvalidMemoryException(String.format("Symbol %s is a %s, expected %s (at line %d)", identifier, expected, actual, line));
     }
 
-    public static ASTInvalidMemoryException NoValueAvailable(String identifier, int line) {
-        return new ASTInvalidMemoryException(String.format("Variable %s has no defined value (at line %d)", identifier, line));
-    }
-
-    public static ASTInvalidMemoryException ConstantChange(String identifier, int line) {
-        return new ASTInvalidMemoryException(String.format("Attempted to change constant value %s (at line %d)", identifier, line));
-    }
-
     public static ASTInvalidMemoryException EmptyStack(int line) {
         return new ASTInvalidMemoryException(String.format("Attempted to pop a value on an empty stack (at line %d)", line));
     }
 
     public static ASTInvalidMemoryException InvalidMemoryOperation(int line, String message) {
-        return new ASTInvalidMemoryException("Memory call failed : " +message + "(at line " + line + ")");
+        return new ASTInvalidMemoryException(message + "(at line " + line + ")");
     }
 }
