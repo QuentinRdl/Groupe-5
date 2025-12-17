@@ -71,4 +71,6 @@ public class DeclarationsNode extends ASTNode implements WithdrawalNode {
         jajacodes.addAll(((WithdrawalNode)declaration).withdrawCompile(address + jajacodes.size()));
         return jajacodes;
     }
+
+    public String toString(){return "declarations";}
 }

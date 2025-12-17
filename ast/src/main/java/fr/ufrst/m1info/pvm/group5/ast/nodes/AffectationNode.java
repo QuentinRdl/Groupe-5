@@ -15,13 +15,13 @@ public class AffectationNode extends ASTNode{
         this.identifier = identifier;
         this.expression = expression;
         if(identifier == null || expression == null){
-            throw new ASTBuildException("Affectation",(identifier==null)?"identifier":"expression", "affectation cannot have null children");
+            throw new ASTBuildException("=",(identifier==null)?"identifier":"expression", "affectation cannot have null children");
         }
         if(!(identifier instanceof IdentNode) && !(identifier instanceof TabNode)){
-            throw new ASTBuildException("Affectation","identifier", "affectation identifier must be a variable or an array");
+            throw new ASTBuildException("=","identifier", "affectation identifier must be a variable or an array");
         }
         if(!(expression instanceof EvaluableNode)){
-            throw new ASTBuildException("Affectation","expression", "affectation's expression must be evaluable");
+            throw new ASTBuildException("=","expression", "affectation's expression must be evaluable");
         }
     }
 
@@ -70,27 +70,27 @@ public class AffectationNode extends ASTNode{
                 ASTNode indexExp = tabNode.getChildren().get(1);
                 String indexType = indexExp.checkType(m);
                 if (!"int".equals(indexType)) {
-                    throw new InterpretationInvalidTypeException(this.getLine(), "int", indexType, "affectation");
+                    throw new InterpretationInvalidTypeException(this.getLine(), "int", indexType, this);
                 }
                 DataType arrayDataType = MemoryCallUtil.safeCall(() -> m.tabType(arrayIdent.identifier), this);
                 String arrayTypeStr;
                 if (arrayDataType == DataType.INT) arrayTypeStr = "int";
                 else if (arrayDataType == DataType.BOOL) arrayTypeStr = "bool";
-                else throw new InterpretationInvalidTypeException(this.getLine(), "int or bool", "array", "affectation");
+                else throw new InterpretationInvalidTypeException(this.getLine(), "[int,bool]", arrayDataType.toString(), this);
                 if (!exprType.equals(arrayTypeStr)) {
-                    throw new InterpretationInvalidTypeException(this.getLine(), arrayTypeStr, exprType, "affectation");
+                    throw new InterpretationInvalidTypeException(this.getLine(), arrayTypeStr, exprType, this);
                 }
             } else {
                 DataType varDataType = m.dataTypeOf(((IdentNode) identifier).identifier);
                 String varTypeStr;
                 if (varDataType == DataType.INT) varTypeStr = "int";
                 else if (varDataType == DataType.BOOL) varTypeStr = "bool";
-                else throw new InterpretationInvalidTypeException(this.getLine(), "int or bool", varDataType.toString(), "affectation");
+                else throw new InterpretationInvalidTypeException(this.getLine(), "[[int, bool]]", varDataType.toString(), this);
                 if(m.isArray(((IdentNode) identifier).identifier)){
                     varTypeStr = "Array<"+varTypeStr+">";
                 }
                 if (!exprType.equals(varTypeStr)) {
-                    throw new InterpretationInvalidTypeException(this.getLine(), varTypeStr, exprType, "affectation");
+                    throw new InterpretationInvalidTypeException(this.getLine(), varTypeStr, exprType, this);
                 }
             }
         } catch (Memory.MemoryIllegalArgException e) {
@@ -108,5 +108,7 @@ public class AffectationNode extends ASTNode{
         return List.of(identifier,expression);
     }
 
-
+    public String toString(){
+        return "=";
+    }
 }

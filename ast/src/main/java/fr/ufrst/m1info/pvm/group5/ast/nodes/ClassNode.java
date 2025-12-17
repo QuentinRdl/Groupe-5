@@ -76,5 +76,6 @@ public class ClassNode extends ASTNode {
         return children;
     }
 
+    public String toString(){return "class";}
 
 }

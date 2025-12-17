@@ -21,8 +21,10 @@ public class SupNode extends BinaryOperator{
     @Override
     protected String controlType(String leftType, String rightType) throws InterpretationInvalidTypeException {
         if (!leftType.equals("int") || !rightType.equals("int")){
-            throw new InterpretationInvalidTypeException(this.getLine(), "int", (leftType.equals("int"))?leftType:rightType, "sup (>)");
+            throw new InterpretationInvalidTypeException(this.getLine(), "int", (leftType.equals("int"))?leftType:rightType, this);
         }
         return "bool";
     }
+
+    public String toString(){return ">";}
 }

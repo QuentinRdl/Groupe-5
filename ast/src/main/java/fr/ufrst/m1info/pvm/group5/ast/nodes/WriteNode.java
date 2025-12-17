@@ -80,4 +80,6 @@ public class WriteNode extends ASTNode{
             return List.of(ident);
         return List.of();
     }
+
+    public String toString(){return "write";}
 }

@@ -51,7 +51,7 @@ public class WhileNode extends ASTNode{
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         String condType = condition.checkType(m);
         if (!condType.equals("bool")) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "bool", condType, "While");
+            throw new InterpretationInvalidTypeException(this.getLine(), "bool", condType, this);
         }
         if (iss != null) {
             iss.checkType(m);
@@ -68,4 +68,5 @@ public class WhileNode extends ASTNode{
         return children;
     }
 
+    public String toString(){return "while";}
 }

@@ -62,4 +62,5 @@ public class MainNode extends ASTNode {
         return children;
     }
 
+    public String toString(){return "main";}
 }

@@ -28,7 +28,7 @@ public class ArrayNode extends ASTNode implements WithdrawalNode {
     public List<String> compile(int address) {
         java.util.List<String> code = new java.util.ArrayList<>();
         code.addAll(sizeExp.compile(address));
-        String typeStr = type.valueType.name().toUpperCase();
+        String typeStr = type.valueType.toString().toUpperCase();
         code.add("newarray(" + ident.identifier + "," + typeStr + ")");
 
         return code;
@@ -58,7 +58,7 @@ public class ArrayNode extends ASTNode implements WithdrawalNode {
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         String sizeType = sizeExp.checkType(m);
         if (!sizeType.equals("int")) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "int", sizeType, "array declaration");
+            throw new InterpretationInvalidTypeException(this.getLine(), "int", sizeType, this);
         }
         DataType dt = ValueType.toDataType(type.valueType);
         MemoryCallUtil.safeCall(() -> m.declTab(ident.identifier, 1, dt), this);
@@ -73,6 +73,8 @@ public class ArrayNode extends ASTNode implements WithdrawalNode {
 
     @Override
     protected Map<String, String> getProperties() {
-        return Map.of("identifier", ident.identifier, "type", type.valueType.name());
+        return Map.of("identifier", ident.identifier, "type", type.valueType.toString());
     }
+
+    public String toString(){return "array<"+type+">:"+ident.identifier;}
 }

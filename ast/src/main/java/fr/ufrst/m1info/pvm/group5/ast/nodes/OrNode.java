@@ -22,8 +22,10 @@ public class OrNode extends BinaryOperator {
     @Override
     protected String controlType(String leftType, String rightType) throws InterpretationInvalidTypeException {
         if (!leftType.equals("bool") || !rightType.equals("bool")){
-            throw new InterpretationInvalidTypeException(this.getLine(), "bool", (leftType.equals("bool"))?leftType:rightType, "or (||)");
+            throw new InterpretationInvalidTypeException(this.getLine(), "bool", (leftType.equals("bool"))?leftType:rightType, this);
         }
         return "bool";
     }
+
+    public String toString(){return "||";}
 }

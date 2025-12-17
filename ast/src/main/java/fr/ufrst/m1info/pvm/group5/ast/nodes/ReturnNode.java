@@ -42,4 +42,5 @@ public class ReturnNode extends ASTNode{
         return List.of(expr);
     }
 
+    public String toString(){return "return";}
 }

@@ -31,14 +31,14 @@ public class UnMinusNode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) throws ASTInvalidOperationException {
-        throw new ASTInvalidOperationException("interpretation", "Unary minus", this.getLine());
+        throw new ASTInvalidOperationException("interpretation", this, this.getLine());
     }
 
     @Override
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         String exprType = exp.checkType(m);
         if (!exprType.equals("int")) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "int", exprType, "Unary minus");
+            throw new InterpretationInvalidTypeException(this.getLine(), "int", exprType, this);
         }
         return "int";
     }
@@ -54,4 +54,6 @@ public class UnMinusNode extends ASTNode implements EvaluableNode {
         Value v = ((EvaluableNode)exp).eval(m);
         return new Value(-v.valueInt);
     }
+
+    public String toString(){return "-";}
 }

@@ -62,7 +62,7 @@ public class IfNode extends ASTNode{
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         String condType = condition.checkType(m);
         if (!condType.equals("bool")) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "bool", condType ,"if");
+            throw new InterpretationInvalidTypeException(this.getLine(), "bool", condType ,this);
         }
         if (instrThen != null) {
             instrThen.checkType(m);
@@ -84,4 +84,5 @@ public class IfNode extends ASTNode{
         return children;
     }
 
+    public String toString(){return "if";}
 }

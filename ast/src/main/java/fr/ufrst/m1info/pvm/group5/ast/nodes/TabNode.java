@@ -34,7 +34,7 @@ public class TabNode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) {
-        throw new ASTInvalidOperationException("interpretation", "Tab", this.getLine());
+        throw new ASTInvalidOperationException("interpretation", this, this.getLine());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class TabNode extends ASTNode implements EvaluableNode {
         }
         String indexType = indexExp.checkType(m);
         if (!"int".equals(indexType)) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "int", indexType, "Tab");
+            throw new InterpretationInvalidTypeException(this.getLine(), "int", indexType, this);
         }
         return MemoryCallUtil.safeCall(() -> m.dataTypeOf(ident.identifier).toString().toLowerCase(), this);
     }
@@ -69,4 +69,6 @@ public class TabNode extends ASTNode implements EvaluableNode {
     protected Map<String, String> getProperties() {
         return Map.of("identifier", ident.identifier);
     }
+
+    public String toString(){return "array reference:{"+ident+"}";}
 }

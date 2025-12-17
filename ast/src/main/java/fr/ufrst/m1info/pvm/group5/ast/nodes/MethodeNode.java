@@ -102,9 +102,9 @@ public class MethodeNode extends ASTNode implements WithdrawalNode {
             }
         }
         MemoryCallUtil.safeCall(m::popScope, this);
-        String typeMethod = returnType.getValueType().name().toLowerCase();
+        String typeMethod = returnType.getValueType().toString().toLowerCase();
         if (!typeMethod.equals(typeReturn)){
-            throw new InterpretationInvalidTypeException(this.getLine(), typeMethod, typeReturn, "method declaration");
+            throw new InterpretationInvalidTypeException(this.getLine(), typeMethod, typeReturn, this);
         }
         return typeMethod;
     }
@@ -122,4 +122,6 @@ public class MethodeNode extends ASTNode implements WithdrawalNode {
     public List<String> withdrawCompile(int address) {
         return List.of("swap","pop");
     }
+
+    public String toString(){return "method:"+ident;}
 }

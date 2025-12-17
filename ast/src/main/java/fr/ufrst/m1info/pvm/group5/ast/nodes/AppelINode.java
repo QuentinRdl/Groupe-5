@@ -77,7 +77,7 @@ public class AppelINode extends ASTNode {
             throw ASTInvalidMemoryException.UndefinedVariable(ident.identifier, this.getLine());
         }
         if (methodEntry.getKind() != EntryKind.METHOD) {
-            throw ASTInvalidMemoryException.InvalidVariable(ident.identifier, this.getLine(), "method", methodEntry.getKind().name());
+            throw ASTInvalidMemoryException.InvalidVariable(ident.identifier, this.getLine(), "method", methodEntry.getKind().toString());
         }
         return methodEntry;
     }
@@ -144,7 +144,7 @@ public class AppelINode extends ASTNode {
             ParamNode p = formals.get(i);
             Value argVal = evaluatedArgs.get(i);
             if (p.type.valueType!=argVal.type){
-                throw new InterpretationInvalidTypeException(this.getLine(), p.type.valueType.toString(), argVal.type.toString(), "method parameter evaluation");
+                throw new InterpretationInvalidTypeException(this.getLine(), p.type.valueType.toString(), argVal.type.toString(), this);
             }
             m.declVar(p.ident.identifier, argVal, ValueType.toDataType(p.type.valueType));
         }
@@ -215,7 +215,9 @@ public class AppelINode extends ASTNode {
             case VOID:
                 return "void";
             default:
-                throw new InterpretationInvalidTypeException(this.getLine(), "int, bool or void", dt.name(), "AppelI");
+                throw new InterpretationInvalidTypeException(this.getLine(), "int, bool or void", dt.toString(), this);
         }
     }
+
+    public String toString(){return "AppelI";}
 }

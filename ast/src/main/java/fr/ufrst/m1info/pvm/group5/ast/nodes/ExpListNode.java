@@ -31,7 +31,7 @@ public class ExpListNode extends ASTNode {
 
     @Override
     public void interpret(Memory m) throws ASTInvalidOperationException {
-        throw new ASTInvalidOperationException("interpretation", "ExpList", this.getLine());
+        throw new ASTInvalidOperationException("interpretation", this, this.getLine());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ExpListNode extends ASTNode {
         }else if (head instanceof EvaluableNode evaluableHead) {
             values.add(evaluableHead.eval(m));
         } else {
-            throw new ASTInvalidOperationException("evaluation", "ExpList", this.getLine());
+            throw new ASTInvalidOperationException("evaluation", this, this.getLine());
         }
 
         if (tail instanceof ExpListNode expListNode) {
@@ -104,4 +104,6 @@ public class ExpListNode extends ASTNode {
             }
         }
     }
+
+    public String toString(){return "listExp";}
 }

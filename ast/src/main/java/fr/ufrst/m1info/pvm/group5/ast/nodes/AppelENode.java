@@ -65,7 +65,7 @@ public class AppelENode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) throws ASTInvalidOperationException {
-        throw new ASTInvalidOperationException("interpretation", "AppelE", this.getLine());
+        throw new ASTInvalidOperationException("interpretation", this, this.getLine());
     }
 
     @Override
@@ -75,7 +75,7 @@ public class AppelENode extends ASTNode implements EvaluableNode {
             throw ASTInvalidMemoryException.UndefinedVariable(ident.identifier, this.getLine());
         }
         if (methodEntry.getKind() != EntryKind.METHOD) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "method", methodEntry.getKind().toString(), "AppelE");
+            throw new InterpretationInvalidTypeException(this.getLine(), "method", methodEntry.getKind().toString(), this);
         }
 
         if (args != null) {
@@ -85,7 +85,9 @@ public class AppelENode extends ASTNode implements EvaluableNode {
         return switch (dt) {
             case INT -> "int";
             case BOOL -> "bool";
-            default -> throw new InterpretationInvalidTypeException(this.getLine(), "int or bool", "void", "AppelE");
+            default -> throw new InterpretationInvalidTypeException(this.getLine(), "[int, bool]", dt.toString(), this);
         };
     }
+
+    public String toString(){return "AppelE";}
 }

@@ -62,14 +62,14 @@ public class VariableNode extends ASTNode implements WithdrawalNode {
             m.declVar(ident.identifier, new Value(true), ValueType.toDataType(typemeth.valueType));
             vType="bool";
         }else {
-            throw new InterpretationInvalidTypeException(this.getLine(), "int or bool", varType.name(), "Variable declaration");
+            throw new InterpretationInvalidTypeException(this.getLine(), "[int, bool]", varType.toString(), this);
         }
         if (vexp != null) {
             String exprType = vexp.checkType(m);
 
 
             if (!exprType.equals(vType)) {
-                throw new InterpretationInvalidTypeException(this.getLine(), exprType, vType, "Variable declaration");
+                throw new InterpretationInvalidTypeException(this.getLine(), exprType, vType, this);
             }
         }
         return "void";
@@ -102,4 +102,6 @@ public class VariableNode extends ASTNode implements WithdrawalNode {
         jajacodes.add("pop");
         return jajacodes;
     }
+
+    public String toString(){return "variable:{"+ident.identifier+"}";}
 }

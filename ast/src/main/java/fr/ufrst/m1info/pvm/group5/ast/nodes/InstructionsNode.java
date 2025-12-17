@@ -59,4 +59,5 @@ public class InstructionsNode extends ASTNode{
         return children;
     }
 
+    public String toString(){return "instructions";}
 }

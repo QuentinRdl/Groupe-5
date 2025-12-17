@@ -75,7 +75,7 @@ public class IncNode extends ASTNode{
             IdentNode identNode = (IdentNode) ident;
             String identType = identNode.checkType(m);
             if (!identType.equals("int")) {
-                throw new InterpretationInvalidTypeException(this.getLine(), "int", identType, "inc");
+                throw new InterpretationInvalidTypeException(this.getLine(), "int", identType, this);
             }
         }
 
@@ -87,4 +87,6 @@ public class IncNode extends ASTNode{
         return List.of(ident);
     }
 
+
+    public String toString(){return "++";}
 }

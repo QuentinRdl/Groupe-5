@@ -73,4 +73,6 @@ public class VariablesNode extends ASTNode implements WithdrawalNode {
         jajacodes.addAll(((WithdrawalNode)variable).withdrawCompile(address + jajacodes.size()));
         return jajacodes;
     }
+
+    public String toString(){return "variables";}
 }

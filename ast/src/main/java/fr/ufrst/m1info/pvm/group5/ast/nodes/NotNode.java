@@ -43,10 +43,10 @@ public class NotNode extends ASTNode implements EvaluableNode {
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         String exprType = expr.checkType(m);
         if (!exprType.equals("bool")) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "bool", exprType, "not");
+            throw new InterpretationInvalidTypeException(this.getLine(), "bool", exprType, this);
         }
         if (expr instanceof IdentNode && MemoryCallUtil.safeCall(()->m.isArray(((IdentNode) expr).identifier), this)){
-            throw new InterpretationInvalidTypeException(this.getLine(), "bool", "array", "not");
+            throw new InterpretationInvalidTypeException(this.getLine(), "bool", "array", this);
         }
         return "bool";
     }
@@ -56,4 +56,5 @@ public class NotNode extends ASTNode implements EvaluableNode {
         return List.of(expr);
     }
 
+    public String toString(){return "noy";}
 }

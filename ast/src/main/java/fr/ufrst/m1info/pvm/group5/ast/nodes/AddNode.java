@@ -21,8 +21,12 @@ public class AddNode extends BinaryOperator{
     @Override
     protected String controlType(String leftType, String rightType) throws InterpretationInvalidTypeException {
         if (!leftType.equals("int") || !rightType.equals("int")){
-            throw new InterpretationInvalidTypeException(this.getLine(), "int", (leftType.equals("int"))?leftType:rightType, "add (+)");
+            throw new InterpretationInvalidTypeException(this.getLine(), "int", (leftType.equals("int"))?leftType:rightType, this);
         }
         return "int";
+    }
+
+    public String toString(){
+        return "+";
     }
 }

@@ -30,7 +30,7 @@ public class LengthNode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) throws ASTInvalidOperationException, ASTInvalidMemoryException {
-        throw new ASTInvalidOperationException("Length", "Length", this.getLine());
+        throw new ASTInvalidOperationException("Length", this, this.getLine());
     }
 
     @Override
@@ -45,4 +45,6 @@ public class LengthNode extends ASTNode implements EvaluableNode {
     public List<ASTNode> getChildren() {
         return List.of(ident);
     }
+
+    public String toString(){return "length";}
 }

@@ -33,7 +33,7 @@ public abstract class BinaryOperator extends ASTNode implements EvaluableNode {
     }
 
     public void interpret(Memory m) {
-        throw new ASTInvalidOperationException("interpretation", this.toString(), this.getLine());
+        throw new ASTInvalidOperationException("interpretation", this, this.getLine());
     }
 
     public Value eval(Memory m) throws ASTInvalidMemoryException, ASTInvalidOperationException {

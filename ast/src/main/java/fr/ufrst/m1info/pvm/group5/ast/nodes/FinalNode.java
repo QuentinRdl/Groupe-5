@@ -66,11 +66,11 @@ public class FinalNode extends ASTNode implements WithdrawalNode {
                 MemoryCallUtil.safeCall(() -> m.declCst(ident.identifier, new Value(false), ValueType.toDataType(type.valueType)), this);
                 break;
             default :
-                throw new InterpretationInvalidTypeException(this.getLine(), "int or bool", type.valueType.name(), "final");
+                throw new InterpretationInvalidTypeException(this.getLine(), "[int, bool]", type.valueType.toString(), this);
         }
 
         if (!exprType.equals(declaredType)) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "int or bool", declaredType ,"final");
+            throw new InterpretationInvalidTypeException(this.getLine(), "[int, bool]", declaredType , this);
         }
 
         return "void";
@@ -103,4 +103,6 @@ public class FinalNode extends ASTNode implements WithdrawalNode {
         jajacodes.add("pop");
         return jajacodes;
     }
+
+    public String toString(){return "final";}
 }
