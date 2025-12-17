@@ -1506,6 +1506,55 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret Affectation Array Name Same As Class Name")
+    void AffectationArrayNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ C[0]=5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Increment Array Name Same As Class Name")
+    void IncrementArrayNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ C[0]++;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Sum Array Name Same As Class Name")
+    void SumArrayNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ C[0]+=5;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Write Array Name Same As Class Name")
+    void WriteArrayNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ write(C[0]);}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Writeln Array Name Same As Class Name")
+    void WritelnArrayNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ writeln(C[0]);}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Expr Array Name Same As Class Name")
+    void ExprArrayNameSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ int x=C[0];}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Method Same As Class Name")
+    void MethodSameAsClassName() {
+        String errMessage=imj.interpretCode("class C { main{ C();}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
     @DisplayName("Interpret Random String")
     void randomString() {
         String errMessage=imj.interpretCode("ezudzedezezbclassdezdoncCdzedo{dezodjintezpodjy;podkezdmain{ydpocke=dozejd10;}}");
