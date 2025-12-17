@@ -2588,41 +2588,4 @@ class MainControllerTest extends ApplicationTest {
 
     }
 
-    @Test
-    void diagnosticWhyMemoryTabNotHiding() throws Exception {
-        System.out.println("\n=== DIAGNOSTIC: Memory Tab Hiding ===");
-
-        File testFile = createTestFile("test.mjj", "class C {", "int x = 10;", "main {", "x++;", "}", "}");
-        interact(() -> controller.loadFile(testFile));
-        WaitForAsyncUtils.waitForFxEvents();
-
-        interact(() -> controller.onRunClicked());
-        WaitForAsyncUtils.waitForFxEvents();
-        Thread.sleep(1500);
-
-        System.out.println("After run - tabs:");
-        controller.getOutputTabPane().getTabs().forEach(tab ->
-                System.out.println("  - " + tab.getText() + " @ " + System.identityHashCode(tab))
-        );
-        System.out.println("memoryTabMinijaja @ " + System.identityHashCode(controller.getMemoryTabMinijaja()));
-
-        boolean beforeLoad = controller.getOutputTabPane().getTabs().contains(controller.getMemoryTabMinijaja());
-        System.out.println("Memory tab visible before load: " + beforeLoad);
-
-        File testFile2 = createTestFile("test2.mjj", "class D {", "main {", "}", "}");
-        interact(() -> controller.loadFile(testFile2));
-        WaitForAsyncUtils.waitForFxEvents();
-        Thread.sleep(500);
-
-        System.out.println("\nAfter loading new file - tabs:");
-        controller.getOutputTabPane().getTabs().forEach(tab ->
-                System.out.println("  - " + tab.getText() + " @ " + System.identityHashCode(tab))
-        );
-
-        boolean afterLoad = controller.getOutputTabPane().getTabs().contains(controller.getMemoryTabMinijaja());
-        System.out.println("Memory tab visible after load: " + afterLoad);
-
-        System.out.println("=== END DIAGNOSTIC ===\n");
-    }
-
 }

@@ -183,7 +183,6 @@ public class MemoryVisualisation extends GridPane {
      * @param heap string representation of the heap
      */
     private void updateHeap(String heap){
-        System.out.println("Heap string : " + heap);
         heapContainer.getChildren().clear();
 
         if(heap == null || heap.trim().isEmpty()){

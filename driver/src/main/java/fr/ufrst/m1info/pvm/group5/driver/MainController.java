@@ -1283,10 +1283,6 @@ public class MainController {
                         // ignore errors
                     }
 
-                    if(currMemoryState != null){
-                        System.out.println(currMemoryState[0]);
-                        System.out.println(currMemoryState[1]);
-                    }
                     final String[] finalMemoryState = currMemoryState;
 
                     Platform.runLater(() -> {
@@ -1418,10 +1414,6 @@ public class MainController {
                         // ignore errors
                     }
 
-                    if(currMemoryState != null){
-                        System.out.println(currMemoryState[0]);
-                        System.out.println(currMemoryState[1]);
-                    }
                     final String[] finalMemoryState = currMemoryState;
                     Platform.runLater(() -> {
                         highlightDebugLine(lineIdx, compiledCodeLines, compiledCodeListView);
@@ -1447,10 +1439,6 @@ public class MainController {
                     // ignore errors
                 }
 
-                if(currMemoryState != null){
-                    System.out.println(currMemoryState[0]);
-                    System.out.println(currMemoryState[1]);
-                }
                 final String[] finalMemoryState = currMemoryState;
 
                 // Stop the interpreter and clear reference
