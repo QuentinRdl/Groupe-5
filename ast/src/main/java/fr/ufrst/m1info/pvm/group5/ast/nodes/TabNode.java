@@ -34,20 +34,20 @@ public class TabNode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) {
-        throw new ASTInvalidOperationException("interpretation", this, this.getLine());
+        throw new ASTInvalidOperationException("interpretation", this);
     }
 
     @Override
     public String checkType(Memory m) {
         if (!MemoryCallUtil.safeCall(() -> m.contains(ident.identifier), this)) {
-            throw ASTInvalidMemoryException.UndefinedVariable(ident.identifier, this.getLine());
+            throw ASTInvalidMemoryException.UndefinedVariable(ident.identifier, this);
         }
         if(!MemoryCallUtil.safeCall(() -> m.isArray(ident.identifier), this)){
-            throw new InterpretationInvalidTypeException("Expected "+ident.identifier+" to be an array", this.getLine());
+            throw new InterpretationInvalidTypeException("Expected "+ident.identifier+" to be an array", this);
         }
         String indexType = indexExp.checkType(m);
         if (!"int".equals(indexType)) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "int", indexType, this);
+            throw new InterpretationInvalidTypeException(this, "int", indexType);
         }
         return MemoryCallUtil.safeCall(() -> m.dataTypeOf(ident.identifier).toString().toLowerCase(), this);
     }

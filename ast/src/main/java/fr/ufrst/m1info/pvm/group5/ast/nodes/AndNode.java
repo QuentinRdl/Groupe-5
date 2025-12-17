@@ -22,7 +22,7 @@ public class AndNode extends BinaryOperator{
     @Override
     protected String controlType(String leftType, String rightType) throws InterpretationInvalidTypeException {
         if (!leftType.equals("bool") || !rightType.equals("bool")){
-            throw new InterpretationInvalidTypeException(this.getLine(), "bool", (leftType.equals("bool"))?leftType:rightType, this);
+            throw new InterpretationInvalidTypeException(this, "bool", (leftType.equals("bool"))?leftType:rightType);
         }
         return "bool";
     }

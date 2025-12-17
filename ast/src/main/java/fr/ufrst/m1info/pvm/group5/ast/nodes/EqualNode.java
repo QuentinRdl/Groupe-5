@@ -26,10 +26,10 @@ public class EqualNode extends BinaryOperator{
     @Override
     protected String controlType(String leftType, String rightType) throws InterpretationInvalidTypeException {
         if (!leftType.equals(rightType)){
-            throw new InterpretationInvalidTypeException(this.getLine(), rightType, leftType, this);
+            throw new InterpretationInvalidTypeException(this, rightType, leftType);
         }
         if (!leftType.equals("int") && !leftType.equals("bool")){
-            throw new InterpretationInvalidTypeException(this.getLine(), "[int, bool]", leftType, this);
+            throw new InterpretationInvalidTypeException(this, "[int, bool]", leftType);
         }
         return "bool";
     }

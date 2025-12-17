@@ -65,17 +65,17 @@ public class AppelENode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) throws ASTInvalidOperationException {
-        throw new ASTInvalidOperationException("interpretation", this, this.getLine());
+        throw new ASTInvalidOperationException("interpretation", this);
     }
 
     @Override
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         SymbolTableEntry methodEntry = MemoryCallUtil.safeCall(() -> m.getMethod(ident.identifier), this);
         if (methodEntry == null) {
-            throw ASTInvalidMemoryException.UndefinedVariable(ident.identifier, this.getLine());
+            throw ASTInvalidMemoryException.UndefinedVariable(ident.identifier, this);
         }
         if (methodEntry.getKind() != EntryKind.METHOD) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "method", methodEntry.getKind().toString(), this);
+            throw new InterpretationInvalidTypeException(this, "method", methodEntry.getKind().toString());
         }
 
         if (args != null) {
@@ -85,7 +85,7 @@ public class AppelENode extends ASTNode implements EvaluableNode {
         return switch (dt) {
             case INT -> "int";
             case BOOL -> "bool";
-            default -> throw new InterpretationInvalidTypeException(this.getLine(), "[int, bool]", dt.toString(), this);
+            default -> throw new InterpretationInvalidTypeException(this, "[int, bool]", dt.toString());
         };
     }
 

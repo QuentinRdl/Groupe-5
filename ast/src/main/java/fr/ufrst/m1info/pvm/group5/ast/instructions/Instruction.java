@@ -36,7 +36,7 @@ public abstract class Instruction implements LocatedElement {
      */
     public void compatibleType(ValueType expected, ValueType actual) {
         if(actual != expected){
-            throw new InterpretationInvalidTypeException(this.getLine(), "int", actual.name(), this);
+            throw new InterpretationInvalidTypeException(this, "int", actual.name());
         }
     }
 
@@ -48,7 +48,7 @@ public abstract class Instruction implements LocatedElement {
      */
     public void compatibleType(List<ValueType> expected, ValueType actual) {
         if(!expected.contains(actual)){
-            throw new InterpretationInvalidTypeException(this.getLine(), expected.toString(), actual.name(), this);
+            throw new InterpretationInvalidTypeException(this, expected.toString(), actual.name());
         }
     }
 }

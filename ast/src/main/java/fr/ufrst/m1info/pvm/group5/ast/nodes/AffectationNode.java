@@ -70,34 +70,34 @@ public class AffectationNode extends ASTNode{
                 ASTNode indexExp = tabNode.getChildren().get(1);
                 String indexType = indexExp.checkType(m);
                 if (!"int".equals(indexType)) {
-                    throw new InterpretationInvalidTypeException(this.getLine(), "int", indexType, this);
+                    throw new InterpretationInvalidTypeException(this, "int", indexType);
                 }
                 DataType arrayDataType = MemoryCallUtil.safeCall(() -> m.tabType(arrayIdent.identifier), this);
                 String arrayTypeStr;
                 if (arrayDataType == DataType.INT) arrayTypeStr = "int";
                 else if (arrayDataType == DataType.BOOL) arrayTypeStr = "bool";
-                else throw new InterpretationInvalidTypeException(this.getLine(), "[int,bool]", arrayDataType.toString(), this);
+                else throw new InterpretationInvalidTypeException(this, "[int,bool]", arrayDataType.toString());
                 if (!exprType.equals(arrayTypeStr)) {
-                    throw new InterpretationInvalidTypeException(this.getLine(), arrayTypeStr, exprType, this);
+                    throw new InterpretationInvalidTypeException(this, arrayTypeStr, exprType);
                 }
             } else {
                 DataType varDataType = m.dataTypeOf(((IdentNode) identifier).identifier);
                 String varTypeStr;
                 if (varDataType == DataType.INT) varTypeStr = "int";
                 else if (varDataType == DataType.BOOL) varTypeStr = "bool";
-                else throw new InterpretationInvalidTypeException(this.getLine(), "[[int, bool]]", varDataType.toString(), this);
+                else throw new InterpretationInvalidTypeException(this, "[[int, bool]]", varDataType.toString());
                 if(m.isArray(((IdentNode) identifier).identifier)){
                     varTypeStr = "Array<"+varTypeStr+">";
                 }
                 if (!exprType.equals(varTypeStr)) {
-                    throw new InterpretationInvalidTypeException(this.getLine(), varTypeStr, exprType, this);
+                    throw new InterpretationInvalidTypeException(this, varTypeStr, exprType);
                 }
             }
         } catch (Memory.MemoryIllegalArgException e) {
             String identName = identifier instanceof TabNode
                     ? ((IdentNode) ((TabNode) identifier).getChildren().get(0)).identifier
                     : ((IdentNode) identifier).identifier;
-            throw ASTInvalidMemoryException.UndefinedVariable(identName, this.getLine());
+            throw ASTInvalidMemoryException.UndefinedVariable(identName, this);
         }
 
         return "void";

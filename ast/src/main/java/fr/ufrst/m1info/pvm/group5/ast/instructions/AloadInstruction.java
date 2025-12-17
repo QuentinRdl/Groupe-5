@@ -20,7 +20,7 @@ public class AloadInstruction extends Instruction{
     public int execute(int address, Memory m) {
         Value index = (Value) MemoryCallUtil.safeCall(m::pop, this);
         if (!MemoryCallUtil.safeCall(() -> m.isArray(ident), this)){
-            throw new InterpretationInvalidTypeException("Expected "+ident+" to be an array", this.getLine());
+            throw new InterpretationInvalidTypeException("Expected "+ident+" to be an array", this);
         }
         compatibleType(ValueType.INT, index.type);
         Value res = MemoryCallUtil.safeCall(()-> m.valT(ident, index.valueInt), this);

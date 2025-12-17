@@ -20,7 +20,7 @@ public class LoadInstruction extends Instruction{
     public int execute(int address, Memory m) {
         Value v = (Value) MemoryCallUtil.safeCall(() -> m.val(ident), this);
         if(v.type == ValueType.EMPTY)
-            throw ASTInvalidMemoryException.UndefinedVariable(ident, this.getLine());
+            throw ASTInvalidMemoryException.UndefinedVariable(ident, this);
         compatibleType(List.of(ValueType.INT, ValueType.BOOL), v.type);
         MemoryCallUtil.safeCall(() -> m.push(".", v, ValueType.toDataType(v.type), EntryKind.CONSTANT), this);
         return address+1;

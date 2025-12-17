@@ -24,7 +24,7 @@ public class IncInstruction extends Instruction{
         Value v_add = (Value) MemoryCallUtil.safeCall(() -> m.val(ident), this);
         Value v_pop = (Value) MemoryCallUtil.safeCall(m::pop, this);
         if(v_add.type == ValueType.EMPTY)
-            throw ASTInvalidMemoryException.UndefinedVariable("x", this.getLine());
+            throw ASTInvalidMemoryException.UndefinedVariable("x", this);
         compatibleType(ValueType.INT, v_add.type);
         compatibleType(ValueType.INT, v_pop.type);
         int res = v_pop.valueInt + v_add.valueInt;

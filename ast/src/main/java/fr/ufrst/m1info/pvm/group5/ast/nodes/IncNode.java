@@ -51,7 +51,7 @@ public class IncNode extends ASTNode{
             int index = indexVal.valueInt;
             Value currentVal = m.valT(arrayIdent.identifier, index);
             if (currentVal == null || currentVal.type == ValueType.EMPTY) {
-                throw ASTInvalidMemoryException.UndefinedVariable(arrayIdent.identifier, this.getLine());
+                throw ASTInvalidMemoryException.UndefinedVariable(arrayIdent.identifier, this);
             }
             Value newVal = new Value(currentVal.valueInt + 1);
             MemoryCallUtil.safeCall(() -> m.affectValT(arrayIdent.identifier, index, newVal), this);
@@ -59,7 +59,7 @@ public class IncNode extends ASTNode{
             String varName = ((IdentNode)ident).identifier;
             Value v = (Value) m.val(varName);
             if (v == null || v.type == fr.ufrst.m1info.pvm.group5.memory.ValueType.EMPTY) {
-                throw ASTInvalidMemoryException.UndefinedVariable(varName, this.getLine());
+                throw ASTInvalidMemoryException.UndefinedVariable(varName, this);
             }
             Value res = new Value(v.valueInt + 1);
             MemoryCallUtil.safeCall(() -> m.affectValue(varName, res), this);
@@ -75,7 +75,7 @@ public class IncNode extends ASTNode{
             IdentNode identNode = (IdentNode) ident;
             String identType = identNode.checkType(m);
             if (!identType.equals("int")) {
-                throw new InterpretationInvalidTypeException(this.getLine(), "int", identType, this);
+                throw new InterpretationInvalidTypeException(this, "int", identType);
             }
         }
 

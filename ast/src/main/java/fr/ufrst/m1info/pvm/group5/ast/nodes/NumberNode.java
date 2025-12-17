@@ -26,7 +26,7 @@ public class NumberNode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) throws ASTInvalidOperationException{
-        throw new ASTInvalidOperationException("interpretation", this, this.getLine());
+        throw new ASTInvalidOperationException("interpretation", this);
     }
 
     @Override

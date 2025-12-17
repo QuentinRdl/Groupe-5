@@ -27,7 +27,7 @@ public class NewarrayInstruction extends Instruction {
     public int execute(int address, Memory m) {
         StackObject top = MemoryCallUtil.safeCall(m::top, this);
         if (!Objects.equals(top.getName(), ".")){
-            throw ASTInvalidMemoryException.EmptyStack(this.getLine());
+            throw ASTInvalidMemoryException.EmptyStack(this);
         }
         Value v = ((Value) MemoryCallUtil.safeCall(m::pop, this));
         compatibleType(List.of(ValueType.INT, ValueType.BOOL), DataType.toValueType(type));

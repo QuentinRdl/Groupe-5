@@ -30,7 +30,7 @@ public class IdentNode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) throws ASTInvalidOperationException{
-        throw new ASTInvalidOperationException("interpret", this, this.getLine());
+        throw new ASTInvalidOperationException("interpret", this);
     }
 
     @Override
@@ -39,14 +39,14 @@ public class IdentNode extends ASTNode implements EvaluableNode {
         try{
             dataType = m.dataTypeOf(identifier);
         } catch (Exception e) {
-            throw ASTInvalidMemoryException.UndefinedVariable(identifier, this.getLine());
+            throw ASTInvalidMemoryException.UndefinedVariable(identifier, this);
         }
 
         String stringDataType = switch (dataType) {
             case INT -> "int";
             case BOOL -> "bool";
             default ->
-                    throw new InterpretationInvalidTypeException(this.getLine(), "[int, bool]", dataType.toString(), this);
+                    throw new InterpretationInvalidTypeException(this, "[int, bool]", dataType.toString());
         };
 
         if(MemoryCallUtil.safeCall(() -> m.isArray(this.identifier), this)){
@@ -72,7 +72,7 @@ public class IdentNode extends ASTNode implements EvaluableNode {
     public Value eval(Memory m) throws ASTInvalidMemoryException{
         Value v = (Value) MemoryCallUtil.safeCall(() -> m.val(identifier), this);
         if(v == null || v.type == ValueType.EMPTY){
-            throw ASTInvalidMemoryException.UndefinedVariable(identifier, this.getLine());
+            throw ASTInvalidMemoryException.UndefinedVariable(identifier, this);
         }
         return v;
     }

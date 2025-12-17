@@ -16,7 +16,7 @@ public class AincInstruction extends Instruction{
     @Override
     public int execute(int address, Memory m) {
         if (!MemoryCallUtil.safeCall(() -> m.isArray(ident), this)){
-            throw new InterpretationInvalidTypeException("Expected "+ident+" to be an array", this.getLine());
+            throw new InterpretationInvalidTypeException("Expected "+ident+" to be an array", this);
         }
 
         Value vAdd = (Value) MemoryCallUtil.safeCall(m::pop, this);

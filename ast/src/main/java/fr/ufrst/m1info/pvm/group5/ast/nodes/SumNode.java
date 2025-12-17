@@ -73,19 +73,19 @@ public class SumNode extends ASTNode {
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         String exprType = expression.checkType(m);
         if (!exprType.equals("int")) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "int", exprType, this);
+            throw new InterpretationInvalidTypeException(this, "int", exprType);
         }
 
         if (identifier instanceof TabNode) {
             String identType = identifier.checkType(m);
             if(!identType.equals("int")){
-                throw new InterpretationInvalidTypeException(this.getLine(), "int", exprType, this);
+                throw new InterpretationInvalidTypeException(this, "int", exprType);
             };
         } else {
             IdentNode identNode = (IdentNode) identifier;
             String identType = identNode.checkType(m);
             if (!Objects.equals(identType, "int")) {
-                throw new InterpretationInvalidTypeException(this.getLine(), "int", identType, this);
+                throw new InterpretationInvalidTypeException(this, "int", identType);
             }
         }
 

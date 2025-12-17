@@ -36,17 +36,17 @@ public class NotNode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) throws ASTInvalidOperationException {
-        throw new ASTInvalidOperationException("interpretation", "not", this.getLine());
+        throw new ASTInvalidOperationException("interpretation", this);
     }
 
     @Override
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         String exprType = expr.checkType(m);
         if (!exprType.equals("bool")) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "bool", exprType, this);
+            throw new InterpretationInvalidTypeException(this, "bool", exprType);
         }
         if (expr instanceof IdentNode && MemoryCallUtil.safeCall(()->m.isArray(((IdentNode) expr).identifier), this)){
-            throw new InterpretationInvalidTypeException(this.getLine(), "bool", "array", this);
+            throw new InterpretationInvalidTypeException(this, "bool", "array");
         }
         return "bool";
     }

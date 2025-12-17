@@ -62,14 +62,14 @@ public class VariableNode extends ASTNode implements WithdrawalNode {
             m.declVar(ident.identifier, new Value(true), ValueType.toDataType(typemeth.valueType));
             vType="bool";
         }else {
-            throw new InterpretationInvalidTypeException(this.getLine(), "[int, bool]", varType.toString(), this);
+            throw new InterpretationInvalidTypeException(this, "[int, bool]", varType.toString());
         }
         if (vexp != null) {
             String exprType = vexp.checkType(m);
 
 
             if (!exprType.equals(vType)) {
-                throw new InterpretationInvalidTypeException(this.getLine(), exprType, vType, this);
+                throw new InterpretationInvalidTypeException(this, exprType, vType);
             }
         }
         return "void";

@@ -104,7 +104,7 @@ public class MethodeNode extends ASTNode implements WithdrawalNode {
         MemoryCallUtil.safeCall(m::popScope, this);
         String typeMethod = returnType.getValueType().toString().toLowerCase();
         if (!typeMethod.equals(typeReturn)){
-            throw new InterpretationInvalidTypeException(this.getLine(), typeMethod, typeReturn, this);
+            throw new InterpretationInvalidTypeException(this, typeMethod, typeReturn);
         }
         return typeMethod;
     }

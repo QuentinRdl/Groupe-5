@@ -74,10 +74,10 @@ public class AppelINode extends ASTNode {
     private SymbolTableEntry validateMethodEntry(Memory m) {
         SymbolTableEntry methodEntry = MemoryCallUtil.safeCall(() -> m.getMethod(ident.identifier), this);
         if (methodEntry == null) {
-            throw ASTInvalidMemoryException.UndefinedVariable(ident.identifier, this.getLine());
+            throw ASTInvalidMemoryException.UndefinedVariable(ident.identifier, this);
         }
         if (methodEntry.getKind() != EntryKind.METHOD) {
-            throw ASTInvalidMemoryException.InvalidVariable(ident.identifier, this.getLine(), "method", methodEntry.getKind().toString());
+            throw ASTInvalidMemoryException.InvalidVariable(ident.identifier, this, "method", methodEntry.getKind().toString());
         }
         return methodEntry;
     }
@@ -115,7 +115,7 @@ public class AppelINode extends ASTNode {
     private MethodeNode getMethodNode(SymbolTableEntry methodEntry) {
         Object ref = MemoryCallUtil.safeCall(methodEntry::getReference, this);
         if (!(ref instanceof MethodeNode methodNode)) {
-            throw ASTInvalidMemoryException.InvalidVariable(ident.identifier, this.getLine(), "MethodNode", ref.getClass().getSimpleName());
+            throw ASTInvalidMemoryException.InvalidVariable(ident.identifier, this, "MethodNode", ref.getClass().getSimpleName());
         }
         return methodNode;
     }
@@ -134,7 +134,7 @@ public class AppelINode extends ASTNode {
         }
 
         if (!(methodNode.params instanceof ParamListNode paramList)) {
-            throw ASTInvalidMemoryException.InvalidVariable(ident.identifier,  this.getLine(), "method", methodNode.params.getClass().getSimpleName());
+            throw ASTInvalidMemoryException.InvalidVariable(ident.identifier,  this, "method", methodNode.params.getClass().getSimpleName());
         }
 
         List<ParamNode> formals = paramList.toList();
@@ -144,7 +144,7 @@ public class AppelINode extends ASTNode {
             ParamNode p = formals.get(i);
             Value argVal = evaluatedArgs.get(i);
             if (p.type.valueType!=argVal.type){
-                throw new InterpretationInvalidTypeException(this.getLine(), p.type.valueType.toString(), argVal.type.toString(), this);
+                throw new InterpretationInvalidTypeException(this, p.type.valueType.toString(), argVal.type.toString());
             }
             m.declVar(p.ident.identifier, argVal, ValueType.toDataType(p.type.valueType));
         }
@@ -159,7 +159,7 @@ public class AppelINode extends ASTNode {
      */
     private void validateArity(int expected, int actual) {
         if (expected != actual) {
-            throw new RuntimeException(String.format("Line %d : Arity mismatch, expected %d arguments, got %d", this.getLine(), expected, actual));
+            throw new RuntimeException(String.format("Line %d : Arity mismatch, expected %d arguments, got %d", this, expected, actual));
         }
     }
 
@@ -215,7 +215,7 @@ public class AppelINode extends ASTNode {
             case VOID:
                 return "void";
             default:
-                throw new InterpretationInvalidTypeException(this.getLine(), "int, bool or void", dt.toString(), this);
+                throw new InterpretationInvalidTypeException(this, "int, bool or void", dt.toString());
         }
     }
 

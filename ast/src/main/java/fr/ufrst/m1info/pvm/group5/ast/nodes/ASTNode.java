@@ -7,7 +7,7 @@ import fr.ufrst.m1info.pvm.group5.memory.Memory;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ASTNode {
+public abstract class ASTNode implements LocatedElement {
     /**
      * Line of the token in the file
      */

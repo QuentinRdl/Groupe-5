@@ -31,14 +31,14 @@ public class UnMinusNode extends ASTNode implements EvaluableNode {
 
     @Override
     public void interpret(Memory m) throws ASTInvalidOperationException {
-        throw new ASTInvalidOperationException("interpretation", this, this.getLine());
+        throw new ASTInvalidOperationException("interpretation", this);
     }
 
     @Override
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         String exprType = exp.checkType(m);
         if (!exprType.equals("int")) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "int", exprType, this);
+            throw new InterpretationInvalidTypeException(this, "int", exprType);
         }
         return "int";
     }

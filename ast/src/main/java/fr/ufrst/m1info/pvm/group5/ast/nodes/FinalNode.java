@@ -66,11 +66,11 @@ public class FinalNode extends ASTNode implements WithdrawalNode {
                 MemoryCallUtil.safeCall(() -> m.declCst(ident.identifier, new Value(false), ValueType.toDataType(type.valueType)), this);
                 break;
             default :
-                throw new InterpretationInvalidTypeException(this.getLine(), "[int, bool]", type.valueType.toString(), this);
+                throw new InterpretationInvalidTypeException(this, "[int, bool]", type.valueType.toString());
         }
 
         if (!exprType.equals(declaredType)) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "[int, bool]", declaredType , this);
+            throw new InterpretationInvalidTypeException(this, "[int, bool]", declaredType);
         }
 
         return "void";

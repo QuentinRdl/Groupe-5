@@ -12,7 +12,7 @@ public class MemoryCallUtil {
             call.run();
         }
         catch (Exception e){
-            throw ASTInvalidMemoryException.InvalidMemoryOperation(caller.getLine(), e.getMessage());
+            throw ASTInvalidMemoryException.InvalidMemoryOperation(caller, e.getMessage());
         }
     }
 
@@ -21,7 +21,7 @@ public class MemoryCallUtil {
             call.run();
         }
         catch (Exception e){
-            throw ASTInvalidMemoryException.InvalidMemoryOperation(caller.getLine(), e.getMessage());
+            throw ASTInvalidMemoryException.InvalidMemoryOperation(caller, e.getMessage());
         }
     }
 
@@ -31,7 +31,7 @@ public class MemoryCallUtil {
             res = call.get();
         }
         catch (Exception e){
-            throw ASTInvalidMemoryException.InvalidMemoryOperation(caller.getLine(), e.getMessage());
+            throw ASTInvalidMemoryException.InvalidMemoryOperation(caller, e.getMessage());
         }
         return res;
     }
@@ -42,7 +42,7 @@ public class MemoryCallUtil {
             res = call.get();
         }
         catch (Exception e){
-            throw ASTInvalidMemoryException.InvalidMemoryOperation(caller.getLine(), e.getMessage());
+            throw ASTInvalidMemoryException.InvalidMemoryOperation(caller, e.getMessage());
         }
         return res;
     }

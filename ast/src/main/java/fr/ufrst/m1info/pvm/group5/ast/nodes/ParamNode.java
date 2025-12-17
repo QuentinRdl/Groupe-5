@@ -56,7 +56,7 @@ public class ParamNode extends ASTNode implements WithdrawalNode {
     @Override
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         if (type.valueType.equals(ValueType.VOID)) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "[int, bool]", type.valueType.toString(), this);
+            throw new InterpretationInvalidTypeException(this, "[int, bool]", type.valueType.toString());
         }else if (type.valueType.equals(ValueType.INT)) {
             MemoryCallUtil.safeCall(() -> m.declVar(ident.identifier, new Value(1), ValueType.toDataType(type.valueType)), this);
         }

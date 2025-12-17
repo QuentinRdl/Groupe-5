@@ -22,7 +22,7 @@ public class IfInstruction extends Instruction{
         try {
             v = ((Value) MemoryCallUtil.safeCall(m::pop, this));
         }catch (Stack.StackIsEmptyException e){
-            throw ASTInvalidMemoryException.EmptyStack(this.getLine());
+            throw ASTInvalidMemoryException.EmptyStack(this);
         }
         compatibleType(ValueType.BOOL, v.type);
         b = v.valueBool;

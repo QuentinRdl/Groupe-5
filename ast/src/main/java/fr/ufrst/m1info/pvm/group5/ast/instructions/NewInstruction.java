@@ -40,7 +40,7 @@ public class NewInstruction extends Instruction{
                 m.pop();
             }
         }catch (Memory.MemoryIllegalOperationException e){
-            throw ASTInvalidMemoryException.EmptyStack(this.getLine());
+            throw ASTInvalidMemoryException.EmptyStack(this);
         }
         try{
             StackObject top= m.top();

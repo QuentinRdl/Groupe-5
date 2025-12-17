@@ -18,14 +18,14 @@ public class InvokeInstruction extends Instruction {
     public int execute(int address, Memory m) {
         Value vMeth = (Value) MemoryCallUtil.safeCall(() -> m.val(ident), this);
         if (vMeth==null) {
-            throw ASTInvalidMemoryException.UndefinedVariable(ident, this.getLine());
+            throw ASTInvalidMemoryException.UndefinedVariable(ident, this);
         }
         try {
             m.getMethod(ident);
         } catch (Exception e) {
             if(m.dataTypeOf(ident) == null)
-                throw ASTInvalidMemoryException.UndefinedVariable(ident, this.getLine());
-            throw ASTInvalidMemoryException.InvalidVariable(ident, this.getLine(), "method", m.dataTypeOf(ident).name());
+                throw ASTInvalidMemoryException.UndefinedVariable(ident, this);
+            throw ASTInvalidMemoryException.InvalidVariable(ident, this, "method", m.dataTypeOf(ident).name());
         }
         int newAdr=vMeth.valueInt;
         MemoryCallUtil.safeCall(() -> m.push(".", new Value(address+1), DataType.INT, EntryKind.CONSTANT), this);

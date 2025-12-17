@@ -58,7 +58,7 @@ public class ArrayNode extends ASTNode implements WithdrawalNode {
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
         String sizeType = sizeExp.checkType(m);
         if (!sizeType.equals("int")) {
-            throw new InterpretationInvalidTypeException(this.getLine(), "int", sizeType, this);
+            throw new InterpretationInvalidTypeException(this, "int", sizeType);
         }
         DataType dt = ValueType.toDataType(type.valueType);
         MemoryCallUtil.safeCall(() -> m.declTab(ident.identifier, 1, dt), this);

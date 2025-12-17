@@ -17,7 +17,7 @@ public class LengthInstruction extends Instruction {
     @Override
     public int execute(int address, Memory m) {
         if (!MemoryCallUtil.safeCall(()->m.isArray(ident), this)){
-            throw new InterpretationInvalidTypeException("Expected " + ident + " to be an array", this.getLine());
+            throw new InterpretationInvalidTypeException("Expected " + ident + " to be an array", this);
         }
         int l = MemoryCallUtil.safeCall(()->m.tabLength(ident), this);
         Value vl = new Value(l);

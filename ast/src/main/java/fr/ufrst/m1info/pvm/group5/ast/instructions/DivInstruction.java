@@ -16,7 +16,7 @@ public class DivInstruction extends Instruction{
         compatibleType(ValueType.INT, v1.type);
         compatibleType(ValueType.INT, v2.type);
         if (v2.valueInt == 0){
-            throw new ASTInvalidOperationException("div", "div Instruction", this.getLine());
+            throw new ASTInvalidOperationException("div", this);
         }
         int res = v1.valueInt / v2.valueInt;
         Value vres = new Value(res);
