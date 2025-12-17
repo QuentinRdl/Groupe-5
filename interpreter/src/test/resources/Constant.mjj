@@ -1,0 +1,15 @@
+class C {
+  final int VAL = 5;
+  final int X;
+  final boolean B = false;
+  final boolean T;
+
+   main {
+ 	writeln(VAL);
+	writeln(B);
+	X = 8 * VAL;
+	T = !B;
+	writeln(X);
+	writeln(T);
+   }
+}

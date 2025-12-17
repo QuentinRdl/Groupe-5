@@ -84,6 +84,16 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret File Constant")
+    void Constant() {
+        Assertions.assertNull(imj.interpretFile("src/test/resources/Constant.mjj"));
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("5\nfalse\n40\ntrue\n", e.oldText());
+        });
+        writer.write("");
+    }
+
+    @Test
     @DisplayName("Interpret File Fact")
     void Fact() {
         Assertions.assertNull(imj.interpretFile("src/test/resources/Fact.mjj"));
