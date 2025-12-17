@@ -214,7 +214,7 @@ class CompilationIntegrationTest extends ApplicationTest {
     void compilerDoesNotWork() throws Exception {
         String consoleText = createFileLoadCompileAndGetConsole("test.mjj", contentIncorrect);
         assertTrue(consoleText.contains("[ERROR]"));
-        assertTrue(consoleText.contains("line 6:5 missing '}' at '<EOF>'"));
+        assertTrue(consoleText.contains("missing '}' at '<EOF>' (at line 6:5)"));
     }
 
 
@@ -222,7 +222,7 @@ class CompilationIntegrationTest extends ApplicationTest {
     void compilerDoesNotWorkActualBtn() throws Exception {
         String consoleText = createFileLoadCompileAndGetConsoleByButton("test.mjj", contentIncorrect);
         assertTrue(consoleText.contains("[ERROR]"));
-        assertTrue(consoleText.contains("line 6:5 missing '}' at '<EOF>'"));
+        assertTrue(consoleText.contains(" missing '}' at '<EOF>' (at line 6:5)"));
     }
 
 
@@ -270,6 +270,7 @@ class CompilationIntegrationTest extends ApplicationTest {
                 "   }",
                 "}");
         String consoleText = createFileLoadCompileAndRunAndGetConsole("test.mjj", content);
+        System.out.println(consoleText);
         assertTrue(consoleText.contains("8"));
         assertTrue(consoleText.contains("[INFO] Compilation and interpretation successfully completed"));
     }
