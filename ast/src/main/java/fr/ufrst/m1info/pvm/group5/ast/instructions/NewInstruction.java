@@ -51,7 +51,7 @@ public class NewInstruction extends Instruction{
             if(name.equals(".")) {
                 v = ((Value) m.pop());
             }else{
-                v=new Value();
+                v=null;
             }
         }catch (Exception e){
             v = new Value();
