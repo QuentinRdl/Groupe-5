@@ -1555,6 +1555,69 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret Variable Name Same As Variable Name")
+    void VariableNameSameAsVariableName() {
+        String errMessage=imj.interpretCode("class C { int x; boolean x; main{ }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Variable Name Same As Constant Name")
+    void VariableNameSameAsConstantName() {
+        String errMessage=imj.interpretCode("class C { final int x; boolean x; main{ }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Variable Name Same As Array Name")
+    void VariableNameSameAsArrayName() {
+        String errMessage=imj.interpretCode("class C { int x[5]; boolean x; main{ }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Constant Name Same As Variable Name")
+    void ConstantNameSameAsVariableName() {
+        String errMessage=imj.interpretCode("class C { int x; final boolean x; main{ }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Constant Name Same As Constant Name")
+    void ConstantNameSameAsConstantName() {
+        String errMessage=imj.interpretCode("class C { final int x; final boolean x; main{ }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Constant Name Same As Array Name")
+    void ConstantNameSameAsArrayName() {
+        String errMessage=imj.interpretCode("class C { int x[5]; final boolean x; main{ }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Array Name Same As Variable Name")
+    void ArrayNameSameAsVariableName() {
+        String errMessage=imj.interpretCode("class C { int x; boolean x[5]; main{ }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Array Name Same As Constant Name")
+    void ArrayNameSameAsConstantName() {
+        String errMessage=imj.interpretCode("class C { final int x; boolean x[5]; main{ }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Array Name Same As Array Name")
+    void ArrayNameSameAsArrayName() {
+        String errMessage=imj.interpretCode("class C { int x[5]; boolean x[5]; main{ }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
     @DisplayName("Interpret Random String")
     void randomString() {
         String errMessage=imj.interpretCode("ezudzedezezbclassdezdoncCdzedo{dezodjintezpodjy;podkezdmain{ydpocke=dozejd10;}}");
