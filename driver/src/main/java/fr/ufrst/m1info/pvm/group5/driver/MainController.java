@@ -1590,7 +1590,7 @@ public class MainController {
             lines.get(lineIndex).setCurrentDebugLine(true);
         }
 
-        listView.refresh();
+        Platform.runLater(listView::refresh);
     }
 
     /**
@@ -1603,6 +1603,6 @@ public class MainController {
         for(CodeLine line : lines){
             line.setCurrentDebugLine(false);
         }
-        listView.refresh();
+        Platform.runLater(listView::refresh);
     }
 }
