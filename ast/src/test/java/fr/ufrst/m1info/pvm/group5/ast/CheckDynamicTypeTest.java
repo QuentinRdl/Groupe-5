@@ -973,7 +973,7 @@ class CheckDynamicTypeTest {
     @DisplayName("InstructionsNode - checkType() fails if statement fails")
     void testInstructionsNode_FailingInstruction() throws Exception {
         ASTNode instr = mock(ASTNode.class);
-        when(instr.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(-1, "type", "type", "op"));
+        when(instr.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(() -> 1, "type", "type"));
 
         InstructionsNode node = new InstructionsNode(instr, null);
 
@@ -1024,7 +1024,7 @@ class CheckDynamicTypeTest {
     @DisplayName("MainNode - checkType() fails if vars fails")
     void testMainNode_VarsFail() throws Exception {
         ASTNode vars = mock(ASTNode.class, withSettings().extraInterfaces(WithdrawalNode.class));
-        when(vars.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(-1, "type", "type", "op"));
+        when(vars.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(()->1, "type", "type"));
 
         MainNode node = new MainNode(vars, null);
 
@@ -1035,7 +1035,7 @@ class CheckDynamicTypeTest {
     @DisplayName("MainNode - checkType() fails if instrs fails")
     void testMainNode_InstrsFail() throws Exception {
         ASTNode instrs = mock(ASTNode.class);
-        when(instrs.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(-1, "type", "type", "op"));
+        when(instrs.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(()->1, "type", "type"));
 
         MainNode node = new MainNode(null, instrs);
 
@@ -1728,7 +1728,7 @@ class CheckDynamicTypeTest {
     @DisplayName("ExpListNode - checkType() throws if head throws")
     void testExpListNode_CheckType_HeadThrows() throws Exception {
         ASTNode bad = mock(ASTNode.class);
-        when(bad.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(-1, "type", "type", "op"));
+        when(bad.checkType(memoryMock)).thenThrow(new InterpretationInvalidTypeException(()->1, "type", "type"));
 
         ExpListNode list = new ExpListNode(bad, null);
 

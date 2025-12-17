@@ -76,7 +76,7 @@ public class AffectationNode extends ASTNode{
                 String arrayTypeStr;
                 if (arrayDataType == DataType.INT) arrayTypeStr = "int";
                 else if (arrayDataType == DataType.BOOL) arrayTypeStr = "bool";
-                else throw new InterpretationInvalidTypeException(this, "[int,bool]", arrayDataType.toString());
+                else throw new InterpretationInvalidTypeException(this, "[int,bool]", (arrayDataType==null)?"null":arrayDataType.toString());
                 if (!exprType.equals(arrayTypeStr)) {
                     throw new InterpretationInvalidTypeException(this, arrayTypeStr, exprType);
                 }

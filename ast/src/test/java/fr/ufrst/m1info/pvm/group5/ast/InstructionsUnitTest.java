@@ -293,6 +293,7 @@ class InstructionsUnitTest {
 
     }
 
+    @Disabled // Changed this so the address is handled by the interpreter
     @Test
     void invoke_method_negative_address() throws Exception {
         Instruction pushInstr = new PushInstruction(new Value(-18));

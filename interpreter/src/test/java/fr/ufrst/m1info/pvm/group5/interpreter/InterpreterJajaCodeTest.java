@@ -712,7 +712,7 @@ class InterpreterJajaCodeTest {
         InterpreterJajaCode ijjc = new InterpreterJajaCode();
         // Creating result
         List<String> expectedErrors = new ArrayList<>();
-        expectedErrors.add("Invalid type, type BOOL given when int is expected for add (at line 4)");
+        expectedErrors.add("Invalid type, type BOOL given when int is expected (at line 4, add)");
 
         InterpretationMode im = InterpretationMode.STEP_BY_STEP;
         ijjc.interpretationHaltedEvent.subscribe(event -> {

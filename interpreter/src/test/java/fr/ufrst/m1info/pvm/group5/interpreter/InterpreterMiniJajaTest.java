@@ -1489,7 +1489,7 @@ class InterpreterMiniJajaTest {
         List<String> expectedErrors = new ArrayList<>();
         expectedErrors.add(null);
         expectedErrors.add(null);
-        expectedErrors.add("Symbol b is not defined (at line 1)");
+        expectedErrors.add("Symbol b is not defined (at line 1, ++)");
 
         InterpretationMode im = InterpretationMode.STEP_BY_STEP;
         imjj.interpretationHaltedEvent.subscribe(event -> {
