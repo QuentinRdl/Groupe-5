@@ -1479,6 +1479,62 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret Final Int Affectation After Initialization 1")
+    void FinalIntAffectationAfterInitialization1() {
+        String errMessage=imj.interpretCode("class C { final int x=15; main{ x=157;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Final Int Affectation After Initialization 2")
+    void FinalIntAffectationAfterInitialization2() {
+        String errMessage=imj.interpretCode("class C { final int x; main{ x=15; x=157; }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Final Bool Affectation After Initialization 1")
+    void FinalBoolAffectationAfterInitialization1() {
+        String errMessage=imj.interpretCode("class C { final boolean x=false; main{ x=true;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Final Bool Affectation After Initialization 2")
+    void FinalBoolAffectationAfterInitialization2() {
+        String errMessage=imj.interpretCode("class C { final boolean x; main{ x=false; x=true; }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Final Int Increment After Initialization 1")
+    void FinalIntIncrementAfterInitialization1() {
+        String errMessage=imj.interpretCode("class C { final int x=15; main{ x++;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Final Int Increment After Initialization 2")
+    void FinalIntIncrementAfterInitialization2() {
+        String errMessage=imj.interpretCode("class C { final int x; main{ x=15; x++; }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Final Int Sum After Initialization 1")
+    void FinalIntSumAfterInitialization1() {
+        String errMessage=imj.interpretCode("class C { final int x=15; main{ x+=157;}}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
+    @DisplayName("Interpret Final Int Sum After Initialization 2")
+    void FinalIntSumAfterInitialization2() {
+        String errMessage=imj.interpretCode("class C { final int x; main{ x=15; x+=157; }}");
+        Assertions.assertNotEquals(null,errMessage);
+    }
+
+    @Test
     @DisplayName("Interpret Random String")
     void randomString() {
         String errMessage=imj.interpretCode("ezudzedezezbclassdezdoncCdzedo{dezodjintezpodjy;podkezdmain{ydpocke=dozejd10;}}");
