@@ -261,8 +261,6 @@ class InterpreterMiniJajaTest {
         Assertions.assertNull(errMessage);
     }
 
-     // TODO : Re-enable this test when the issue is fixed
-    @Disabled
     @Test
     @DisplayName("Interpret Multiple Class")
     void multipleClass() {
