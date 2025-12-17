@@ -7,6 +7,7 @@ import fr.ufrst.m1info.pvm.group5.memory.Value;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SumNode extends ASTNode {
     ASTNode identifier;
@@ -61,12 +62,6 @@ public class SumNode extends ASTNode {
             MemoryCallUtil.safeCall(() -> m.affectValT(arrayIdent.identifier, index, new Value(res)), this);
         } else {
             IdentNode identNode = (IdentNode) identifier;
-            if (m.isArray(identNode.identifier)){
-                throw new ASTInvalidOperationException("Line "+ getLine() +" : Sum operation cannot be used on array.");
-            }
-            if (expression instanceof IdentNode iNode && m.isArray(iNode.identifier)){
-                throw new ASTInvalidOperationException("Line "+ getLine() +" : Sum operation cannot be used with an array.");
-            }
             Value v = ((EvaluableNode) expression).eval(m);
             Value u = ((IdentNode) identifier).eval(m);
             int res = u.valueInt + v.valueInt;
@@ -88,15 +83,9 @@ public class SumNode extends ASTNode {
             };
         } else {
             IdentNode identNode = (IdentNode) identifier;
-            DataType dataType;
-            try {
-                dataType = m.dataTypeOf(identNode.identifier);
-            }catch (Memory.MemoryIllegalArgException e){
-                throw ASTInvalidMemoryException.UndefinedVariable(identNode.identifier, this.getLine());
-            }
-
-            if (dataType != DataType.INT) {
-                throw new InterpretationInvalidTypeException(this.getLine(), "int", dataType.name(), "sum");
+            String identType = identNode.checkType(m);
+            if (!Objects.equals(identType, "int")) {
+                throw new InterpretationInvalidTypeException(this.getLine(), "int", identType, "sum");
             }
         }
 

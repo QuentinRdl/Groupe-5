@@ -3,6 +3,7 @@ package fr.ufrst.m1info.pvm.group5.ast.nodes;
 import fr.ufrst.m1info.pvm.group5.ast.InterpretationInvalidTypeException;
 import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidMemoryException;
 import fr.ufrst.m1info.pvm.group5.ast.ASTInvalidOperationException;
+import fr.ufrst.m1info.pvm.group5.ast.MemoryCallUtil;
 import fr.ufrst.m1info.pvm.group5.memory.Value;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
 
@@ -44,9 +45,6 @@ public class WriteNode extends ASTNode{
     @Override
     public void interpret(Memory m) throws ASTInvalidOperationException, ASTInvalidMemoryException {
         if(ident instanceof IdentNode iNode){
-            if (m.isArray(iNode.identifier)){
-                throw new ASTInvalidOperationException("Line "+ getLine() +" : Write operation cannot be used with an array.");
-            }
             Value v = iNode.eval(m);
             m.write(v.toString());
         }
@@ -61,8 +59,12 @@ public class WriteNode extends ASTNode{
 
     @Override
     public String checkType(Memory m) throws InterpretationInvalidTypeException {
-        if(this.ident != null)
+        if(this.ident != null) {
+            IdentNode ident = (IdentNode)this.ident;
+            if (MemoryCallUtil.safeCall(()-> m.isArray(ident.identifier), this))
+                throw new InterpretationInvalidTypeException("Array type cannot be used with instruction " + "write", this.getLine());
             ident.checkType(m);
+        }
         return "void";
     }
 

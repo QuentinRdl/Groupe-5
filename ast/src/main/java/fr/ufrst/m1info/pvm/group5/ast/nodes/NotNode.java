@@ -22,9 +22,6 @@ public class NotNode extends ASTNode implements EvaluableNode {
 
     @Override
     public Value eval(Memory m) throws ASTInvalidOperationException, ASTInvalidMemoryException {
-        if (expr instanceof IdentNode && m.isArray(((IdentNode) expr).identifier)){
-            throw new ASTInvalidOperationException("Line "+ getLine() +" : Not operator cannot be used with an array.");
-        }
         Value v = ((EvaluableNode)expr).eval(m);
         return new Value(!v.valueBool);
     }
@@ -47,6 +44,9 @@ public class NotNode extends ASTNode implements EvaluableNode {
         String exprType = expr.checkType(m);
         if (!exprType.equals("bool")) {
             throw new InterpretationInvalidTypeException(this.getLine(), "bool", exprType, "not");
+        }
+        if (expr instanceof IdentNode && MemoryCallUtil.safeCall(()->m.isArray(((IdentNode) expr).identifier), this)){
+            throw new InterpretationInvalidTypeException(this.getLine(), "bool", "array", "not");
         }
         return "bool";
     }

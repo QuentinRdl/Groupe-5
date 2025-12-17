@@ -57,9 +57,6 @@ public class IncNode extends ASTNode{
             MemoryCallUtil.safeCall(() -> m.affectValT(arrayIdent.identifier, index, newVal), this);
         } else {
             String varName = ((IdentNode)ident).identifier;
-            if (m.isArray(varName)){
-                throw new ASTInvalidOperationException("Line "+ getLine() +" : Increment operation cannot be used on array.");
-            }
             Value v = (Value) m.val(varName);
             if (v == null || v.type == fr.ufrst.m1info.pvm.group5.memory.ValueType.EMPTY) {
                 throw ASTInvalidMemoryException.UndefinedVariable(varName, this.getLine());
@@ -76,15 +73,9 @@ public class IncNode extends ASTNode{
             tabNode.checkType(m);
         } else {
             IdentNode identNode = (IdentNode) ident;
-            DataType dataType;
-            try {
-                dataType = m.dataTypeOf(identNode.identifier);
-            }catch (Memory.MemoryIllegalArgException e){
-                throw ASTInvalidMemoryException.UndefinedVariable(identNode.identifier, this.getLine());
-            }
-
-            if (dataType != DataType.INT) {
-                throw new InterpretationInvalidTypeException(this.getLine(), "int", dataType.name(), "inc");
+            String identType = identNode.checkType(m);
+            if (!identType.equals("int")) {
+                throw new InterpretationInvalidTypeException(this.getLine(), "int", identType, "inc");
             }
         }
 
