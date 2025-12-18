@@ -129,7 +129,7 @@ public abstract class ASTNode implements LocatedElement {
      * @return non-children properties of the node
      */
     protected Map<String, String> getProperties(){
-        return null;
+        return Map.of();
     }
 
     /**
