@@ -149,6 +149,16 @@ class InterpreterMiniJajaTest {
     }
 
     @Test
+    @DisplayName("Interpret File Retour")
+    void Retour() {
+        Assertions.assertNull(imj.interpretFile("src/test/resources/Retour.mjj"));
+        writer.textChangedEvent.subscribe(e -> {
+            assertEquals("99\n49\n", e.oldText());
+        });
+        writer.write("");
+    }
+
+    @Test
     @DisplayName("Interpret File Quicksort")
     void Quicksort() {
         Assertions.assertNull(imj.interpretFile("src/test/resources/Quick_sort.mjj"));

@@ -1,0 +1,20 @@
+class C {
+    int x = 1;
+    int y = 100;
+
+    int diff(int op1,int op2){
+        if (op1 > op2){
+            return op1 - op2;
+        }
+        else{
+            return op2 - op1;
+        };
+    };
+
+    main{
+        x = diff(x,y);
+        writeln(x);
+        x = diff(x,50);
+        writeln(x);
+    }
+}
