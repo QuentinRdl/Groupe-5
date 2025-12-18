@@ -21,12 +21,6 @@ public class IfNode extends ASTNode{
         if(!(condition instanceof EvaluableNode)){
             throw new ASTBuildException("If", "condition", "If node condition must be evaluable");
         }
-        if (this.instrThen!=null){
-            this.instrThen.setAsRoot();
-        }
-        if (this.instrElse!=null){
-            this.instrElse.setAsRoot();
-        }
     }
 
     @Override

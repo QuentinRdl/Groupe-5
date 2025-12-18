@@ -41,6 +41,7 @@ public class ReturnNode extends ASTNode{
                 if (!expType.equals(methType)){
                     throw new InterpretationInvalidTypeException(this, methType, expType);
                 }
+                break;
             }
             root=root.getRoot();
         }

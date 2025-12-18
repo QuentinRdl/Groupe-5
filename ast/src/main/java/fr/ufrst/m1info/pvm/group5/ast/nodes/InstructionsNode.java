@@ -19,10 +19,6 @@ public class InstructionsNode extends ASTNode{
         if(instruction == null){
             throw new ASTBuildException("Instructions", "instruction", "Instructions node's instruction must not be null");
         }
-        this.instruction.setAsRoot();
-        if (this.otherInstructions!=null){
-            this.otherInstructions.setAsRoot();
-        }
     }
 
     @Override

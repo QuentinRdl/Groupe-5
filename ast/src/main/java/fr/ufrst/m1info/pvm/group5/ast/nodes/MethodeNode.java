@@ -28,9 +28,6 @@ public class MethodeNode extends ASTNode implements WithdrawalNode {
         this.params = params;
         this.vars = vars;
         this.instrs = instrs;
-        if (this.instrs!=null){
-            this.instrs.setAsRoot();
-        }
     }
 
     @Override
@@ -90,6 +87,7 @@ public class MethodeNode extends ASTNode implements WithdrawalNode {
         DataType dataType = ValueType.toDataType(this.returnType.valueType);
         MemoryCallUtil.safeCall(() -> m.declMethod(ident.identifier, dataType, this), this);
         MemoryCallUtil.safeCall(m::pushScope, this);
+        setAsRoot();
         if (params != null) params.checkType(m);
         if (vars != null) vars.checkType(m);
         if (instrs != null) instrs.checkType(m);
@@ -104,8 +102,7 @@ public class MethodeNode extends ASTNode implements WithdrawalNode {
             }
         }
         MemoryCallUtil.safeCall(m::popScope, this);
-        String typeMethod = returnType.getValueType().toString().toLowerCase();
-        return typeMethod;
+        return returnType.getValueType().toString().toLowerCase();
     }
     @Override
     protected Map<String, String> getProperties(){
