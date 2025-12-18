@@ -69,7 +69,7 @@ public class WriteLineNode extends ASTNode{
     @Override
     protected Map<String, String> getProperties(){
         if(text == null)
-            return null;
+            return Map.of();
         return Map.ofEntries(Map.entry("text", text));
     }
 
