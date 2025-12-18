@@ -49,7 +49,7 @@ public abstract class ASTNode implements LocatedElement {
     public Event<InterpretationStoppedData> interpretationStoppedEvent(){
         if(this.InterpretationStoppedEvent == null){
             if(this.root == null){
-                throw new RuntimeException("line "+this.line + " - " + this.getClass().getSimpleName() + " : No root node has been set for the current tree");
+                throw new ASTBuildException(this.toString(), "root", "no root has been set for the current tree");
             }
             return root.interpretationStoppedEvent();
         }
