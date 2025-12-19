@@ -1,7 +1,6 @@
 package fr.ufrst.m1info.pvm.group5.ast.nodes;
 
 import fr.ufrst.m1info.pvm.group5.ast.ASTBuildException;
-import fr.ufrst.m1info.pvm.group5.ast.InterpretationInvalidTypeException;
 import fr.ufrst.m1info.pvm.group5.ast.MemoryCallUtil;
 import fr.ufrst.m1info.pvm.group5.ast.WithdrawalNode;
 import fr.ufrst.m1info.pvm.group5.memory.Memory;
@@ -102,7 +101,9 @@ public class MethodeNode extends ASTNode implements WithdrawalNode {
                 }
             }
         }
-        root.setAsRoot();
+        if (root!= null){
+            root.setAsRoot();
+        }
         MemoryCallUtil.safeCall(m::popScope, this);
         return returnType.getValueType().toString().toLowerCase();
     }
