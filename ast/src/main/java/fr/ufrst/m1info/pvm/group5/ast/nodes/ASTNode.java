@@ -111,8 +111,8 @@ public abstract class ASTNode implements LocatedElement {
         StringBuilder sb = new StringBuilder();
         addTabDepth(sb,depth);
         sb.append("\"line\" : ").append(getLine());
-        if(props!=null)sb.append(",\n");
-        if(props==null) return sb.toString();
+        if(props!=null && !props.isEmpty())sb.append(",\n");
+        else return sb.toString();
         var iterator = props.entrySet().iterator();
         while(iterator.hasNext()){
             var e = iterator.next();
@@ -166,7 +166,9 @@ public abstract class ASTNode implements LocatedElement {
         var prop = dumpProperties(depth+1);
         if(!prop.isEmpty()) {
             sb.append(prop);
-            if(children != null && !children.isEmpty()) sb.append(",");
+            if(!children.isEmpty()) {
+                sb.append(",");
+            }
             sb.append("\n");
         }
         if(children != null) {
