@@ -1,5 +1,6 @@
 # Groupe 5
-
+![CI/CD](https://github.com/QuentinRdl/Groupe-5/workflows/CI/CD/badge.svg)
+```![Deploy](https://github.com/QuentinRdl/Groupe-5/workflows/Deploy%20sur%20GitHub%20Pages/badge.svg)```
 
 
 ## Getting started
