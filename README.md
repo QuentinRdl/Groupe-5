@@ -4,13 +4,13 @@
 
 A complete compiler, interpreter, and IDE for the MiniJaja programming language. Built as a group project during the first semester of M1 Computer Science at Université de Franche-Comté.
 
-<!---
+
 ![Project Demo](resources/demo.gif)
--->
+
 
 ## Overview
 
-MiniJaja Studio is an educational compiler and interpreter system for MiniJaja, a simplified Java-like programming language designed for teaching compiler construction and program execution concepts. The project includes a full-featured JavaFX-based IDE with real-time compilation, step-through debugging (step-by-step and breakpoints), and memory visualization.
+MiniJaja Studio is an educational compiler and interpreter system for MiniJaja, a simplified Java-like programming language designed for teaching compiler construction and program execution concepts. The project features a full-featured JavaFX-based IDE with real-time compilation, step-through debugging (including step-by-step execution and breakpoints), and memory visualization.
 
 ## Features
 
@@ -143,7 +143,7 @@ The project maintains high code quality standards with continuous integration an
 
 ## Project Context
 
-This project was developed as part of the "Atelier de Mise en oeuvre de la Validation" (AMV) course during the first semester of the Master's program in Computer Science at Université de Franche-Comté (2024-2025). The project was completed by a team of six students over the course of the semester.
+This project was developed as part of the "Application Machines Virtuelles" (AMV)  course during the first semester of the Master's program in Computer Science at Université de Franche-Comté (2025). The project was completed as a team of six students throughout the semester.
 
 ### Team Size
 6 developers
@@ -178,4 +178,4 @@ This project was developed for educational purposes as part of university course
 
 ## Acknowledgments
 
-Special thanks to the teaching staff of the course and my teammates for their implication throughout the project !
+Special thanks to the teaching staff of the course and my teammates for their involvement throughout the project !
