@@ -135,33 +135,3 @@ jobs:
   #           -Dsonar.host.url=https://disc.univ-fcomte.fr/cr700-sonarqube \
   #           -Dsonar.token=$SONAR_TOKEN \
   #           -Dsonar.coverage.jacoco.xmlReportPaths=**/target/site/jacoco/jacoco.xml
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test  # Changed from sonarqube since it's temporarily disabled
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: production
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v4
-        with:
-          path: .m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Setup settings
-        run: |
-          chmod +x ./settings.sh
-          ./settings.sh
-
-      # TEMPORARILY DISABLED - Nexus login issues
-      # - name: Deploy with Maven
-      #   run: |
-      #     echo "Starting manual Maven deploy..."
-      #     mvn deploy -s ~/.m2/settings.xml
