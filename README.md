@@ -1,93 +1,181 @@
-# Groupe 5
+![CI/CD](https://github.com/QuentinRdl/MiniJaja-Compiler-Studio/workflows/CI/CD/badge.svg)
 
+# MiniJaja Compiler Studio
 
+A complete compiler, interpreter, and IDE for the MiniJaja programming language. Built as a group project during the first semester of M1 Computer Science at Université de Franche-Comté.
 
-## Getting started
+<!---
+![Project Demo](resources/demo.gif)
+-->
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Overview
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+MiniJaja Studio is an educational compiler and interpreter system for MiniJaja, a simplified Java-like programming language designed for teaching compiler construction and program execution concepts. The project includes a full-featured JavaFX-based IDE with real-time compilation, step-through debugging (step-by-step and breakpoints), and memory visualization.
 
-## Add your files
+## Features
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### Language Support
+
+**MiniJaja** - A class-based source language supporting:
+- Variables and constants with type checking (`int`, `boolean`, `void`)
+- Single-dimensional arrays
+- Methods with parameters and return values
+- Control flow structures (`if/else`, `while`)
+- Arithmetic and logical operators
+- Console Output operations
+
+**JajaCode** - Low-level bytecode representation:
+- Stack machine instructions
+- Memory operations (load, store, heap allocation)
+- Control flow primitives (goto, conditional jumps)
+- Array manipulation
+
+### IDE Capabilities
+
+- **Dual Editor**: Edit both MiniJaja source code and JajaCode bytecode
+- **Compilation**: Transform MiniJaja programs into JajaCode with comprehensive error reporting
+- **Interpretation**: Execute both language levels directly
+- **Debugging**: Step-by-step execution with breakpoint support
+- **Memory Visualization**: Real-time stack and heap inspection during program execution
+- **Syntax Highlighting**: Color-coded syntax for improved readability
+- **File Management**: Load and save `.mjj` source files
+
+## Architecture
+
+The project follows a modular architecture with clear separation of concerns:
 
 ```
-cd existing_repo
-git remote add origin https://disc.univ-fcomte.fr/cr700-gitlab/projet-amv-2025/groupe-5.git
-git branch -M main
-git push -uf origin main
+├── memory/              Memory management (stack, heap, symbol tables)
+├── ast/                 ANTLR-based parser and AST construction
+├── compiler/            MiniJaja to JajaCode compilation with type checking
+├── interpreter/         Dual interpreters for MiniJaja and JajaCode
+├── driver/              JavaFX IDE application
+├── integration_tests/   Integration test suite
+└── acceptation_tests/   BDD-style acceptance tests (Cucumber)
 ```
 
-## Integrate with your tools
+## Technology Stack
 
-- [ ] [Set up project integrations](https://disc.univ-fcomte.fr/cr700-gitlab/projet-amv-2025/groupe-5/-/settings/integrations)
+- **Java 22** - Core implementation language
+- **Maven** - Build and dependency management
+- **ANTLR 4** - Lexer and parser generation
+- **JavaFX** - GUI framework
+- **JUnit 5 + Mockito** - Unit testing
+- **Cucumber/Gherkin** - Acceptance testing
+- **JaCoCo** - Code coverage analysis
 
-## Collaborate with your team
+## Getting Started
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### Prerequisites
 
-## Test and Deploy
+- Java Development Kit (JDK) 22 or higher
+- Maven 3.6+
 
-Use the built-in continuous integration in GitLab.
+### Building the Project
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+```bash
+# Compile all modules
+mvn clean install
 
-***
+# Run tests
+mvn test
 
-# Editing this README
+# Generate code coverage report
+mvn jacoco:report
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Running the IDE
 
-## Suggestions for a good README
+```bash
+# Launch the MiniJaja Studio IDE
+cd driver
+mvn javafx:run
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Or use the Maven wrapper :
 
-## Name
-Choose a self-explaining name for your project.
+```bash
+./mvnw -pl driver javafx:run
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Or the produced jar :
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```bash
+cd driver/target
+java -jar driver-VERSION.jar
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### Example Programs
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Example MiniJaja programs are included in the `acceptation_tests/src/test/resources/` directory:
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+- `Simple.mjj` - Basic class structure
+- `BasicOperations.mjj` - Variable declarations and arithmetic
+- `Loops.mjj` - While loop demonstration
+- `Conditionals.mjj` - Conditional branching
+- `Complex.mjj` - Methods, parameters, and I/O operations
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### Generating Documentation
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Generate JavaDoc for all modules:
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+```bash
+# Linux/macOS
+./generate-javadoc.sh
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+# Windows
+generate-javadoc.bat
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Documentation will be available in `target/site/apidocs/` for each module.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## Code Quality
+
+The project maintains high code quality standards with continuous integration and automated testing.
+
+![Coverage Report](resources/coverage.png)
+
+- **Unit Tests**: Comprehensive test coverage across all modules
+- **Integration Tests**: End-to-end compilation and execution verification
+- **Acceptance Tests**: BDD scenarios validating language specifications
+- **Static Analysis**: SonarQube integration for code quality metrics
+- **Code Coverage**: JaCoCo reports with detailed coverage statistics
+
+## Project Context
+
+This project was developed as part of the "Atelier de Mise en oeuvre de la Validation" (AMV) course during the first semester of the Master's program in Computer Science at Université de Franche-Comté (2024-2025). The project was completed by a team of six students over the course of the semester.
+
+### Team Size
+6 developers
+
+### Academic Context
+- **Program**: Master 1 Computer Science
+- **Course**: AMV (Application Machines Virtuelles)
+- **Semester**: Fall 2025
+- **Institution**: Université de Franche-Comté
+
+## Development
+
+### Continuous Integration
+
+The project uses GitHub Actions for automated builds and testing (but was originally designed for the private university GitLab) :
+- Automated compilation on push and pull requests
+- Test execution across all modules
+- Code coverage reporting
+
+### Project Structure
+
+Each module has its own `pom.xml` and follows Maven's standard directory layout:
+- `src/main/java` - Production code
+- `src/main/antlr4` - ANTLR grammar files (AST module)
+- `src/main/resources` - Resource files
+- `src/test/java` - Test code
+- `src/test/resources` - Test resources
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+This project was developed for educational purposes as part of university coursework.
+
+## Acknowledgments
+
+Special thanks to the teaching staff of the course and my teammates for their implication throughout the project !
